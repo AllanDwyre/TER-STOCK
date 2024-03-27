@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Product {
   String name, sku, image;
   String? class_, category, storageDate, arrivalDate;

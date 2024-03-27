@@ -48,22 +48,17 @@ class OnBoardingPageView extends StatefulWidget {
 class _OnBoardingPageViewState extends State<OnBoardingPageView>
 		with TickerProviderStateMixin {
 	late PageController _pageController;
-	late TabController _tabController;
-	int _currentPageIndex = 0;
 
 	@override
 	void initState() {
 		super.initState();
-
 		_pageController = PageController();
-		_tabController = TabController(length: 6, vsync: this);
 	}
 
 	@override
 	void dispose() {
 		super.dispose();
 		_pageController.dispose();
-		_tabController.dispose();
 	}
 
 	List<Map<String, String>> onbordingData = [
@@ -142,9 +137,8 @@ class _OnBoardingPageViewState extends State<OnBoardingPageView>
 	}
 
 	void _handlePageViewChanged(int currentPageIndex) {
-		_tabController.index = currentPageIndex;
 		setState(() {
-			_currentPageIndex = currentPageIndex;
+			// _currentPageIndex = currentPageIndex;
 		});
 	}
 }

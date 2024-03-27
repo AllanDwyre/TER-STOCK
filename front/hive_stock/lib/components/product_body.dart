@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/product.dart';
+import '../Product/models/product.dart';
 import '../constants/padding.dart';
 
 class ProductBody extends StatelessWidget {
@@ -57,7 +57,7 @@ class ProductBody extends StatelessWidget {
               color: Colors.orangeAccent,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Center(
+            child: const Center(
               child: Text("to fill"),
             ),
           ),
