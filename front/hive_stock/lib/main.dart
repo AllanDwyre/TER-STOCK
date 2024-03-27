@@ -20,5 +20,12 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       home: const SafeArea(child: OnBoardingWidget()), //todo : detect the user status (connected or disconnected)
     );
+    /*
+    POUR TESTER PAGE PRODUIT
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: ProductScreen(products.first),
+    );
+    */
   }
 }
