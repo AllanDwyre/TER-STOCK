@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Flutter Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F5FAFD;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            border-radius: 20px;
+            background: url('https://fn12.com/api/clusters/cluster-fn12-prod-europe-west1/trialprojects/trial-E4AuFwFNnDwigoWi8SQN25/assets/images/a7d432c96d787af9f70048dc9e27c1c5974716cd?Expires=1712091320&KeyName=fn12-cdn&Signature=jF1rH2jsMeLcONbFvLrgdIHxfV8=') 50% / cover no-repeat, linear-gradient(#FFFFFF, #FFFFFF);
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .background-image {
+            background: url('https://fn12.com/api/clusters/cluster-fn12-prod-europe-west1/trialprojects/trial-E4AuFwFNnDwigoWi8SQN25/assets/images/a7d432c96d787af9f70048dc9e27c1c5974716cd?Expires=1712091320&KeyName=fn12-cdn&Signature=jF1rH2jsMeLcONbFvLrgdIHxfV8=') 50% / cover no-repeat;
+            position: absolute;
+            top: -90px;
+            right: -21px;
+            width: 435px;
+            height: 942px;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 236px 0 85px 0;
+            width: 1101px;
+            height: fit-content;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .logo {
+            border-radius: 20px;
+            background: url('https://fn12.com/api/clusters/cluster-fn12-prod-europe-west1/trialprojects/trial-E4AuFwFNnDwigoWi8SQN25/assets/images/75601d40331d21fded53a800d99a145b72a0e74f?Expires=1712091320&KeyName=fn12-cdn&Signature=EUzP40wxOFVwdUFB4tcxT8rX-54=') 50% / cover no-repeat;
+            margin-bottom: 15px;
+            width: 40px;
+            height: 40px;
+        }
+
+        .scan-info {
+            margin-bottom: 63.1px;
+            width: fit-content;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .scan-text {
+            margin-right: 26.6px;
+            color: #FFFFFF;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: normal;
+            font-size: 24px;
+            text-align: left;
+        }
+
+        .scan-description {
+            color: #FFFFFF;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: normal;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .dashboard,
+        .products {
+            border-radius: 20px;
+            background: #F9F9F9;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 27.5px 0 26.5px 0;
+            width: 393px;
+            box-sizing: border-box;
+            position: relative;
+            margin-top: 20px;
+        }
+
+        .dashboard-text,
+        .products-text {
+            position: relative;
+            font-family: 'Inter', sans-serif;
+            font-weight: bold;
+            font-size: 11px;
+            color: #000000;
+            text-align: center;
+            margin: 0 20px 6px 20px;
+        }
+
+        .inactive {
+            color: #B8B8B9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="background-image"></div>
+        <div class="content">
+            <div class="logo"></div>
+            <div class="scan-info">
+                <div class="scan-text">Scan your products!</div>
+                <div class="rounded-[20px] bg-[url('https://fn12.com/api/clusters/cluster-fn12-prod-europe-west1/trialprojects/trial-E4AuFwFNnDwigoWi8SQN25/assets/images/75601d40331d21fded53a800d99a145b72a0e74f?Expires=1712091320&KeyName=fn12-cdn&Signature=EUzP40wxOFVwdUFB4tcxT8rX-54=')_50%_/_cover_no-repeat] m-[0_0_15px_0] w-[40px] h-[40px]"></div>
+            </div>
+            <div class="rounded-t-[20px] bg-[#F9F9F9] relative flex flex-row justify-between p-[27.5px_0_26.5px_0] w-[393px] box-sizing-border">
+                <div class="relative flex flex-col box-sizing-border">
+                    <div class="relative m-[0_19.9px_6px_19.9px] flex
+                    flex-row justify-center self-start w-[18.4px] h-[18px] box-sizing-border">
+                        <img class="relative w-[18.4px] h-[18px]" />
+                        <div class="absolute left-[50%] bottom-[0px] translate-x-[-50%] flex flex-row justify-center w-[18.4px] h-[18px] box-sizing-border">
+                            <img class="w-[18.4px] h-[18px]" />
+                        </div>
+                    </div>
+                    <span class="relative break-words font-['Inter'] font-bold text-[11px] text-[#000000]">
+                        Dashboard
+                    </span>
+                    <span class="absolute left-[50%] bottom-[0px] translate-x-[-50%] break-words font-['Inter'] font-bold text-[11px] text-[#B8B8B9]">
+                        Dashboard
+                    </span>
+                </div>
+                <div class="relative m-[0.2px_0_0_0] flex flex-col items-center box-sizing-border">
+                    <div class="m-[0_19.9px_5.9px_19.9px] flex flex-col items-center w-[9px] box-sizing-border">
+                        <img class="m-[0_0_2.6px_0] w-[9px] h-[5.2px]" />
+                        <img class="m-[0_2.5px_0_4.5px] w-[2px] h-[10.1px]" />
+                    </div>
+                    <span class="relative break-words font-['Inter'] font-bold text-[11px] text-[#000000]">
+                        Products
+                    </span>
+                    <span class="absolute left-[50%] bottom-[0px] translate-x-[-50%] break-words font-['Inter'] font-bold text-[11px] text-[#B8B8B9]">
+                        Products
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
