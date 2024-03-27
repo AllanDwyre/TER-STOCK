@@ -15,11 +15,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'HiveStock',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: lightColorScheme,
-        textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme),
-
-      ),
+      theme: ThemeData(colorScheme: lightColorScheme, textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme),).copyWith(extensions: [lightCustomColors]),
+      darkTheme: ThemeData(colorScheme: darkColorScheme, textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme)).copyWith(extensions: [darkCustomColors]),
+      themeMode: ThemeMode.system,
       home: const SafeArea(child: OnBoardingWidget()), //todo : detect the user status (connected or disconnected)
     );
   }
