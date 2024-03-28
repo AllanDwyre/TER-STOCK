@@ -11,8 +11,8 @@ import 'package:hive_stock/App/constants/padding.dart';
 
 // * https://www.youtube.com/shorts/sDcAQNvRD10
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({
+class LastnameScreen extends StatelessWidget {
+  const LastnameScreen({
     super.key,
   });
 
@@ -37,7 +37,7 @@ class LoginScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Welcome !\nPlease enter your first name.",
+                    "Oh hello  !\nWhat is your last name?",
                     style: textTheme.bodyMedium!
                         .copyWith(color: colorScheme.primary),
                   ),
@@ -46,7 +46,7 @@ class LoginScreen extends StatelessWidget {
                     onChanged: (value) =>
                         {}, // todo : make the function (not here but in a logic class -> then test the logic class with unit tests)
                     decoration: InputDecoration(
-                      hintText: "Your Firstame",
+                      hintText: "Your Lastname",
                       hintStyle: textTheme.headlineLarge!
                           .copyWith(color: colorScheme.tertiary),
                       border: InputBorder.none,
@@ -65,7 +65,7 @@ class LoginScreen extends StatelessWidget {
                   text: "Continue",
                   icon: Icons.arrow_forward,
                   onPressed: () => Navigator.of(context).pushNamed(
-                      "/LastName"), // Todo : make the logic work here (may be no a go to but a page index transition)
+                      "/email"), // Todo : make the logic work here (may be no a go to but a page index transition)
                 ),
               )
             ],
