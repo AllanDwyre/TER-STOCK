@@ -1,6 +1,8 @@
-// Dans votre fichier productController.js
-
+const express = require('express');
 const mysql = require('mysql2');
+
+const app = express();
+const PORT = 3000; // Vous pouvez ajuster le port selon vos besoins
 
 // Créer une connexion à la base de données MySQL
 const connection = mysql.createConnection({
@@ -10,32 +12,22 @@ const connection = mysql.createConnection({
     database: 'stock'
 });
 
-// Fonction pour récupérer les produits disponibles dans le stock
-exports.getProducts = (req, res) => {
-    // Requête SQL pour récupérer les produits disponibles
-    const sql = `SELECT NOM FROM PRODUIT`;
+// Middleware pour parser le corps de la requête en JSON
+app.use(express.json());
 
-    // Exécutez la requête SQL pour récupérer les noms des produits
-    connection.query(sql, (err, results) => {
-        if (err) {
-            console.error("Erreur lors de la récupération des produits :", err);
-            return res.status(500).send("Erreur lors de la récupération des produits");
-        }
-        // Renvoyer les noms des produits au format JSON
-        res.status(200).json(results);
-    });
-};
+const path = require('path');
+app.get('/addProduct', (req, res) => {
+    res.sendFile(path.join(__dirname, 'addProduct.html'));
 
+// Middleware pour gérer les requêtes POST depuis le formulaire HTML
 
-// Fonction pour ajouter un produit au stock
-exports.addProduct = (req, res) => {
-    const { nom, prixUnitaire, quantite, dateExpiration } = req.body;
+    const { id, nom, descr } = req.body;
 
     // Requête SQL pour insérer un nouveau produit dans la base de données
-    const sql = `INSERT INTO PRODUIT (PRODUIT_ID, NOM, PRIX_UNIT,) VALUES (1332, kiwi, 2)`;
-    
+    const sql = `INSERT INTO PRODUIT (PRODUIT_ID, NOM, DESCR) VALUES (?, ?, ?)`;
+
     // Exécutez la requête SQL avec les valeurs fournies
-    connection.query(sql, [nom, prixUnitaire, dateExpiration], (err, result) => {
+    connection.query(sql, [id, nom, descr], (err, result) => {
         if (err) {
             console.error("Erreur lors de l'ajout du produit :", err);
             return res.status(500).send("Erreur lors de l'ajout du produit");
@@ -43,4 +35,11 @@ exports.addProduct = (req, res) => {
         console.log("Produit ajouté avec succès !");
         res.status(200).send("Produit ajouté avec succès !");
     });
-};
+});
+
+
+
+// Démarrer le serveur
+app.listen(PORT, () => {
+    console.log(`Serveur démarré sur le port ${PORT}`);
+});

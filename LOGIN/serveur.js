@@ -3,7 +3,7 @@ var connection = require('./config/db.js');
 var app = express();
 
 app.use(function(req, res, next) {
-  req.connection = connection
+  req.socket = connection
   next()
 })
 
@@ -15,5 +15,5 @@ app.use("/", authRouter);
 
 let port = process.env.PORT || 3000;
 app.listen(port, function () {
-  return console.log("Started user authentication server listening on port " + port);
+  return console.log("Seveur Login utlisateur en écoute dans le port " + port);
 });

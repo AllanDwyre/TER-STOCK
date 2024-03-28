@@ -1,16 +1,20 @@
-var crypto = require('crypto');
+// API POUR VERIF NUM TEL
 
 module.exports = {
-    selectLogIn: function (connection, username, password, callback) {
-        var cryptPassword = crypto.createHash('sha256').update(password).digest('hex');
-        connection.query("SELECT * FROM division5.users WHERE username = ? AND password = ?", [username, cryptPassword], callback);
+    selectLogInName: function (connection, username, callback) {
+        connection.query("SELECT * FROM login.users WHERE user_name = ?", [username], callback);
     },
-    selectSignUp: function (connection, username, password, callback) {
-        connection.query("SELECT * FROM users WHERE username = ?", [username], callback);
+    selectLogInFirstName: function (connection, user_first_name, callback) {
+        connection.query("SELECT * FROM login.users WHERE user_first_name = ?", [user_first_name], callback);
     },
-    insert: function (connection, username, password, callback) {
-        var cryptPassword = crypto.createHash('sha256').update(password).digest('hex');
-        var credentials = [[username, cryptPassword]];
-        connection.query("INSERT INTO division5.users (username, password) VALUES ?", [credentials], callback);
+    selectLogInEmail: function (connection, usermail, callback){
+        connection.query("SELECT * FROM login.users WHERE user_mail = ?", [usermail], callback);
+    },
+    selectSignUpTel: function (connection, user_tel, callback) {
+        connection.query("SELECT * FROM users WHERE user_tel = ?", [user_tel], callback);
+    },
+    insert: function (connection, username, user_first_name, usermail, user_date, user_tel, callback) {
+        var credentials = [[username, user_first_name, usermail, user_date, user_tel]];
+        connection.query("INSERT INTO login.users (username, password) VALUES ?", [credentials], callback);
     }
 };
