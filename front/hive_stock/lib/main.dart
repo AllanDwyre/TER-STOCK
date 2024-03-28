@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_stock/login/screens/onbording.dart';
-import 'constants/colors.dart';
+
+import 'App/constants/colors.dart';
 
 void main() {
 	runApp(const MyApp());

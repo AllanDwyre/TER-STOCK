@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hive_stock/components/buttons.dart';
-import 'package:hive_stock/components/custom_app_bar.dart';
+import 'package:hive_stock/App/components/buttons.dart';
+import 'package:hive_stock/App/components/custom_app_bar.dart';
 
 class OnBoardingWidget extends StatelessWidget {
 	const OnBoardingWidget({super.key});
@@ -98,43 +98,52 @@ class _OnBoardingPageViewState extends State<OnBoardingPageView>
 	];
 
 	@override
-	Widget build(BuildContext context) {
-		final TextTheme textTheme = Theme.of(context).textTheme;
-		// final ColorScheme colorTheme = Theme.of(context).colorScheme;
-		return Stack(children: [
-			PageView.builder(
-				controller: _pageController,
-				onPageChanged: _handlePageViewChanged,
-				itemCount: onbordingData.length,
-				itemBuilder: (context, index) => Center(
-					child: Column(children: [
-						Expanded(
-								child: Image.asset(
-							onbordingData[index]["path"] ?? "",
-							fit: BoxFit.cover,
-						)),
-						const SizedBox(
-							height: 10,
-						),
-						Text(
-							onbordingData[index]["title"] ?? "[Title]",
-							style: textTheme.titleLarge,
-							textAlign: TextAlign.center,
-						),
-						const SizedBox(
-							height: 10,
-						),
-						Text(
-							onbordingData[index]["description"] ?? "[description]",
-							style: textTheme.bodyMedium,
-							textAlign: TextAlign.center,
-						),
-					]),
-				),
-			),
-			// todo : page indicator
-		]);
-	}
+Widget build(BuildContext context) {
+  final TextTheme textTheme = Theme.of(context).textTheme;
+  final screenWidth = MediaQuery.of(context).size.width;
+  final imageWidth = screenWidth / 2;
+
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Row(
+      children: onbordingData.map((data) {
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 10.0),
+          width: imageWidth,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: Image.asset(
+                    data["path"] ?? "",
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                data["title"] ?? "[Title]",
+                style: textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                data["description"] ?? "[description]",
+                style: textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    ),
+  );
+}
+
 
 	void _handlePageViewChanged(int currentPageIndex) {
 		setState(() {
