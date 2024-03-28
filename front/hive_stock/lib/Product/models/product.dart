@@ -4,20 +4,23 @@ class Product {
   int? quantity, atPreparation, onTheWay;
 
   Product(
-      this.name,
-      this.sku,
-      this.image,
-      {
-        this.class_,
-        this.category,
-        this.storageDate,
-        this.arrivalDate,
-        this.quantity,
-        this.atPreparation,
-        this.onTheWay,
-      });
+    this.name,
+    this.sku,
+    this.image, {
+    this.class_,
+    this.category,
+    this.storageDate,
+    this.arrivalDate,
+    this.quantity,
+    this.atPreparation,
+    this.onTheWay,
+  });
 }
 
 List<Product> products = [
-  Product("Bioglow", "WC-JT-MD-PP", "./assets/images/bioglow.png"),
+  Product(
+    "Bioglow",
+    "WC-JT-MD-PP",
+    "./assets/images/bioglow.png",
+  ),
 ];

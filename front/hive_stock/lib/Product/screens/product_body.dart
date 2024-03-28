@@ -12,6 +12,8 @@ class ProductBody extends StatelessWidget {
   Widget build(BuildContext context) {
     // Hauteur et largeur totales
     Size size = MediaQuery.of(context).size;
+    TextTheme textTheme = Theme.of(context).textTheme;
+    ColorScheme colorTheme = Theme.of(context).colorScheme;
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
@@ -24,15 +26,17 @@ class ProductBody extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(product.name, style: Theme.of(context)
-                        .textTheme
-                        .displayMedium
-                        ?.copyWith(color: Colors.black),
+                  Text(
+                    product.name,
+                    style: textTheme.displayMedium
+                        ?.copyWith(color: colorTheme.onBackground),
                   ),
-                  Text("Class ${product.class_??"null"} | Sku : ${product.sku}", style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(color: Colors.black),
+                  Text(
+                    "Class ${product.class_ ?? "null"} | Sku : ${product.sku}",
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(color: Colors.black),
                   ),
                 ],
               ),
@@ -42,15 +46,19 @@ class ProductBody extends StatelessWidget {
             width: size.width,
             color: Colors.white,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(kDefaultPadding, 0, kDefaultPadding, kDefaultPadding),
-              child: Text("Special handling", style: Theme.of(context)
-                .textTheme
-                .headlineLarge
-                ?.copyWith(color: Colors.black),
-            ),
+              padding: const EdgeInsets.fromLTRB(
+                  kDefaultPadding, 0, kDefaultPadding, kDefaultPadding),
+              child: Text(
+                "Special handling",
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineLarge
+                    ?.copyWith(color: Colors.black),
+              ),
             ),
           ),
-          Container(// CONTAINER "TO FILL"
+          Container(
+            // CONTAINER "TO FILL"
             height: 100,
             width: size.width * 0.9,
             decoration: BoxDecoration(
@@ -62,8 +70,8 @@ class ProductBody extends StatelessWidget {
             ),
           ),
           Container(
-            // TABS A IMPLEMENTER ICI
-          ),
+              // TABS A IMPLEMENTER ICI
+              ),
         ],
       ),
     );

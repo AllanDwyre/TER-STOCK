@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hive_stock/login/screens/birthday.dart';
 import 'package:hive_stock/login/screens/login.dart';
-import 'package:hive_stock/login/screens/LastName.dart';
-import 'package:hive_stock/login/screens/email.dart';
 import 'package:hive_stock/login/screens/onbording.dart';
 
 /// This class allows to centralized the logic of routing, and the logic of passing data between page transition.
@@ -15,15 +12,10 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
+        // todo : verify the user state and correctyl direct
         return MaterialPageRoute(builder: (_) => const OnBoardingScreen());
       case '/login':
         return MaterialPageRoute(builder: (_) => const LoginScreen());
-      case '/LastName':
-        return MaterialPageRoute(builder: (_) => const LastnameScreen());
-      case '/email':
-        return MaterialPageRoute(builder: (_) => const emailScreen());
-      case '/birthday':
-        return MaterialPageRoute(builder: (_) => const BirthdayScreen());
       default:
         return _errorRoute();
     }

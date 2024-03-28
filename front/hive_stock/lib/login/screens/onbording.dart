@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hive_stock/App/components/buttons.dart';
-import 'package:hive_stock/App/components/custom_app_bar.dart';
+import 'package:hive_stock/App/widgets/buttons.dart';
+import 'package:hive_stock/App/widgets/custom_app_bar.dart';
 import 'package:hive_stock/App/constants/padding.dart';
 
 class OnBoardingScreen extends StatelessWidget {
