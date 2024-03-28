@@ -24,13 +24,16 @@ class _CustomProgressBarState extends State<CustomProgressBar> {
       children: [
         for (int i = 0; i < widget.stepNumber; i++)
           Expanded(
-            child: Container(
-              height: 5,
-              decoration: BoxDecoration(
-                color: i == widget.currentStep
-                    ? colorTheme.primary
-                    : colorTheme.primaryContainer,
-                borderRadius: const BorderRadius.all(Radius.circular(5)),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+              child: Container(
+                height: 5,
+                decoration: BoxDecoration(
+                  color: i == widget.currentStep
+                      ? colorTheme.primary
+                      : colorTheme.primaryContainer,
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                ),
               ),
             ),
           ),
