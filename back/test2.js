@@ -3,9 +3,9 @@ const mysql = require('mysql2');
 
 // Configuration de la connexion à la base de données
 const connection = mysql.createConnection({
-  host: 'localhost', // L'hôte de la base de données (par exemple, 'localhost' si la base de données est en local)
-  user: 'root', // Le nom d'utilisateur de la base de données
-  password: 'hai501', // Le mot de passe de la base de données
+  host: '10.192.35.56', // L'hôte de la base de données (par exemple, 'localhost' si la base de données est en local)
+  user: 'newuser', // Le nom d'utilisateur de la base de données
+  password: 'terstock', // Le mot de passe de la base de données
   database: 'stock' // Le nom de la base de données à laquelle se connecter
 });
 
