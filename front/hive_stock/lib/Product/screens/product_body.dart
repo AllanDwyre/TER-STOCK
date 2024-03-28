@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_stock/Product/models/product.dart';
 
-import '../constants/padding.dart';
+import '../../App/constants/padding.dart';
 
 class ProductBody extends StatelessWidget {
   final Product product;

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hive_stock/App/components/buttons.dart';
 import 'package:hive_stock/App/components/custom_app_bar.dart';
-import 'package:hive_stock/App/components/snackbars.dart';
 import 'package:hive_stock/App/constants/padding.dart';
 
 class OnBoardingScreen extends StatelessWidget {
