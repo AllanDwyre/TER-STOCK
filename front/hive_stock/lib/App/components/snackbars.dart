@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:hive_stock/App/constants/colors.dart';
 
 enum SnackbarType { info, warning, error, success }
 
-class Snackbar extends StatelessWidget {
-  Snackbar(
+class CustomSnackbar extends StatelessWidget {
+  CustomSnackbar(
       {super.key,
       required this.type,
       required this.description,
@@ -16,13 +18,6 @@ class Snackbar extends StatelessWidget {
   final SnackbarType type;
   final String description;
 
-  final Map<SnackbarType, List<Color>> colorTheme = {
-    SnackbarType.info: [Colors.blue, Colors.lightBlue],
-    SnackbarType.warning: [Colors.blue, Colors.lightBlue],
-    SnackbarType.error: [Colors.blue, Colors.lightBlue],
-    SnackbarType.success: [Colors.blue, Colors.lightBlue],
-  };
-
   final Map<SnackbarType, IconData> iconFromType = {
     SnackbarType.info: Icons.info,
     SnackbarType.warning: Icons.error,
@@ -31,19 +26,72 @@ class Snackbar extends StatelessWidget {
   };
 
   Color getColorFromType(BuildContext context, bool forText) {
-    return colorTheme[type]![forText ? 0 : 1];
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final CustomColors colorExtension =
+        Theme.of(context).extension<CustomColors>()!;
+
+    Map<SnackbarType, List<Color>> color = {
+      SnackbarType.info: [
+        colorScheme.onPrimaryContainer,
+        colorScheme.primaryContainer
+      ],
+      SnackbarType.warning: [
+        colorExtension.onWarningContainer!,
+        colorExtension.warningContainer!
+      ],
+      SnackbarType.error: [
+        colorScheme.onErrorContainer,
+        colorScheme.errorContainer
+      ],
+      SnackbarType.success: [
+        colorExtension.onSuccessContainer!,
+        colorExtension.successContainer!
+      ],
+    };
+    return color[type]![forText ? 0 : 1];
   }
 
   @override
   Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
     return Container(
-      color: getColorFromType(context, false),
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: getColorFromType(context, false),
+      ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(iconFromType[type]),
-          Column(
-            children: [if (title != null) Text(title!), Text(description)],
+          if (showIcon ?? true)
+            Icon(
+              iconFromType[type],
+              color: getColorFromType(context, true),
+              size: 20,
+            ),
+          if (showIcon ?? true)
+            const SizedBox(
+              width: 10,
+            ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (title != null)
+                  Text(
+                    title!,
+                    style: textTheme.titleSmall!
+                        .copyWith(color: getColorFromType(context, true)),
+                  ),
+                Text(
+                  description,
+                  style: textTheme.bodySmall!
+                      .copyWith(color: getColorFromType(context, true)),
+                ),
+              ],
+            ),
           )
         ],
       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hive_stock/App/components/buttons.dart';
 import 'package:hive_stock/App/components/custom_app_bar.dart';
+import 'package:hive_stock/App/components/snackbars.dart';
 import 'package:hive_stock/App/constants/padding.dart';
 
 class OnBoardingScreen extends StatelessWidget {
@@ -19,14 +21,20 @@ class OnBoardingScreen extends StatelessWidget {
               const CustomAppBar(
                 smallOne: false,
               ),
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: const Color(0xFFEFF4F7)),
-                height: 560,
-                width: double.infinity,
-                child: const _PageViewWidget(),
+              const Spacer(
+                flex: 2,
               ),
+              Expanded(
+                flex: 20,
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color(0xFFEFF4F7)),
+                  width: double.infinity,
+                  child: const _PageViewWidget(),
+                ),
+              ),
+              const Spacer(),
               PrimaryButton(
                 text: "Get Started",
                 icon: Icons.arrow_forward,
