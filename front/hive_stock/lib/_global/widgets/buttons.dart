@@ -18,6 +18,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
 	@override
 	Widget build(BuildContext context) {
 		return FilledButton(
+      key: widget.key,
       style:  ButtonStyle(
         shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)))
       ),

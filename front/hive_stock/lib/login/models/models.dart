@@ -1,2 +1,3 @@
 export 'username.dart';
+export 'email.dart';
 // on pourra exporter d'autre models, tel que l'email, birthday, ...
