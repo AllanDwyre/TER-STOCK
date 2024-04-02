@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_stock/_global/constants/constants.dart';
 import 'package:hive_stock/_global/widgets/buttons.dart';
 import 'package:hive_stock/_global/widgets/custom_app_bar.dart';
+import 'package:hive_stock/login/views/login_page.dart';
 import 'package:hive_stock/onBording/models/onboarding_data.dart';
 
 class OnBoardingPage extends StatelessWidget {
@@ -41,7 +42,8 @@ class OnBoardingPage extends StatelessWidget {
               PrimaryButton(
                 text: "Get Started",
                 icon: Icons.arrow_forward,
-                onPressed: () => Navigator.of(context).pushNamed("/login"),
+                onPressed: () =>
+                    Navigator.of(context).push<void>(LoginPage.route()),
               )
             ],
           ),

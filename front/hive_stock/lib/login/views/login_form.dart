@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:hive_stock/App/widgets/custom_progress_bar.dart';
+import 'package:hive_stock/_global/widgets/custom_progress_bar.dart';
 import 'package:hive_stock/_global/constants/constants.dart';
 import 'package:hive_stock/_global/widgets/buttons.dart';
 import 'package:hive_stock/_global/widgets/custom_app_bar.dart';
@@ -33,6 +33,7 @@ class LoginForm extends StatelessWidget {
             const CustomAppBar(smallOne: false),
             const SizedBox(height: 45),
             // todo : Swipe the widget base on the index we are or base on a map <"step_name" : widget>  or using bloc state
+            // const _UsernameInput(),
             const _BirthdayWidget(),
             const Spacer(),
             Align(
@@ -47,57 +48,41 @@ class LoginForm extends StatelessWidget {
 }
 
 class _UsernameInput extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (previous, current) => previous.username != current.username,
-      builder: (context, state) {
-        return TextField(
-          key: const Key('loginForm_usernameInput_textField'),
-          onChanged: (username) =>
-              context.read<LoginBloc>().add(LoginUsernameChanged(username)),
-          decoration: InputDecoration(
-            labelText: 'username',
-            errorText:
-                state.username.displayError != null ? 'invalid username' : null,
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _Firstname extends StatelessWidget {
-  const _Firstname();
+  const _UsernameInput();
 
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (previous, current) => previous.username != current.username, // todo : a changer en firstname
+      buildWhen: (previous, current) =>
+          previous.username !=
+          current.username, // todo : a changer en firstname
       builder: (context, state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Welcome !\nPlease enter your first name.",
+              "Welcome !\nPlease enter your username.",
               style: textTheme.bodyMedium!.copyWith(color: colorScheme.primary),
             ),
             TextFormField(
               autofocus: true,
-              onChanged: (username) => context.read<LoginBloc>().add(LoginUsernameChanged(username)),
+              onChanged: (username) =>
+                  context.read<LoginBloc>().add(LoginUsernameChanged(username)),
               decoration: InputDecoration(
-                hintText: "Your Firstame",
-                hintStyle:
-                    textTheme.headlineLarge!.copyWith(color: colorScheme.tertiary),
+                hintText: "Your Username",
+                hintStyle: textTheme.headlineLarge!
+                    .copyWith(color: colorScheme.tertiary),
                 border: InputBorder.none,
-                errorText: state.username.displayError != null ? 'invalid username' : null,
+                errorText: state.username.displayError != null
+                    ? 'invalid username'
+                    : null,
               ),
               cursorColor: colorScheme.tertiary,
               cursorHeight: textTheme.headlineLarge!.fontSize,
-              style: textTheme.headlineLarge!.copyWith(color: colorScheme.tertiary),
-              
+              style: textTheme.headlineLarge!
+                  .copyWith(color: colorScheme.tertiary),
             )
           ],
         );
@@ -106,50 +91,13 @@ class _Firstname extends StatelessWidget {
   }
 }
 
-class _LastName extends StatelessWidget {
-  const _LastName({
-    String? firstName,
-  }) : _firstName = firstName;
-  final String? _firstName;
+class _Email extends StatelessWidget {
+  const _Email();
+
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Oh hello $_firstName !\nWhat is your last name?',
-          style: textTheme.bodyMedium!.copyWith(color: colorScheme.primary),
-        ),
-        TextFormField(
-          autofocus: true,
-          decoration: InputDecoration(
-            hintText: "Your Lastname",
-            hintStyle:
-                textTheme.headlineLarge!.copyWith(color: colorScheme.tertiary),
-            border: InputBorder.none,
-          ),
-          cursorColor: colorScheme.tertiary,
-          cursorHeight: textTheme.headlineLarge!.fontSize,
-          style: textTheme.headlineLarge!.copyWith(color: colorScheme.tertiary),
-        )
-      ],
-    );
-  }
-}
-
-class _Email extends StatelessWidget {
-  const _Email({
-    required this.textTheme,
-    required this.colorScheme,
-  });
-
-  final TextTheme textTheme;
-  final ColorScheme colorScheme;
-
-  @override
-  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
