@@ -8,3 +8,4 @@ From L3 licence
 - npm install express
 - npm install dotenv
 - npm install jsonwebtoken
+- npm install uuid
