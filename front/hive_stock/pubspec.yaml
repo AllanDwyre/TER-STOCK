@@ -38,12 +38,14 @@ dependencies:
   flutter_bloc: ^8.1.5
   formz: ^0.6.0
   equatable: ^2.0.3
-  http: ^1.2.1
   otp_text_field: ^1.1.3
+
   user_repository:
     path: packages/user_repository
   authentication_repository:
     path: packages/authentication_repository
+  dio: ^5.4.2+1
+  go_router: ^13.2.2
 
 dev_dependencies:
   flutter_test:
