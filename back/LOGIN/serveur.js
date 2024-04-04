@@ -1,5 +1,10 @@
 var express = require('express');
 var sequelize = require('./config/db.js');
+<<<<<<< HEAD
+=======
+const User = require('./model/users')(sequelize, Sequelize);
+
+>>>>>>> 3ac06fe4f35ca40a1cbb9b697efc5e3a99d6ac82
 var app = express();
 
 // Ajout des middlewares

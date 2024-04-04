@@ -9,3 +9,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
 
 // Exporter l'objet Sequelize configuré
 module.exports = sequelize;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3ac06fe4f35ca40a1cbb9b697efc5e3a99d6ac82
