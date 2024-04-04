@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive_stock/_global/constants/constants.dart';
-import 'package:hive_stock/_global/widgets/buttons.dart';
-import 'package:hive_stock/_global/widgets/custom_app_bar.dart';
+import 'package:hive_stock/utils/constants/constants.dart';
+import 'package:hive_stock/utils/widgets/buttons.dart';
+import 'package:hive_stock/utils/widgets/custom_app_bar.dart';
 import 'package:hive_stock/login/views/login_page.dart';
 import 'package:hive_stock/onBording/models/onboarding_data.dart';
 

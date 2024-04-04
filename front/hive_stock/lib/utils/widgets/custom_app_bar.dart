@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hive_stock/_global/constants/constants.dart';
+import 'package:hive_stock/utils/constants/constants.dart';
 
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({super.key, required this.smallOne, this.child});

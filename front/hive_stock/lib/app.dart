@@ -6,7 +6,7 @@ import 'package:hive_stock/splash/views/splash_page.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive_stock/_global/constants/colors.dart';
+import 'package:hive_stock/utils/constants/colors.dart';
 import 'package:hive_stock/authentication/bloc/authentication_bloc.dart';
 
 /// app.dart is split into two parts App and AppView.

@@ -6,7 +6,7 @@ final class LoginState extends Equatable {
     this.username = const Username.pure(),
     this.otp = const Otp.pure(),
     this.step = 0,
-    //todo : Implements others fields
+    //TODO : Implements others fields
     this.isValid = false,
   });
 
@@ -14,7 +14,7 @@ final class LoginState extends Equatable {
   final Username username;
   final Otp otp;
   final int step;
-  //todo : Implements others fields
+  //TODO : Implements others fields
 
   final bool isValid;
 

@@ -48,7 +48,7 @@ class _BirthdayWidget extends StatelessWidget {
         TextFormField(
           keyboardType: TextInputType.datetime,
           autofocus: true,
-          // onChanged: _onBirthdayChange, // todo : create the model for this
+          // onChanged: _onBirthdayChange, // TODO : create the model for this
           decoration: InputDecoration(
             hintText: "DD MM YYYY",
             hintStyle:

@@ -6,15 +6,15 @@ class AuthenticationRepository {
   final _controller = StreamController<AuthenticationStatus>();
 
   Stream<AuthenticationStatus> get status async* {
-    // todo : replace by the act to fecth the actual status : maybe chaching in the app.
+    // TODO : replace by the act to fecth the actual status : maybe chaching in the app.
     await Future<void>.delayed(const Duration(seconds: 1));
     yield AuthenticationStatus.unauthenticated;
     yield* _controller.stream;
   }
 
-  // todo : Implement the register function ?
+  // TODO : Implement the register function ?
 
-  // todo : replace by the act to fecth the status from the backend, maybe otp ?
+  // TODO : replace by the act to fecth the status from the backend, maybe otp ?
   Future<void> logIn({
     required String username,
   }) async {
@@ -24,7 +24,8 @@ class AuthenticationRepository {
     );
   }
 
-  // todo : replace by the act to fecth the status from the backend
+  // TODO : replace by the act to fecth the status from the backend
+  // ?    : Do this function belong here or in the user repository ?
   Future<bool> userExist({
     required String username,
   }) async {

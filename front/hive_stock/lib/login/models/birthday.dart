@@ -1,5 +1,5 @@
 import 'package:formz/formz.dart';
-import 'package:hive_stock/_global/constants/constants.dart';
+import 'package:hive_stock/utils/constants/constants.dart';
 
 enum BirthdayValidationError { empty, invalid }
 

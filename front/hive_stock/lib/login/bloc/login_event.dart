@@ -24,7 +24,7 @@ final class LoginOTPChanged extends LoginEvent {
   @override
   List<Object> get props => [otp];
 }
-// todo : Implements others fields to log in.
+// TODO : Implements others fields to log in.
 
 final class LoginUsernameSubmitted extends LoginEvent {
   const LoginUsernameSubmitted();

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:hive_stock/_global/constants/constants.dart';
-import 'package:hive_stock/_global/widgets/buttons.dart';
-import 'package:hive_stock/_global/widgets/custom_app_bar.dart';
+import 'package:hive_stock/utils/constants/constants.dart';
+import 'package:hive_stock/utils/widgets/buttons.dart';
+import 'package:hive_stock/utils/widgets/custom_app_bar.dart';
 import 'package:hive_stock/login/bloc/login_bloc.dart';
 
 import 'login_widgets.dart';
@@ -72,7 +72,7 @@ class _LoginButton extends StatelessWidget {
     if (!state.isValid) return null;
     debugPrint('Current step : ${state.step}');
     if (state.step == 0) {
-      // todo : instead of login, just fecth if the user exist and add one to the step, and add to the total step the adequate number if we need to register
+      // TODO : instead of login, just fecth if the user exist and add one to the step, and add to the total step the adequate number if we need to register
       return () =>
           context.read<LoginBloc>().add(const LoginUsernameSubmitted());
     } else {

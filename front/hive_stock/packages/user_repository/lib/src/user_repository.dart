@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:user_repository/src/models/models.dart';
 import 'package:uuid/uuid.dart';
 
-// todo : get the user from the backend
+// TODO : get the user from the backend
 class UserRepository {
   User? _user;
 
@@ -12,7 +12,7 @@ class UserRepository {
     return Future.delayed(
       const Duration(milliseconds: 300),
       () => _user =
-          User(const Uuid().v4()), // todo : replace by the user id and details
+          User(const Uuid().v4()), // TODO : replace by the user id and details
     );
   }
 }
