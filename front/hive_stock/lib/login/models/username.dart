@@ -10,9 +10,9 @@ class Username extends FormzInput<String, UsernameValidationError> {
   @override
   UsernameValidationError? validator(String value) {
     if (value.isEmpty) return UsernameValidationError.empty;
-    if (nameValidatorRegExp.hasMatch(value)) {
-      return UsernameValidationError.invalid;
-    }
+    // if (!nameValidatorRegExp.hasMatch(value)) {
+    //   return UsernameValidationError.invalid;
+    // }
     return null;
   }
 }
