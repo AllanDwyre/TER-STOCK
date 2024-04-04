@@ -1,20 +1,20 @@
-// API POUR VERIF NUM TEL
-
-module.exports = {
-    selectLogInName: function (connection, username, callback) {
-        connection.query("SELECT * FROM login.users WHERE user_name = ?", [username], callback);
+module.exports={
+    selectLogInUserID: function(User, USER_ID){
+        return User.findOne({ where: {USER_ID: USER_ID }});
     },
-    selectLogInFirstName: function (connection, user_first_name, callback) {
-        connection.query("SELECT * FROM login.users WHERE user_first_name = ?", [user_first_name], callback);
+    selectLogInFirstName: function(User, USERNAME){
+        return User.findOne({ where: {USERNAME: USERNAME}});
     },
-    selectLogInEmail: function (connection, usermail, callback){
-        connection.query("SELECT * FROM login.users WHERE user_mail = ?", [usermail], callback);
+    selectLogInEmail: function(User, USER_MAIL){
+        return User.findOne({where: {USER_MAIL: USER_MAIL }});
     },
-    selectSignUpTel: function (connection, user_tel, callback) {
-        connection.query("SELECT * FROM users WHERE user_tel = ?", [user_tel], callback);
+    selectSignUpTel: function(User, USER_TEL){
+        return User.findOne({where: {USER_TEL: USER_TEL}});
     },
-    insert: function (connection, username, user_first_name, usermail, user_date, user_tel, callback) {
-        var credentials = [[username, user_first_name, usermail, user_date, user_tel]];
-        connection.query("INSERT INTO login.users (username, password) VALUES ?", [credentials], callback);
+    insert: function(User, userData){
+        return User.create(userData);
     }
 };
+
+// findOne :  rechercher des utilisateurs dans la base de donnÃ©es en fonction de diffÃ©rents critÃ¨res
+// create : insÃ©rer un nouvel utilisateur dans la base de donnÃ©es.
