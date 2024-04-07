@@ -1,42 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:hive_stock/utils/constants/constants.dart';
 import 'package:hive_stock/product/models/product.dart';
+import 'package:hive_stock/utils/constants/padding.dart';
+import 'package:hive_stock/utils/widgets/snackbars.dart';
+import "package:hive_stock/utils/methods/string_extension.dart";
 
+class ProductBody extends StatefulWidget {
 
-class ProductBody extends StatelessWidget {
   final Product product;
 
   const ProductBody(this.product, {super.key});
 
+  @override
+  State<ProductBody> createState() => _ProductBodyState();
+}
+
+class _ProductBodyState extends State<ProductBody> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     // Hauteur et largeur totales
     Size size = MediaQuery.of(context).size;
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorTheme = Theme.of(context).colorScheme;
+
+    TabController _tabController = TabController(length:4, vsync:this);
+
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          Image.asset(product.image),
+          Image.asset(widget.product.image),
           Container(
             width: size.width,
-            color: Colors.white,
+            color: colorTheme.onPrimary,
             child: Padding(
-              padding: const EdgeInsets.all(kDefaultPadding),
+              padding: const EdgeInsets.fromLTRB(kDefaultPadding, kDefaultPadding, kDefaultPadding, kDefaultPadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    product.name,
+                    widget.product.name,
                     style: textTheme.displayMedium
                         ?.copyWith(color: colorTheme.onBackground),
                   ),
                   Text(
-                    "Class ${product.class_ ?? "null"} | Sku : ${product.sku}",
-                    style: Theme.of(context)
-                        .textTheme
+                    "Class ${widget.product.class_ ?? "null"} | Sku : ${widget.product.sku}",
+                    style: textTheme
                         .titleSmall
-                        ?.copyWith(color: Colors.black),
+                        ?.copyWith(color: colorTheme.onBackground),
                   ),
                 ],
               ),
@@ -44,34 +53,135 @@ class ProductBody extends StatelessWidget {
           ),
           Container(
             width: size.width,
-            color: Colors.white,
+            color: colorTheme.onPrimary,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                  kDefaultPadding, 0, kDefaultPadding, kDefaultPadding),
+              padding: const EdgeInsets.fromLTRB(kDefaultPadding, 0, kDefaultPadding, kDefaultPadding / 2),
               child: Text(
                 "Special handling",
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineLarge
-                    ?.copyWith(color: Colors.black),
+                style: textTheme
+                    .headlineMedium
+                    ?.copyWith(color: colorTheme.onBackground),
+              ),
+            ),
+          ),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(kDefaultPadding, 0, kDefaultPadding, 0),
+              child: (widget.product.specialHandling == null)
+                  ? Text("No special handling", style: textTheme
+                    .titleSmall
+                    ?.copyWith(color: colorTheme.outlineVariant),)
+                  : CustomSnackbar(
+                      type: SnackbarType.warning,
+                      description: "Please ensure special handling for this package, as it requires temperature maintenant below 5°C throughout transit and storage",
+                      title: (widget.product.specialHandling ?? "Non renseigné").capitalize(),
+                    ),
+          ),
+          Container(
+            color: colorTheme.onPrimary,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: TabBar(
+                controller: _tabController,
+                isScrollable: true,
+                //labelPadding: const EdgeInsets.only(left: 0, right: 0),
+                labelColor: colorTheme.primary,
+                unselectedLabelColor: colorTheme.secondary,
+                indicator: UnderlineTabIndicator(borderSide: BorderSide(color:colorTheme.primary, width: 1)),
+                tabs: [
+                  Tab(text:"Overview"),
+                  Tab(text:"Purchases"),
+                  Tab(text:"Adjustement"),
+                  Tab(text:"History"),
+                ],
               ),
             ),
           ),
           Container(
-            // CONTAINER "TO FILL"
-            height: 100,
-            width: size.width * 0.9,
-            decoration: BoxDecoration(
-              color: Colors.orangeAccent,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Center(
-              child: Text("to fill"),
+            width: double.maxFinite,
+            height: 300,
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(kDefaultPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Primary Details",
+                        style: textTheme.titleLarge
+                            ?.copyWith(color: colorTheme.onBackground),
+                      ),
+                      Text(
+                        "Text",
+                        style: textTheme
+                            .titleSmall
+                            ?.copyWith(color: colorTheme.onBackground),
+                      ),
+                    ],
+                  ),
+                ),
+                // TODO : factoriser ça ->
+                Padding(
+                  padding: const EdgeInsets.all(kDefaultPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Primary Details",
+                        style: textTheme.titleLarge
+                            ?.copyWith(color: colorTheme.onBackground),
+                      ),
+                      Text(
+                        "Text",
+                        style: textTheme
+                            .titleSmall
+                            ?.copyWith(color: colorTheme.onBackground),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(kDefaultPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Primary Details",
+                        style: textTheme.titleLarge
+                            ?.copyWith(color: colorTheme.onBackground),
+                      ),
+                      Text(
+                        "Text",
+                        style: textTheme
+                            .titleSmall
+                            ?.copyWith(color: colorTheme.onBackground),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(kDefaultPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Primary Details",
+                        style: textTheme.titleLarge
+                            ?.copyWith(color: colorTheme.onBackground),
+                      ),
+                      Text(
+                        "Text",
+                        style: textTheme
+                            .titleSmall
+                            ?.copyWith(color: colorTheme.onBackground),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-          Container(
-              // TABS A IMPLEMENTER ICI
-              ),
         ],
       ),
     );
