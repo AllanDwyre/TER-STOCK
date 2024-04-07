@@ -1,7 +1,10 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_stock/home/views/home_page.dart';
+import 'package:hive_stock/login/bloc/login_bloc.dart';
 import 'package:hive_stock/onBording/views/onbording_page.dart';
+import 'package:hive_stock/product/models/product.dart';
+import 'package:hive_stock/product/views/product_page.dart';
 import 'package:hive_stock/splash/views/splash_page.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,11 +44,19 @@ class _AppState extends State<App> {
     //RepositoryProvider is used to provide the single instance of AuthenticationRepository to the entire application which will come in handy later on.
     return RepositoryProvider.value(
       value: _authenticationRepository,
-      child: BlocProvider(
-        create: (_) => AuthenticationBloc(
-          authenticationRepository: _authenticationRepository,
-          userRepository: _userRepository,
-        ),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => AuthenticationBloc(
+              authenticationRepository: _authenticationRepository,
+              userRepository: _userRepository,
+            ),
+          ),
+          BlocProvider(
+            create: (context) =>
+                LoginBloc(authenticationRepository: _authenticationRepository),
+          ),
+        ],
         child: const AppView(),
       ),
     );
@@ -81,6 +92,21 @@ class _AppViewState extends State<AppView> {
                   GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme))
           .copyWith(extensions: [darkCustomColors]),
       themeMode: ThemeMode.system,
+      home: ProductScreen(products.first),
+    );
+    /* MaterialApp(
+      title: 'HiveStock',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: lightColorScheme,
+        textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme),
+      ).copyWith(extensions: [lightCustomColors]),
+      darkTheme: ThemeData(
+              colorScheme: darkColorScheme,
+              textTheme:
+                  GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme))
+          .copyWith(extensions: [darkCustomColors]),
+      themeMode: ThemeMode.system,
       navigatorKey: _navigatorKey,
       onGenerateRoute: (_) => SplashPage.route(),
       builder: (context, child) {
@@ -104,6 +130,6 @@ class _AppViewState extends State<AppView> {
           child: child,
         );
       },
-    );
+    ); */
   }
 }

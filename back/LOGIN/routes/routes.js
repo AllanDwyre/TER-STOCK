@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controller/authController.js");
+const controllerTest = require("../controller/controllerTest.js");
+
+router.post('/login/Name', authController.loginUserName);
+//pour le test 
+router.post('/login',controllerTest.loginName);
 
 router.post('/login/Name', authController.loginName);
 router.post('/login/FirstName',authController.loginFirstName);

@@ -1,7 +1,5 @@
 var express = require('express');
 var sequelize = require('./config/db.js');
-const User = require('./model/users')(sequelize, Sequelize);
-
 var app = express();
 
 // Ajout des middlewares
@@ -25,7 +23,7 @@ app.get('/', function(req, res) {
 });
 
 // Définition du port d'écoute
-let port = process.env.PORT || 3000;
+let port = process.env.PORT || 8000;
 app.listen(port, function () {
   return console.log("Serveur Login utilisateur en écoute sur le port " + port);
 });

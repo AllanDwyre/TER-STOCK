@@ -7,50 +7,47 @@ const { v4: uuidv4 } = require('uuid');
 const otpGenerator = require('otp-generator');
 
 module.exports = {
-    loginUserName: function (User, USER_ID) {
+    loginUserName: function (req, res) {
         console.log("page login");
     
         // Créer une promesse pour attendre la saisie de l'utilisateur
-        const waitForUserId = new Promise((resolve, reject) => {
-            const { userId } = req.body; // Changer la variable firstname en userId
-            if (userId) {
-                // Si un USER_ID est fourni, résoudre la promesse avec le USER_ID
-                resolve(userId);
+        const waitForUserName = new Promise((resolve, reject) => {
+            const { userName } = req.body; // Utiliser le nom d'utilisateur à la place de userId
+            if (userName) {
+                // Si un nom d'utilisateur est fourni, résoudre la promesse avec le nom d'utilisateur
+                resolve(userName);
             } else {
-                // Si aucun USER_ID n'est fourni, rejeter la promesse avec une erreur
-                reject(new Error("Aucun USER_ID fourni"));
+                // Si aucun nom d'utilisateur n'est fourni, rejeter la promesse avec une erreur
+                reject(new Error("Aucun nom d'utilisateur fourni"));
             }
         });
     
         // Attendre que la promesse soit résolue ou rejetée
-        waitForUserId.then((userId) => {
-            // Utiliser la fonction selectLogInUserID du fichier auth.js pour trouver l'utilisateur par USER_ID
-            Auth.selectLogInUserID(User, userId)
+        waitForUserName.then((userName) => {
+            Auth.selectLogInUserName(User, userName) // Utiliser selectLogInUserName à la place de selectLogInUserID
                 .then((user) => {
                     if (user) {
-                        // Stocker le USER_ID dans la session
+                        // Si l'utilisateur est trouvé, stocker son USER_ID dans la session
                         req.session.USER_ID = user.USER_ID; // Assurez-vous que le nom de la session correspond à votre modèle de données
-                        // Rediriger vers '/loginFirstName'
-                        res.redirect('/loginFirstName');
+                        // Rediriger vers '/verifOTP'
+                        res.redirect('/verifOTP');
                     } else {
-                        // Si aucun utilisateur correspondant n'est trouvé, renvoyer une erreur
-                        throw new Error("Utilisateur non trouvé pour USER_ID : " + userId);
+                        // Si l'utilisateur n'est pas trouvé, afficher un message et rediriger vers '/signUpEmail'
+                        res.status(404).send("Nom d'utilisateur inconnu, veuillez vous inscrire");
+                        res.redirect('/signUpEmail');
                     }
                 })
                 .catch((error) => {
                     // Gérer les erreurs, par exemple en renvoyant une réponse d'erreur
-                    res.status(400).send("Erreur : " + error.message);
+                    res.status(400).send("Erreur lors de la recherche de l'utilisateur : " + error.message);
                 });
         }).catch((error) => {
             // Gérer les erreurs, par exemple en renvoyant une réponse d'erreur
-            res.status(400).send("Erreur : " + error.message);
+            res.status(400).send("Erreur lors de la validation du nom d'utilisateur : " + error.message);
         });
     },
 
-
-
-
-    signupEmail: function (req,res){
+    signUpEmail: function (req,res){
         Auth.selectLogInEmail(req.connection, req.body.usermail, function(err,row){
             if (row != undefined && row.length){
                 Auth.selectLogInName(req.connection, req.session.username, function(err,row){
@@ -117,27 +114,64 @@ module.exports = {
         }
     },
 
-    signupDate: function(req,res){
-        const {date} = req.body;
-        req.session.date = date;
-        res.status(202);
-        res.send("Success");
-        res.redirect('/signupTel');
-    },
-
-
-    signupTel: function(req,res){
-        Auth.selectSignUpTel(req.connection, req.body.user_tel, function (err, row) {
-            if(row != undefined && row.length){
-                res.status(402);
-                res.send("Téléphone déjà utilisé");
-            }else{
-                req.session.user_tel = req.body.user_tel;
-                res.status(201);
-                res.send("Success");
-                res.redirect('/verifTel');
+    signupDate: function(req, res) {
+        const { date } = req.body;
     
+        // Créer une promesse pour stocker la date dans la session
+        const storeDateInSession = new Promise((resolve, reject) => {
+            if (date) {
+                // Si une date est fournie, stocker la date dans la session
+                req.session.date = date;
+                resolve();
+            } else {
+                // Si aucune date n'est fournie, rejeter la promesse avec une erreur
+                reject(new Error("Aucune date fournie"));
             }
+        });
+    
+        // Attendre que la promesse soit résolue ou rejetée
+        storeDateInSession.then(() => {
+            // Rediriger vers '/signupTel' après avoir envoyé une réponse réussie
+            res.status(202).send("Success");
+            res.redirect('/signupTel');
+        }).catch((error) => {
+            // Gérer les erreurs, par exemple en renvoyant une réponse d'erreur
+            res.status(400).send("Erreur : " + error.message);
+        });
+    },
+    
+    
+
+    signupTel: function(req, res) {
+        const { user_tel } = req.body;
+    
+        // Créer une promesse pour vérifier si le numéro de téléphone est déjà utilisé
+        const checkTelAvailability = new Promise((resolve, reject) => {
+            Auth.selectSignUpTel(req.connection, user_tel, function(err, row) {
+                if (err) {
+                    reject(err);
+                } else {
+                    if (row != undefined && row.length) {
+                        // Si le numéro de téléphone est déjà utilisé, rejeter la promesse
+                        reject("Téléphone déjà utilisé");
+                    } else {
+                        // Si le numéro de téléphone est disponible, résoudre la promesse
+                        resolve();
+                    }
+                }
+            });
+        });
+    
+        // Attendre que la promesse soit résolue ou rejetée
+        checkTelAvailability.then(() => {
+            // Stocker le numéro de téléphone dans la session
+            req.session.user_tel = user_tel;
+            // Envoyer une réponse réussie et rediriger vers '/verifTel'
+            res.status(201).send("Success");
+            res.redirect('/verifTel');
+        }).catch((error) => {
+            // Gérer les erreurs, par exemple en renvoyant une réponse d'erreur
+            res.status(402).send("Erreur : " + error);
         });
     },
 
