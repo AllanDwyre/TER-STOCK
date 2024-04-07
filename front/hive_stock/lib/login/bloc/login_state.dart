@@ -8,23 +8,24 @@ final class LoginState extends Equatable {
     this.birthday = const Birthday.pure(),
     this.phone = const Phone.pure(),
     this.otp = const Otp.pure(),
-    this.step = 0,
-    this.totalStep = 2,
     this.isValid = false,
     this.isAttemptingLogin = true,
   });
 
-  final FormzSubmissionStatus status;
   final Username username;
-  final Email? email;
-  final Birthday? birthday;
-  final Phone? phone;
+  final Email email;
+  final Birthday birthday;
+  final Phone phone;
   final Otp otp;
-  final int step;
-  final int totalStep;
-  final bool
-      isAttemptingLogin; // Indicates whether the user is in the process of logging in, not registering
+
+  /// Indicates whether the form is correctly fill or not
   final bool isValid;
+
+  /// Indicates the result of the submission
+  final FormzSubmissionStatus status;
+
+  /// Indicates whether the user is in the process of logging in, not registering
+  final bool isAttemptingLogin;
 
   LoginState copyWith({
     FormzSubmissionStatus? status,
@@ -34,21 +35,20 @@ final class LoginState extends Equatable {
     Phone? phone,
     Otp? otp,
     bool? isValid,
-    int? step,
-    int? totalStep,
     bool? isAttemptingLogin,
   }) =>
       LoginState(
         status: status ?? this.status,
-        step: step ?? this.step,
         username: username ?? this.username,
+        email: email ?? this.email,
+        birthday: birthday ?? this.birthday,
+        phone: phone ?? this.phone,
         otp: otp ?? this.otp,
         isValid: isValid ?? this.isValid,
-        totalStep: totalStep ?? this.totalStep,
         isAttemptingLogin: isAttemptingLogin ?? this.isAttemptingLogin,
       );
 
   @override
   List<Object> get props =>
-      [status, isAttemptingLogin, username, otp, step, totalStep];
+      [status, isAttemptingLogin, username, email, birthday, phone, otp];
 }
