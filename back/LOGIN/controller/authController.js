@@ -28,15 +28,14 @@ module.exports = {
                 .then((user) => {
                     if (user) {
                         // Si l'utilisateur est trouvé, stocker son USER_ID dans la session
-                        req.session.USER_ID = user.USER_ID; // Assurez-vous que le nom de la session correspond à votre modèle de données
+                        req.session.username = userName; // Assurez-vous que le nom de la session correspond à votre modèle de données
                         // Rediriger vers '/verifOTP'
                         //res.redirect('/verifOTP');
 
                         res.status(200).send("Success");
                     } else {
                         // Si l'utilisateur n'est pas trouvé, afficher un message et rediriger vers '/signUpEmail'
-                        res.status(404).send("Nom d'utilisateur inconnu, veuillez vous inscrire");
-                        res.redirect('/signUpEmail');
+                        res.status(201).send("Nom d'utilisateur inconnu, veuillez vous inscrire");
                     }
                 })
                 .catch((error) => {
