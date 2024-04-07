@@ -1,10 +1,11 @@
-// Dans votre fichier app.js ou index.js
-
 const express = require('express');
 const router = express.Router();
-const productController = require('./controllers/productController');
+const userController = require('../controllers/userController');
 
-// Route pour récupérer les produits
-router.get('/products', productController.getProducts);
+// CRUD utilisateur:
+router.post('/create', userController.create);
+router.get('/:id', userController.getById);
+router.put('/:id', userController.updateById);
+router.delete('/:id', userController.deleteById);
 
 module.exports = router;
