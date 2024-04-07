@@ -1,4 +1,4 @@
-const Auth = require("../model/auth");
+const Auth = require("../model/authModel");
 const { User } = require('../model/users');
 require("dotenv").config();
 const KEY = process.env.DEV_KEY;
@@ -45,10 +45,10 @@ module.exports = {
     
         // Créer une promesse pour attendre la saisie de l'utilisateur
         const waitForUserName = new Promise((resolve, reject) => {
-            const { userName } = req.body; 
-            if (userName) {
+            const { username } = req.body; 
+            if (username) {
                 // Si un nom d'utilisateur est fourni, résoudre la promesse avec le nom d'utilisateur
-                resolve(userName);
+                resolve(username);
             } else {
                 // Si aucun nom d'utilisateur n'est fourni, rejeter la promesse avec une erreur
                 reject(new Error("Aucun nom d'utilisateur fourni"));
@@ -56,12 +56,12 @@ module.exports = {
         });
     
         // Attendre que la promesse soit résolue ou rejetée
-        waitForUserName.then((userName) => {
-            Auth.selectLogInUserName(User, userName) // Utiliser selectLogInUserName à la place de selectLogInUserID
+        waitForUserName.then((username) => {
+            Auth.selectLogInUserName(User, username) // Utiliser selectLogInUserName à la place de selectLogInUserID
                 .then((user) => {
                     if (user) {
                         // Si l'utilisateur est trouvé, stocker son USER_ID dans la session
-                        req.session.username = userName; // Assurez-vous que le nom de la session correspond à votre modèle de données
+                        req.session.username = username; // Assurez-vous que le nom de la session correspond à votre modèle de données
                         // Rediriger vers '/verifOTP'
                         //res.redirect('/verifOTP');
 
@@ -81,46 +81,20 @@ module.exports = {
         });
     },
 
-    signUpEmail: function (req,res){
-        Auth.selectLogInEmail(req.connection, req.body.usermail, function(err,row){
-            if (row != undefined && row.length){
-                Auth.selectLogInName(req.connection, req.session.username, function(err,row){
-                    if(row != undefined && row.length){
-                        // Le nom d'utilisateur existe déjà, générer une nouvelle concaténation avec un compteur
-                        let counter = 2;
-                        let newUsername = req.session.username + counter;
+    signUpFirstName: function (req, res){
+        console.log("Page First Name");
 
-                        // Vérifier si la nouvelle concaténation existe
-                        while (row != undefined && row.length) {
-                            newUsername = req.session.username + counter;
-                            counter++;
-                        }
+        const { name } = req.body.name;
+        const { firstname } = req.body.firstname;
 
-                        // Enregistrer le nouveau nom d'utilisateur dans une variable pour l'utiliser plus tard
-                        req.session.newUsername = newUsername;
-                    }else{
-                        // Le nom d'utilisateur n'existe pas encore, utiliser la concaténation actuelle
-                        req.session.newUsername = req.session.username;
-                    }
-                });
+        if(!name || !firstname){
+            return res.status(400).send("Vous devez fourni un nom et un prénom.");
+        }
 
-                var payload = {
-                    usermail: req.body.usermail,
-                    //usermail : reqbody.usermail,
-                };
-                var token = jwt.sign(payload, KEY, { algorithm: 'HS256', expiresIn: "15d" });
-                res.send(token);
-                res.redirect('/verifTel');
-            }else {
-                req.session.usermail = req.body.usermail;
-                //res.send("Aucun email existant, veuillez créer votre compte");
-                res.status(202).send("Aucun email existant, veuillez créer votre compte");
-                //res.redirect('/signupDate');
-            }
-        });
+        req.session.name = name;
+        req.session.firstname = firstname;
+        res.status(202).send("Success");
     },
-
-
 
     signUpEmail: function (req, res) {
 
@@ -222,7 +196,9 @@ module.exports = {
                         userId = uuidv4().replace(/[^0-9]/g, '');
                     }
 
-                    const username = req.session.userName;
+                    const username = req.session.username;
+                    const name = req.session.name;
+                    const firstname = req.session.firstname;
                     const usermail = req.session.usermail;
                     const userdate = req.session.date;
                     const usertel = req.session.user_tel;
@@ -233,19 +209,22 @@ module.exports = {
                     Auth.insert(User, {
                         USER_ID: userId,
                         USERNAME: username,
+                        NAME_USER: name,
+                        FIRST_NAME: firstname,
                         USER_MAIL: usermail,
                         USER_TEL: usertel,
                         USER_DATE_NAISS : userdate
                     })
                     .then(() =>{
                         // Supprimer les variables de session une fois que les données sont insérées avec succès
-                        delete req.session.username;
+                        delete req.session.name;
+                        delete req.session.firstname;
                         delete req.session.usermail;
                         delete req.session.usertel;
                         delete req.session.userdate;
             
                         var payload = {
-                            username: req.session.userName,
+                            username: req.session.username,
                         };
                         var token = jwt.sign(payload, KEY, { algorithm: 'HS256', expiresIn: "15d" });
                         res.send(token);
