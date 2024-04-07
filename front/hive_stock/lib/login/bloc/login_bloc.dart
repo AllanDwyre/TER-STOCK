@@ -1,7 +1,6 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 import 'package:hive_stock/login/models/birthday.dart';
 import 'package:hive_stock/login/models/models.dart';
@@ -91,10 +90,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         emit(
           state.copyWith(
+            // TODO : manage if the username is already taken, how to separate a person who log in, or someone who is trying to find a name
             status: isUserExit
                 ? FormzSubmissionStatus.success
                 : FormzSubmissionStatus.failure,
             step: state.step + 1,
+            isAttemptingLogin: isUserExit,
           ),
         );
       } catch (_) {
@@ -107,8 +108,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     LoginSubmitted event,
     Emitter<LoginState> emit,
   ) async {
-    debugPrint(
-        "yoooyoooyoooyoooyoooyoooyoooyoooyoooyoooyoooyoooyoooyoooyoooyoooyooo");
     if (state.isValid) {
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
       try {
@@ -123,7 +122,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           // await _authenticationRepository.register(
           //   username: state.username.value,
           // );
-          // TODO : register
+          // TODO : register with all the data
         }
         emit(state.copyWith(status: FormzSubmissionStatus.success));
       } catch (_) {

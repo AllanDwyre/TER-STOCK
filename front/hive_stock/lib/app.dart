@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hive_stock/home/views/home_page.dart';
 import 'package:hive_stock/login/bloc/login_bloc.dart';
 import 'package:hive_stock/onBording/views/onbording_page.dart';
+import 'package:hive_stock/product/models/product.dart';
+import 'package:hive_stock/product/views/product_page.dart';
 import 'package:hive_stock/splash/views/splash_page.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -90,6 +92,21 @@ class _AppViewState extends State<AppView> {
                   GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme))
           .copyWith(extensions: [darkCustomColors]),
       themeMode: ThemeMode.system,
+      home: ProductScreen(products.first),
+    );
+    /* MaterialApp(
+      title: 'HiveStock',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: lightColorScheme,
+        textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme),
+      ).copyWith(extensions: [lightCustomColors]),
+      darkTheme: ThemeData(
+              colorScheme: darkColorScheme,
+              textTheme:
+                  GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme))
+          .copyWith(extensions: [darkCustomColors]),
+      themeMode: ThemeMode.system,
       navigatorKey: _navigatorKey,
       onGenerateRoute: (_) => SplashPage.route(),
       builder: (context, child) {
@@ -113,6 +130,6 @@ class _AppViewState extends State<AppView> {
           child: child,
         );
       },
-    );
+    ); */
   }
 }

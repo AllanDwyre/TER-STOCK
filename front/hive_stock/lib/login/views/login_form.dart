@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:formz/formz.dart';
 import 'package:hive_stock/utils/constants/constants.dart';
 import 'package:hive_stock/utils/widgets/custom_app_bar.dart';
 import 'package:hive_stock/login/bloc/login_bloc.dart';
