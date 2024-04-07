@@ -7,12 +7,8 @@
     "mysql2": "^3.9.3",
     "path": "^0.12.7",
     "sequelize": "^6.37.2",
-<<<<<<< HEAD
     "sequelize-auto": "^0.8.8",
     "sequelize-cli": "^6.6.2",
     "uuid": "^9.0.1"
-=======
-    "sequelize-auto": "^0.8.8"
->>>>>>> 3ac06fe4f35ca40a1cbb9b697efc5e3a99d6ac82
   }
 }
