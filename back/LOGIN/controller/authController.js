@@ -1,32 +1,56 @@
 const Auth = require("../model/auth");
+const { User } = require('../model/users');
 require("dotenv").config();
 const KEY = process.env.DEV_KEY;
 var jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
+const otpGenerator = require('otp-generator');
 
 module.exports = {
-    loginName: function (req, res) {
-        const { firstname } = req.body;
-        // Stocker le prénom dans la session
-        req.session.firstname = firstname;
-        res.redirect('/loginFirstName');
-        
+    loginUserName: function (User, USER_ID) {
+        console.log("page login");
+    
+        // Créer une promesse pour attendre la saisie de l'utilisateur
+        const waitForUserId = new Promise((resolve, reject) => {
+            const { userId } = req.body; // Changer la variable firstname en userId
+            if (userId) {
+                // Si un USER_ID est fourni, résoudre la promesse avec le USER_ID
+                resolve(userId);
+            } else {
+                // Si aucun USER_ID n'est fourni, rejeter la promesse avec une erreur
+                reject(new Error("Aucun USER_ID fourni"));
+            }
+        });
+    
+        // Attendre que la promesse soit résolue ou rejetée
+        waitForUserId.then((userId) => {
+            // Utiliser la fonction selectLogInUserID du fichier auth.js pour trouver l'utilisateur par USER_ID
+            Auth.selectLogInUserID(User, userId)
+                .then((user) => {
+                    if (user) {
+                        // Stocker le USER_ID dans la session
+                        req.session.USER_ID = user.USER_ID; // Assurez-vous que le nom de la session correspond à votre modèle de données
+                        // Rediriger vers '/loginFirstName'
+                        res.redirect('/loginFirstName');
+                    } else {
+                        // Si aucun utilisateur correspondant n'est trouvé, renvoyer une erreur
+                        throw new Error("Utilisateur non trouvé pour USER_ID : " + userId);
+                    }
+                })
+                .catch((error) => {
+                    // Gérer les erreurs, par exemple en renvoyant une réponse d'erreur
+                    res.status(400).send("Erreur : " + error.message);
+                });
+        }).catch((error) => {
+            // Gérer les erreurs, par exemple en renvoyant une réponse d'erreur
+            res.status(400).send("Erreur : " + error.message);
+        });
     },
 
-    loginFirstName: function (req, res) {
-        const { name } = req.body;
-        const firstname = req.session.firstname; // Récupérer le prénom depuis la session
-
-        // Concaténer le prénom et le nom de famille pour former le nom complet
-        req.session.username = firstname + name;
-
-        // Rediriger vers la page de saisie de l'email
-        res.redirect('/loginEmail');
-
-    },
 
 
-    loginEmail: function (req,res){
+
+    signupEmail: function (req,res){
         Auth.selectLogInEmail(req.connection, req.body.usermail, function(err,row){
             if (row != undefined && row.length){
                 Auth.selectLogInName(req.connection, req.session.username, function(err,row){
@@ -64,6 +88,24 @@ module.exports = {
         });
     },
 
+    signupEmail: function (req, res) {
+        Auth.selectLogInEmail(User, req.body.usermail)
+            .then(user => {
+                if (user) {
+                    
+                } else {
+                    // Le courriel n'existe pas encore
+                    // Votre code pour gérer cela
+                }
+            })
+            .catch(err => {
+                // Gérer les erreurs
+                console.error(err);
+                res.status(500).send("Une erreur s'est produite.");
+            });
+    },
+    
+
     home: function (req, res) {
         var str = req.get('Authorization');
         try {
@@ -99,7 +141,7 @@ module.exports = {
         });
     },
 
-    verifTel: function(req,res){
+    verifOTP: function(req,res){
         //API Verif tel par code SMS
         //if(/*API*/){
             const userId = uuidv4().replace(/[^0-9]/g, '');
