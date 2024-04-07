@@ -6,40 +6,38 @@ var jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
-const otp = otpGenerator.generate(6, { upperCase: false, specialChars: false, alphabets: false });
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 3000,
-    secure: false, // Use `true` for port 465, `false` for all other ports
+    port: 465,
+    secure: true, // Use `true` for port 465, `false` for all other ports
     auth: {
       user: "hivestock92@gmail.com",
       pass: "isclwxtwlglfyspq",
     },
-  });
+});
 
-  transporter.verify().then(() => {
-    console.log("Pret pour envoyer un email");
-  });
+transporter.verify().then(() => {
+console.log("Pret pour envoyer un email");
+});
 
-  function envoyerEmail(otp) {
-    const mailOptions = {
-      from: '"HiveStock" <hivestock92@gmail.com>',
-      to: 'salhinina2002@gmail.com',
-      subject: 'Hive stock - Code OTP',
-      text: `Votre OTP est : ${otp}.\n
-      Saissez ce code pour vérifier votre compte`
-    };
-  
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error('Erreur lors de l\'envoi de l\'e-mail:', error);
-      } else {
-        console.log('E-mail envoyé:', info.response);
-      }
-    });
-  }
+function envoyerEmail(otp) {
+const mailOptions = {
+    from: '"HiveStock" <hivestock92@gmail.com>',
+    to: 'salhinina2002@gmail.com',
+    subject: 'Hive stock - Code OTP',
+    text: `Votre OTP est : ${otp}.\n
+    Saissez ce code pour vérifier votre compte`
+};
 
+transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+    console.error('Erreur lors de l\'envoi de l\'e-mail:', error);
+    } else {
+    console.log('E-mail envoyé:', info.response);
+    }
+});
+}
 
 module.exports = {
     loginUserName: function (req, res) {
@@ -155,66 +153,30 @@ module.exports = {
             res.status(400).send("Erreur lors de validation : " + error.message);
         })
     },
-    
-
-    home: function (req, res) {
-        var str = req.get('Authorization');
-        try {
-            jwt.verify(str, KEY, { algorithm: 'HS256' });
-            res.send("Welcome");
-        } catch {
-            res.status(401);
-            res.send("Bad Token");
-        }
-    },
 
     signupDate: function(req, res) {
+
         const { date } = req.body;
-    
-        // Créer une promesse pour stocker la date dans la session
         const storeDateInSession = new Promise((resolve, reject) => {
             if (date) {
-                // Si une date est fournie, stocker la date dans la session
                 resolve(date);
             } else {
-                // Si aucune date n'est fournie, rejeter la promesse avec une erreur
                 reject(new Error("Aucune date fournie"));
             }
         });
     
-        // Attendre que la promesse soit résolue ou rejetée
         storeDateInSession.then(() => {
-            // Rediriger vers '/signupTel' après avoir envoyé une réponse réussie
             req.session.date = date;
             res.status(202).send("Success");
         }).catch((error) => {
-            // Gérer les erreurs, par exemple en renvoyant une réponse d'erreur
             res.status(400).send("Erreur : " + error.message);
         });
     },
     
     
-
     signupTel: function(req, res) {
+
         const { user_tel } = req.body;
-    
-        /* Créer une promesse pour vérifier si le numéro de téléphone est déjà utilisé
-        const checkTelAvailability = new Promise((resolve, reject) => {
-            Auth.selectSignUpTel(req.connection, user_tel, function(err, row) {
-                if (err) {
-                    reject(err);
-                } else {
-                    if (row != undefined && row.length) {
-                        // Si le numéro de téléphone est déjà utilisé, rejeter la promesse
-                        reject("Téléphone déjà utilisé");
-                    } else {
-                        // Si le numéro de téléphone est disponible, résoudre la promesse
-                        resolve();
-                    }
-                }
-            });
-        });
-        */
        if(!user_tel){
         return res.status(400).send("Aucun numéro de téléphone fourni");
        }
@@ -222,40 +184,92 @@ module.exports = {
        Auth.selectSignUpTel(User, user_tel)
             .then(user => {
                 if (user) {
-                    // Si le numéro de téléphone existe déjà
                     res.status(409).json({ success: false, message: "Le numéro de téléphone existe déjà. Veuillez saisir un autre numéro." });
                 } else {
-                    // Si le numéro de téléphone n'existe pas, le sauvegarder dans la session
                     req.session.user_tel = user_tel;
                     res.status(200).json({ success: true, message: "Numéro de téléphone disponible." });
                 }
             })
             .catch(err => {
-                // Gérer les erreurs
                 console.error(err);
                 res.status(500).json({ success: false, message: "Une erreur s'est produite lors de la vérification du numéro de téléphone." });
             });
     },
 
     verifOTP: function(req,res){
-        //API Verif tel par code SMS
-        //if(/*API*/){
-            const userId = uuidv4().replace(/[^0-9]/g, '');
-            const username = req.session.newUsername;
-            const usermail = req.session.usermail;
-            const userdate = req.session.date;
-            const usertel = req.session.user_tel;
+        
+        const otp = otpGenerator.generate(6, { upperCase: false, specialChars: false, alphabets: false });
+        envoyerEmail(otp);
+        const otp_user = req.body;
 
-            Auth.insert(req.connection, userId, username, usermail, userdate, usertel, function (err, result){
-                    if(err) throw(err);
-            });
-            res.status(201);
-            res.send("Votre compte a été créé avec succès !");
-            res.redirect('/home');
-        /*}else{
-            res.status(403);
-            res.send("Code mauvais")  
-        }*/
+        Auth.selectLogInUserName(User, req.session.userName)
+            .then(userExistant => {
+                if(userExistant){
+                    if (otp !== otp_user) {
+                        res.status(400).json({ success: false, message: "Le code OTP est incorrect." });
+                    }else {
+                        var payload = {
+                            username: req.session.userName,
+                        };
+                        var token = jwt.sign(payload, KEY, { algorithm: 'HS256', expiresIn: "15d" });
+                        res.send(token);
+                        res.status(202).json({success : true, message : "Le code OTP est bon."});
+                    }
+
+                }else{
+                    const userId = uuidv4().replace(/[^0-9]/g, '')
+                    while(Auth.selectLogInUserID(User, User.USER_ID) == userId){
+                        userId = uuidv4().replace(/[^0-9]/g, '');
+                    }
+
+                    const username = req.session.userName;
+                    const usermail = req.session.usermail;
+                    const userdate = req.session.date;
+                    const usertel = req.session.user_tel;
+                    if (otp !== otp_user) {
+                        return res.status(400).json({ success: false, message: "Le code OTP est incorrect." });
+                    }
+
+                    Auth.insert(User, {
+                        USER_ID: userId,
+                        USERNAME: username,
+                        USER_MAIL: usermail,
+                        USER_TEL: usertel,
+                        USER_DATE_NAISS : userdate
+                    })
+                    .then(() =>{
+                        // Supprimer les variables de session une fois que les données sont insérées avec succès
+                        delete req.session.username;
+                        delete req.session.usermail;
+                        delete req.session.usertel;
+                        delete req.session.userdate;
+            
+                        var payload = {
+                            username: req.session.userName,
+                        };
+                        var token = jwt.sign(payload, KEY, { algorithm: 'HS256', expiresIn: "15d" });
+                        res.send(token);
+                        res.status(201).json({success : true, message : "Le code OTP est bon."});
+                        console.log("Les données ont été insérées avec succès dans la base de données.");
+                        res.send("Votre compte a été créé avec succès !");
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        res.status(500).json({ success: false, message: "Une erreur s'est produite lors de l'insertion des données dans la base de données." });
+                    });
+                }
+            })
+    },
+
+    home: function (req, res) {
+        var str = req.get('Authorization');
+        try {
+            jwt.verify(str, KEY, { algorithm: 'HS256' });
+            res.send("Bienvenu !");
+        } catch {
+            res.status(401);
+            res.send("Bad Token");
         }
+    }
 
 };

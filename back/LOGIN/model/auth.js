@@ -15,6 +15,3 @@ module.exports={
         return User.create(userData);
     }
 };
-
-// findOne :  rechercher des utilisateurs dans la base de donnÃ©es en fonction de diffÃ©rents critÃ¨res
-// create : insÃ©rer un nouvel utilisateur dans la base de donnÃ©es.

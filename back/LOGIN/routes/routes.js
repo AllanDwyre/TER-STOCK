@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controller/authController.js");
-const controllerTest = require("../controller/controllerTest.js");
+//const controllerTest = require("../controller/controllerTest.js");
 
 router.post('/login/Name', authController.loginUserName);
 router.post('/login/Email',authController.signUpEmail);
