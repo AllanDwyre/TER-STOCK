@@ -1,15 +1,15 @@
 module.exports={
-    selectLogInUserID: function(User, USER_ID){
-        return User.findOne({ where: {USER_ID: USER_ID }});
+    selectLogInUserID: function(User, user_id){
+        return User.findOne({ where: {USER_ID: user_id }});
     },
-    selectLogInFirstName: function(User, USERNAME){
-        return User.findOne({ where: {USERNAME: USERNAME}});
+    selectLogInUserName: function(User, username){
+        return User.findOne({ where: {USERNAME: username}});
     },
-    selectLogInEmail: function(User, USER_MAIL){
-        return User.findOne({where: {USER_MAIL: USER_MAIL }});
+    selectLogInEmail: function(User, user_mail){
+        return User.findOne({where: {USER_MAIL: user_mail }});
     },
-    selectSignUpTel: function(User, USER_TEL){
-        return User.findOne({where: {USER_TEL: USER_TEL}});
+    selectSignUpTel: function(User, user_tel){
+        return User.findOne({where: {USER_TEL: user_tel}});
     },
     insert: function(User, userData){
         return User.create(userData);
