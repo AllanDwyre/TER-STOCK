@@ -5,6 +5,41 @@ const KEY = process.env.DEV_KEY;
 var jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const otpGenerator = require('otp-generator');
+const nodemailer = require('nodemailer');
+const otp = otpGenerator.generate(6, { upperCase: false, specialChars: false, alphabets: false });
+
+const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 3000,
+    secure: false, // Use `true` for port 465, `false` for all other ports
+    auth: {
+      user: "hivestock92@gmail.com",
+      pass: "isclwxtwlglfyspq",
+    },
+  });
+
+  transporter.verify().then(() => {
+    console.log("Pret pour envoyer un email");
+  });
+
+  function envoyerEmail(otp) {
+    const mailOptions = {
+      from: '"HiveStock" <hivestock92@gmail.com>',
+      to: 'salhinina2002@gmail.com',
+      subject: 'Hive stock - Code OTP',
+      text: `Votre OTP est : ${otp}.\n
+      Saissez ce code pour vérifier votre compte`
+    };
+  
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Erreur lors de l\'envoi de l\'e-mail:', error);
+      } else {
+        console.log('E-mail envoyé:', info.response);
+      }
+    });
+  }
+
 
 module.exports = {
     loginUserName: function (req, res) {
