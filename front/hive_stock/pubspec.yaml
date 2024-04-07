@@ -44,6 +44,7 @@ dependencies:
     path: packages/user_repository
   authentication_repository:
     path: packages/authentication_repository
+  flutter_barcode_scanner: ^2.0.0
 
 dev_dependencies:
   flutter_test:

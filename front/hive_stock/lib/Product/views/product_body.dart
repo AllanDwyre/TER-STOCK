@@ -22,7 +22,7 @@ class _ProductBodyState extends State<ProductBody> with TickerProviderStateMixin
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorTheme = Theme.of(context).colorScheme;
 
-    TabController _tabController = TabController(length:4, vsync:this);
+    TabController tabController = TabController(length:4, vsync:this);
 
     return SingleChildScrollView(
       child: Column(
@@ -81,13 +81,13 @@ class _ProductBodyState extends State<ProductBody> with TickerProviderStateMixin
             child: Align(
               alignment: Alignment.centerLeft,
               child: TabBar(
-                controller: _tabController,
+                controller: tabController,
                 isScrollable: true,
                 //labelPadding: const EdgeInsets.only(left: 0, right: 0),
                 labelColor: colorTheme.primary,
                 unselectedLabelColor: colorTheme.secondary,
                 indicator: UnderlineTabIndicator(borderSide: BorderSide(color:colorTheme.primary, width: 1)),
-                tabs: [
+                tabs: const [
                   Tab(text:"Overview"),
                   Tab(text:"Purchases"),
                   Tab(text:"Adjustement"),
@@ -96,11 +96,11 @@ class _ProductBodyState extends State<ProductBody> with TickerProviderStateMixin
               ),
             ),
           ),
-          Container(
+          SizedBox(
             width: double.maxFinite,
             height: 300,
             child: TabBarView(
-              controller: _tabController,
+              controller: tabController,
               children: [
                 Padding(
                   padding: const EdgeInsets.all(kDefaultPadding),

@@ -1,10 +1,6 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_stock/home/views/home_page.dart';
-import 'package:hive_stock/onBording/views/onbording_page.dart';
-import 'package:hive_stock/product/models/product.dart';
-import 'package:hive_stock/product/views/product_page.dart';
-import 'package:hive_stock/splash/views/splash_page.dart';
+import 'package:hive_stock/inventory/views/inventory_page.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -70,6 +66,7 @@ class _AppViewState extends State<AppView> {
 
   @override
   Widget build(BuildContext context) {
+    // début section test page produit
     return MaterialApp(
       title: 'HiveStock',
       debugShowCheckedModeBanner: false,
@@ -83,9 +80,10 @@ class _AppViewState extends State<AppView> {
                   GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme))
           .copyWith(extensions: [darkCustomColors]),
       themeMode: ThemeMode.system,
-      home: ProductScreen(products.first),
+      home: const InventoryScreen(),
     );
-    /* MaterialApp(
+    // fin section test page produit
+    /*return MaterialApp(
       title: 'HiveStock',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
