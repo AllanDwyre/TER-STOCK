@@ -1,8 +1,8 @@
-const { loginUserName } = require('../controllers/authController');
+const { loginUserName } = require('../controller/authController');
 
 describe('loginUserName function', () => {
   test('should return status 200 with valid username', () => {
-    const req = { body: { userName: 'validUserName' } };
+    const req = { body: { userName: 'daniVV' } };
     const res = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
