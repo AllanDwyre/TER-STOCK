@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hive_stock/product/models/product.dart';
 import 'package:hive_stock/utils/constants/padding.dart';
 import 'package:hive_stock/utils/widgets/snackbars.dart';
-import "package:hive_stock/utils/methods/string_extension.dart";
+import "package:hive_stock/utils/utils/string_extension.dart";
 
 class ProductBody extends StatefulWidget {
-
   final Product product;
 
   const ProductBody(this.product, {super.key});
@@ -14,7 +13,8 @@ class ProductBody extends StatefulWidget {
   State<ProductBody> createState() => _ProductBodyState();
 }
 
-class _ProductBodyState extends State<ProductBody> with TickerProviderStateMixin{
+class _ProductBodyState extends State<ProductBody>
+    with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     // Hauteur et largeur totales
@@ -32,7 +32,8 @@ class _ProductBodyState extends State<ProductBody> with TickerProviderStateMixin
             width: size.width,
             color: colorTheme.onPrimary,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(kDefaultPadding, kDefaultPadding, kDefaultPadding, kDefaultPadding),
+              padding: const EdgeInsets.fromLTRB(kDefaultPadding,
+                  kDefaultPadding, kDefaultPadding, kDefaultPadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -43,8 +44,7 @@ class _ProductBodyState extends State<ProductBody> with TickerProviderStateMixin
                   ),
                   Text(
                     "Class ${widget.product.class_ ?? "null"} | Sku : ${widget.product.sku}",
-                    style: textTheme
-                        .titleSmall
+                    style: textTheme.titleSmall
                         ?.copyWith(color: colorTheme.onBackground),
                   ),
                 ],
@@ -55,26 +55,31 @@ class _ProductBodyState extends State<ProductBody> with TickerProviderStateMixin
             width: size.width,
             color: colorTheme.onPrimary,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(kDefaultPadding, 0, kDefaultPadding, kDefaultPadding / 2),
+              padding: const EdgeInsets.fromLTRB(
+                  kDefaultPadding, 0, kDefaultPadding, kDefaultPadding / 2),
               child: Text(
                 "Special handling",
-                style: textTheme
-                    .headlineMedium
+                style: textTheme.headlineMedium
                     ?.copyWith(color: colorTheme.onBackground),
               ),
             ),
           ),
           Padding(
-              padding: const EdgeInsets.fromLTRB(kDefaultPadding, 0, kDefaultPadding, 0),
-              child: (widget.product.specialHandling == null)
-                  ? Text("No special handling", style: textTheme
-                    .titleSmall
-                    ?.copyWith(color: colorTheme.outlineVariant),)
-                  : CustomSnackbar(
-                      type: SnackbarType.warning,
-                      description: "Please ensure special handling for this package, as it requires temperature maintenant below 5°C throughout transit and storage",
-                      title: (widget.product.specialHandling ?? "Non renseigné").capitalize(),
-                    ),
+            padding: const EdgeInsets.fromLTRB(
+                kDefaultPadding, 0, kDefaultPadding, 0),
+            child: (widget.product.specialHandling == null)
+                ? Text(
+                    "No special handling",
+                    style: textTheme.titleSmall
+                        ?.copyWith(color: colorTheme.outlineVariant),
+                  )
+                : CustomSnackbar(
+                    type: SnackbarType.warning,
+                    description:
+                        "Please ensure special handling for this package, as it requires temperature maintenant below 5°C throughout transit and storage",
+                    title: (widget.product.specialHandling ?? "Non renseigné")
+                        .capitalize(),
+                  ),
           ),
           Container(
             color: colorTheme.onPrimary,
@@ -114,8 +119,7 @@ class _ProductBodyState extends State<ProductBody> with TickerProviderStateMixin
                       ),
                       Text(
                         "Text",
-                        style: textTheme
-                            .titleSmall
+                        style: textTheme.titleSmall
                             ?.copyWith(color: colorTheme.onBackground),
                       ),
                     ],
@@ -134,8 +138,7 @@ class _ProductBodyState extends State<ProductBody> with TickerProviderStateMixin
                       ),
                       Text(
                         "Text",
-                        style: textTheme
-                            .titleSmall
+                        style: textTheme.titleSmall
                             ?.copyWith(color: colorTheme.onBackground),
                       ),
                     ],
@@ -153,8 +156,7 @@ class _ProductBodyState extends State<ProductBody> with TickerProviderStateMixin
                       ),
                       Text(
                         "Text",
-                        style: textTheme
-                            .titleSmall
+                        style: textTheme.titleSmall
                             ?.copyWith(color: colorTheme.onBackground),
                       ),
                     ],
@@ -172,8 +174,7 @@ class _ProductBodyState extends State<ProductBody> with TickerProviderStateMixin
                       ),
                       Text(
                         "Text",
-                        style: textTheme
-                            .titleSmall
+                        style: textTheme.titleSmall
                             ?.copyWith(color: colorTheme.onBackground),
                       ),
                     ],

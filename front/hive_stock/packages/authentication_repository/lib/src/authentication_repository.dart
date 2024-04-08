@@ -12,11 +12,23 @@ class AuthenticationRepository {
     yield* _controller.stream;
   }
 
-  // TODO : Implement the register function ?
-
-  // TODO : replace by the act to fecth the status from the backend, maybe otp ?
   Future<void> logIn({
     required String username,
+    required String email,
+    required String otp,
+  }) async {
+    await Future.delayed(
+      const Duration(milliseconds: 300),
+      () => _controller.add(AuthenticationStatus.authenticated),
+    );
+  }
+
+  Future<void> register({
+    required String username,
+    required String email,
+    required String birthday,
+    required String phone,
+    required String otp,
   }) async {
     await Future.delayed(
       const Duration(milliseconds: 300),
@@ -28,6 +40,7 @@ class AuthenticationRepository {
   // ?    : Do this function belong here or in the user repository ?
   Future<bool> userExist({
     required String username,
+    required String email,
   }) async {
     await Future.delayed(
       const Duration(milliseconds: 300),

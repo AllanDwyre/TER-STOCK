@@ -1,2 +1,4 @@
 **/node_modules/ipaddr.js
 **/node_modules/inherits
+**/node_modules
+node_modules/**

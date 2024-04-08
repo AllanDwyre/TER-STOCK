@@ -2,12 +2,13 @@ const express = require("express");
 const router = express.Router();
 const authController = require("../controller/authController.js");
 
-router.post('/login/Name', authController.loginName);
-router.post('/login/FirstName',authController.loginFirstName);
-router.post('/login/Email',authController.loginEmail);
+router.post('/login/UserName', authController.loginUserName);
+router.post('/signUp/FirstName',authController.signUpFirstName);
+router.post('/signUp/Email',authController.signUpEmail);
+router.post('/signup/Date',authController.signupDate);
+router.post('/signup/Tel', authController.signupTel);
+router.post('/otp',authController.verifOTP);
 router.get('/homePage', authController.home);
-router.post('/signupDate',authController.signupDate);
-router.post('/signupTel', authController.signupTel);
-router.post('/opt',authController.verifTel);
 
 module.exports = router;
+

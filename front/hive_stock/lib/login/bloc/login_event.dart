@@ -24,10 +24,36 @@ final class LoginOTPChanged extends LoginEvent {
   @override
   List<Object> get props => [otp];
 }
-// TODO : Implements others fields to log in.
 
-final class LoginUsernameSubmitted extends LoginEvent {
-  const LoginUsernameSubmitted();
+final class LoginEmailChanged extends LoginEvent {
+  const LoginEmailChanged(this.email);
+
+  final String email;
+
+  @override
+  List<Object> get props => [email];
+}
+
+final class LoginBirthdayChanged extends LoginEvent {
+  const LoginBirthdayChanged(this.birthday);
+
+  final String birthday;
+
+  @override
+  List<Object> get props => [birthday];
+}
+
+final class LoginPhoneChanged extends LoginEvent {
+  const LoginPhoneChanged(this.phone);
+
+  final String phone;
+
+  @override
+  List<Object> get props => [phone];
+}
+
+final class LoginAttemptSubmitted extends LoginEvent {
+  const LoginAttemptSubmitted();
 }
 
 final class LoginSubmitted extends LoginEvent {
