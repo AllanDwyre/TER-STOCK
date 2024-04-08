@@ -111,18 +111,38 @@ class _ProductBodyState extends State<ProductBody>
                     children: <Widget>[
                       Text(
                         "Primary Details",
-                        style: textTheme.titleLarge
-                            ?.copyWith(color: colorTheme.onBackground),
+                        style: textTheme.titleLarge?.copyWith(color: colorTheme.secondary),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(kDefaultPadding),
+                        child: Column(
+                          children: [
+                            displayDetails(context, widget, "Product Name", widget.product.name),
+                            displayDetails(context, widget, "Product SKU", widget.product.sku),
+                            displayDetails(context, widget, "Product Class", "${widget.product.class_}"),
+                            displayDetails(context, widget, "Product Category", "${widget.product.category}"),
+                            displayDetails(context, widget, "Storage Date", "${widget.product.storageDate}"),
+                          ],
+                        ),
                       ),
                       Text(
-                        "Text",
-                        style: textTheme.titleSmall
-                            ?.copyWith(color: colorTheme.onBackground),
+                        "Quantity Details",
+                        style: textTheme.titleLarge?.copyWith(color: colorTheme.secondary),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(kDefaultPadding),
+                        child: Column(
+                          children: [
+                            displayDetails(context, widget, "Quantity", "${widget.product.quantity}"),
+                            displayDetails(context, widget, "At preparation", "${widget.product.atPreparation}"),
+                            displayDetails(context, widget, "On the way", "${widget.product.onTheWay}"),
+                            displayDetails(context, widget, "Arrival date", "${widget.product.arrivalDate}"),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-                // TODO : factoriser ça ->
                 Padding(
                   padding: const EdgeInsets.all(kDefaultPadding),
                   child: Column(
@@ -184,4 +204,26 @@ class _ProductBodyState extends State<ProductBody>
       ),
     );
   }
+}
+
+dynamic displayDetails(context, widget, text1, text2){
+  return Row(
+    mainAxisSize: MainAxisSize.min,
+    children: <Widget>[
+      Expanded(
+        child: Text(
+          text1,
+          maxLines: 1,
+          softWrap: false,
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.secondary),
+        ),
+      ),
+      Expanded(
+        child: Text(
+          text2,
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.secondary),
+        ),
+      ),
+    ],
+  );
 }

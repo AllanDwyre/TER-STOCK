@@ -1,8 +1,8 @@
 class Product {
   String name, sku, image;
   String? class_, category, storageDate, arrivalDate, specialHandling;
-  int? price, atPreparation, onTheWay;
-  int quantity;
+  int? price;
+  int quantity, atPreparation, onTheWay;
 
   Product({
     required this.name,
@@ -14,9 +14,9 @@ class Product {
     this.arrivalDate,
     this.specialHandling,
     this.price,
-    this.atPreparation,
-    this.onTheWay,
     this.quantity = 0,
+    this.atPreparation = 0,
+    this.onTheWay = 0,
   });
 }
 
