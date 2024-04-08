@@ -77,32 +77,29 @@ class _ProductBodyState extends State<ProductBody>
                     type: SnackbarType.warning,
                     description:
                         "Please ensure special handling for this package, as it requires temperature maintenant below 5°C throughout transit and storage",
-                    title: (widget.product.specialHandling ?? "Non renseigné")
+                    title: (widget.product.specialHandling ?? "non renseigné")
                         .capitalize(),
                   ),
           ),
           Container(
             color: colorTheme.onPrimary,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: TabBar(
-                controller: tabController,
-                isScrollable: true,
-                //labelPadding: const EdgeInsets.only(left: 0, right: 0),
-                labelColor: colorTheme.primary,
-                unselectedLabelColor: colorTheme.secondary,
-                indicator: UnderlineTabIndicator(borderSide: BorderSide(color:colorTheme.primary, width: 1)),
-                tabs: const [
-                  Tab(text:"Overview"),
-                  Tab(text:"Purchases"),
-                  Tab(text:"Adjustement"),
-                  Tab(text:"History"),
-                ],
-              ),
+            child: TabBar(
+              controller: tabController,
+              labelPadding: const EdgeInsets.symmetric(horizontal: 10),
+              labelColor: colorTheme.primary,
+              unselectedLabelColor: colorTheme.secondary,
+              dividerColor: Colors.transparent,
+              indicator: UnderlineTabIndicator(borderSide: BorderSide(color:colorTheme.primary, width: 1)),
+              tabs: const [
+                Tab(text:"Overview"),
+                Tab(text:"Purchases"),
+                Tab(text:"Adjustement"),
+                Tab(text:"History"),
+              ],
             ),
           ),
           SizedBox(
-            width: double.maxFinite,
+            width: size.width,
             height: 300,
             child: TabBarView(
               controller: tabController,
