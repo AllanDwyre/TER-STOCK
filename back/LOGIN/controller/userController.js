@@ -1,4 +1,4 @@
-const User = require('../LOGIN/model/users'); // Importez le modèle users
+const User = require('../model/users'); // Importez le modèle users
 
 module.exports = {
   // app.post : /users
