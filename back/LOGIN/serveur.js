@@ -1,5 +1,8 @@
 var express = require('express');
 var sequelize = require('./config/db.js');
+const { Sequelize } = require('sequelize');
+const User = require('./model/users')(sequelize, Sequelize);
+
 var app = express();
 
 // Ajout des middlewares

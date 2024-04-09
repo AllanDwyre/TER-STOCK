@@ -7,8 +7,7 @@ class AuthButton extends StatelessWidget {
   final VoidCallback? onPressed;
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
+    return Center(
       child: isInProgress
           ? const CircularProgressIndicator()
           : PrimaryButton(

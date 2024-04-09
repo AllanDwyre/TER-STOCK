@@ -1,21 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controller/authController.js");
-const controllerTest = require("../controller/controllerTest.js");
 
-//LOGIN
-router.post('/login/Name', authController.loginUserName);
-//pour le test 
-router.post('/login',controllerTest.loginName);
-
-router.post('/login/Email',authController.signUpEmail);
+router.post('/login/UserName', authController.loginUserName);
+router.post('/signUp/FirstName',authController.signUpFirstName);
+router.post('/signUp/Email',authController.signUpEmail);
+router.post('/signup/Date',authController.signupDate);
+router.post('/signup/Tel', authController.signupTel);
+router.post('/otp',authController.verifOTP);
 router.get('/homePage', authController.home);
-router.post('/signupDate',authController.signupDate);
-router.post('/signupTel', authController.signupTel);
-router.post('/opt',authController.verifTel);
 
 //crud
 //blabla
 
 
 module.exports = router;
+

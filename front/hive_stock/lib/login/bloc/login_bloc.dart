@@ -2,9 +2,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:hive_stock/login/models/birthday.dart';
 import 'package:hive_stock/login/models/models.dart';
-import 'package:hive_stock/login/models/phone.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -19,7 +17,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginPhoneChanged>(_onPhoneChanged);
     on<LoginOTPChanged>(_onOtpChanged);
     on<LoginSubmitted>(_onSubmitted);
-    on<LoginUsernameSubmitted>(_onUsernameSubmitted);
+    on<LoginAttemptSubmitted>(_onAttemptSubmitted);
   }
 
   final AuthenticationRepository _authenticationRepository;
@@ -40,7 +38,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(
       state.copyWith(
         email: email,
-        isValid: Formz.validate([email]),
+        isValid: Formz.validate([state.username, email]),
       ),
     );
   }
@@ -77,8 +75,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     );
   }
 
-  Future<void> _onUsernameSubmitted(
-    LoginUsernameSubmitted event,
+  Future<void> _onAttemptSubmitted(
+    LoginAttemptSubmitted event,
     Emitter<LoginState> emit,
   ) async {
     if (state.isValid) {
@@ -86,16 +84,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       try {
         bool isUserExit = await _authenticationRepository.userExist(
           username: state.username.value,
+          email: state.email.value,
         );
 
         emit(
           state.copyWith(
-            // TODO : manage if the username is already taken, how to separate a person who log in, or someone who is trying to find a name
-            status: isUserExit
-                ? FormzSubmissionStatus.success
-                : FormzSubmissionStatus.failure,
-            step: state.step + 1,
             isAttemptingLogin: isUserExit,
+            status: FormzSubmissionStatus.success,
           ),
         );
       } catch (_) {
@@ -114,15 +109,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (state.isAttemptingLogin) {
           await _authenticationRepository.logIn(
             username: state.username.value,
+            email: state.email.value,
+            otp: state.otp.value,
           );
         } else {
-          await _authenticationRepository.logIn(
+          await _authenticationRepository.register(
             username: state.username.value,
+            email: state.email.value,
+            birthday: state.birthday.value,
+            phone: state.phone.value,
+            otp: state.otp.value,
           );
-          // await _authenticationRepository.register(
-          //   username: state.username.value,
-          // );
-          // TODO : register with all the data
         }
         emit(state.copyWith(status: FormzSubmissionStatus.success));
       } catch (_) {

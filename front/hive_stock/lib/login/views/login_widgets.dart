@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:hive_stock/login/views/login_page.dart';
-import 'package:hive_stock/login/views/register_page.dart';
-import 'package:hive_stock/utils/widgets/snackbars.dart';
 import 'package:hive_stock/login/bloc/login_bloc.dart';
+import 'package:hive_stock/login/views/login_page.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 
 import 'auth_button.dart';
@@ -16,15 +14,7 @@ class UsernameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return BlocConsumer<LoginBloc, LoginState>(
-      listenWhen: (previous, current) => previous.step != current.step,
-      listener: (context, state) {
-        if (state.status.isSuccess) {
-          Navigator.of(context).push<void>(OtpPage.route());
-        } else {
-          Navigator.of(context).push<void>(EmailPage.route());
-        }
-      },
+    return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) => previous.username != current.username,
       builder: (context, state) {
         return Column(
@@ -36,6 +26,7 @@ class UsernameInput extends StatelessWidget {
             ),
             TextFormField(
               autofocus: true,
+              initialValue: state.username.value,
               onChanged: (username) =>
                   context.read<LoginBloc>().add(LoginUsernameChanged(username)),
               decoration: InputDecoration(
@@ -65,7 +56,59 @@ class UsernameInput extends StatelessWidget {
 
   VoidCallback? _onPressed(BuildContext context, LoginState state) {
     if (!state.isValid) return null;
-    return () => context.read<LoginBloc>().add(const LoginUsernameSubmitted());
+    return () => Navigator.of(context).push<void>(EmailPage.route());
+  }
+}
+
+class EmailInput extends StatelessWidget {
+  const EmailInput({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    TextTheme textTheme = Theme.of(context).textTheme;
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Hello ${state.username.value} 👋\nPlease enter your email.",
+              style: textTheme.bodyMedium!.copyWith(color: colorScheme.primary),
+            ),
+            TextFormField(
+              autofocus: true,
+              initialValue: state.email.value,
+              onChanged: (email) =>
+                  context.read<LoginBloc>().add(LoginEmailChanged(email)),
+              decoration: InputDecoration(
+                hintText: "Your email",
+                hintStyle: textTheme.headlineLarge!
+                    .copyWith(color: colorScheme.tertiary),
+                border: InputBorder.none,
+                errorText: state.username.displayError != null
+                    ? 'invalid email ${state.username.displayError}'
+                    : null,
+              ),
+              cursorColor: colorScheme.tertiary,
+              cursorHeight: textTheme.headlineLarge!.fontSize,
+              style: textTheme.headlineLarge!
+                  .copyWith(color: colorScheme.tertiary),
+            ),
+            const Spacer(),
+            AuthButton(
+              isInProgress: state.status.isInProgress,
+              onPressed: _onPressed(context, state),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  VoidCallback? _onPressed(BuildContext context, LoginState state) {
+    if (!state.isValid) return null;
+    return () => context.read<LoginBloc>().add(const LoginAttemptSubmitted());
   }
 }
 
@@ -85,6 +128,19 @@ class _OtpInputState extends State<OtpInput> {
     super.initState();
   }
 
+  String obstructEmail(String email) {
+    String obfuscatedEmail = '';
+    int at = email.indexOf('@');
+    for (int i = 0; i < email.length; i++) {
+      if (i <= at / 2) {
+        obfuscatedEmail += '*';
+      } else {
+        obfuscatedEmail += email[i];
+      }
+    }
+    return obfuscatedEmail;
+  }
+
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
@@ -96,7 +152,7 @@ class _OtpInputState extends State<OtpInput> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Hello ${state.username.value} 👋\nLast step! Enter the unique code we just sent to your email to verify it's really you.",
+              "Last step! ${state.username.value} 👋\nEnter the unique code we just sent to ${obstructEmail(state.email.value)}.",
               style: textTheme.bodyMedium!.copyWith(color: colorScheme.primary),
             ),
             OTPTextField(
@@ -111,12 +167,25 @@ class _OtpInputState extends State<OtpInput> {
               onChanged: (pin) =>
                   context.read<LoginBloc>().add(LoginOTPChanged(pin)),
             ),
-            const SizedBox(height: 50),
-            CustomSnackbar(
-              type: SnackbarType.info,
-              showIcon: false,
-              description:
-                  "Please enter the OTP within the specified time frame to proceed with your login or requested  action. If you haven't received the OTP, you can request for it to be  resent. Thank you for prioritizing the security of your account with us.",
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Didn't get the opt?",
+                  style: textTheme.bodyMedium,
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Resend',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.primary,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
             ),
             const Spacer(),
             AuthButton(

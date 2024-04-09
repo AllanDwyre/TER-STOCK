@@ -4,20 +4,16 @@ import '../models/product.dart';
 import 'product_body.dart';
 
 class ProductScreen extends StatelessWidget {
+  const ProductScreen({super.key, required this.product});
 
   final Product product;
-
-  const ProductScreen(this.product, {super.key});
-
-  static Route<void> route() {
-    return MaterialPageRoute<void>(builder: (_) => ProductScreen(products.first));
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: Colors.white,
+      //resizeToAvoidBottomInset: false,
+      backgroundColor: Theme.of(context).colorScheme.onPrimary,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 30.0),

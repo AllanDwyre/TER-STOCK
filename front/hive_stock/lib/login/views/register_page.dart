@@ -3,26 +3,6 @@ import 'package:hive_stock/login/views/registration_widgets.dart';
 import 'package:hive_stock/utils/constants/constants.dart';
 import 'package:hive_stock/login/views/login_form.dart';
 
-class EmailPage extends StatelessWidget {
-  const EmailPage({super.key});
-
-  static Route<void> route() {
-    return MaterialPageRoute<void>(builder: (_) => const EmailPage());
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Padding(
-        padding: defaultPagePadding,
-        child: LoginForm(
-          child: EmailInput(),
-        ),
-      ),
-    );
-  }
-}
-
 class BirthdayPage extends StatelessWidget {
   const BirthdayPage({super.key});
 
@@ -36,6 +16,8 @@ class BirthdayPage extends StatelessWidget {
       body: Padding(
         padding: defaultPagePadding,
         child: LoginForm(
+          step: 3,
+          totalStep: 5,
           child: PhoneInput(),
         ),
       ),
@@ -56,6 +38,8 @@ class PhonePage extends StatelessWidget {
       body: Padding(
         padding: defaultPagePadding,
         child: LoginForm(
+          step: 4,
+          totalStep: 5,
           child: PhoneInput(),
         ),
       ),

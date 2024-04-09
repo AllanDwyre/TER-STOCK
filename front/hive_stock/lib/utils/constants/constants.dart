@@ -1,7 +1,6 @@
 export "colors.dart";
 export "customs_icons.dart";
 export "padding.dart";
-export "utils.dart";
 export "validation.dart";
 
 
