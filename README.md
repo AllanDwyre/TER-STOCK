@@ -11,6 +11,8 @@ Il s'agit d'une application de gestion de stock développée dans le cadre d'un 
 - npm install dotenv
 - npm install jsonwebtoken
 - npm install uuid
+- npm install nodemailer
+- npm install otp-generator
 
 ## Installation de sequelize-auto
 Pour installer `sequelize-auto` et ses dépendances, exécutez les commandes suivantes :
