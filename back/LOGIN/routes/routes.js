@@ -10,5 +10,9 @@ router.post('/signup/Tel', authController.signupTel);
 router.post('/otp',authController.verifOTP);
 router.get('/homePage', authController.home);
 
+//crud
+//blabla
+
+
 module.exports = router;
 

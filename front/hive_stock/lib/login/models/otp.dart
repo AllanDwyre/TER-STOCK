@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 import 'package:hive_stock/utils/constants/constants.dart';
 
@@ -10,7 +9,6 @@ class Otp extends FormzInput<String, OtpValidationError> {
 
   @override
   OtpValidationError? validator(String value) {
-    debugPrint(value);
     if (value.isEmpty) return OtpValidationError.empty;
     if (!isnumericRegex.hasMatch(value)) {
       return OtpValidationError.invalid;

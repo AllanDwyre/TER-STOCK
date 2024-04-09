@@ -5,9 +5,14 @@ import 'package:hive_stock/utils/widgets/custom_app_bar.dart';
 import 'package:hive_stock/login/bloc/login_bloc.dart';
 
 class LoginForm extends StatelessWidget {
+  final int step;
+  final int totalStep;
+
   const LoginForm({
     super.key,
     required this.child,
+    required this.step,
+    required this.totalStep,
   });
   final Widget child;
   @override
@@ -20,7 +25,7 @@ class LoginForm extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               LinearProgressIndicator(
-                value: state.step / state.totalStep,
+                value: step / totalStep,
                 semanticsLabel:
                     'linear progress bar of the authentification steps.',
               ),
