@@ -176,7 +176,7 @@ module.exports = {
         envoyerEmail(otp);
         const otp_user = req.body;
 
-        Auth.selectLogInUserName(User, req.session.userName)
+        Auth.selectLogInUserName(User, req.session.username)
             .then(userExistant => {
                 if(userExistant){
                     if (otp !== otp_user) {
