@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('commande_entree', {
+  return sequelize.define('COMMANDE_ENTREE', {
     COMMANDE_E_ID: {
       type: DataTypes.DECIMAL(15,0),
       allowNull: false,
@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     sequelize,
-    tableName: 'commande_entree',
+    tableName: 'COMMANDE_ENTREE',
     timestamps: false,
     indexes: [
       {

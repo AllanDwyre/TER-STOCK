@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('inventaire_lot', {
+  return sequelize.define('INVENTAIRE_LOT', {
     INVENTAIRE_LOT_ID: {
       type: DataTypes.DECIMAL(15,0),
       allowNull: false,
@@ -10,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DECIMAL(15,0),
       allowNull: true,
       references: {
-        model: 'employe',
+        model: 'EMPLOYE',
         key: 'EMPLOYE_ID'
       }
     },
@@ -18,7 +18,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DECIMAL(15,0),
       allowNull: true,
       references: {
-        model: 'lot_produits',
+        model: 'LOT_PRODUITS',
         key: 'LOT_ID'
       }
     },
@@ -36,7 +36,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     sequelize,
-    tableName: 'inventaire_lot',
+    tableName: 'INVENTAIRE_LOT',
     timestamps: false,
     indexes: [
       {

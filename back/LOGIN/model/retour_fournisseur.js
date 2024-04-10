@@ -1,12 +1,12 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('retour_fournisseur', {
+  return sequelize.define('RETOUR_FOURNISSEUR', {
     RETOUR_FOURNISSEUR_ID: {
       type: DataTypes.DECIMAL(15,0),
       allowNull: false,
       primaryKey: true,
       references: {
-        model: 'commande_sortie',
+        model: 'COMMANDE_SORTIE',
         key: 'COMMANDE_S_ID'
       }
     },
@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     sequelize,
-    tableName: 'retour_fournisseur',
+    tableName: 'RETOUR_FOURNISSEUR',
     timestamps: false,
     indexes: [
       {
