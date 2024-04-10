@@ -7,27 +7,34 @@ module.exports={
             });
 
     },
-    selectLogInUserName: function(User, username){
-        return User.findOne({ where: {USERNAME: username}})
-            .catch(error => {
-                console.error('Erreur lors de la recherche de l\'utilisateur par nom d\'utilisateur :', error);
-                throw new Error('Erreur lors de la recherche de l\'utilisateur par nom d\'utilisateur');
-            });
+
+    selectLogInUserNameAndEmail: function(User, username, email){
+        return User.findOne({ where: { 
+            $or: [
+                { USERNAME: username },
+                { USER_MAIL: email }
+            ]
+        }})
+        .catch(error => {
+            console.error('Erreur lors de la recherche de l\'utilisateur par ID :', error);
+            throw new Error('Erreur lors de la recherche de l\'utilisateur par ID');
+        });
     },
-    selectLogInEmail: function(User, user_mail){
-        return User.findOne({where: {USER_MAIL: user_mail }})
-            .catch(error => {
-                console.error('Erreur lors de la recherche de l\'utilisateur par email :', error);
-                throw new Error('Erreur lors de la recherche de l\'utilisateur par email');
-            });
+
+    selectSignUpData: function(User, username, email, telephone){
+        return User.findOne({ where: { 
+            $or: [
+                { USERNAME: username },
+                { USER_MAIL: email },
+                { USER_TEL: telephone}
+            ]
+        }})
+        .catch(error => {
+            console.error('Erreur lors de la recherche de l\'utilisateur par ces données :', error);
+            throw new Error('Erreur lors de la recherche de l\'utilisateur par ces données');
+        });
     },
-    selectSignUpTel: function(User, user_tel){
-        return User.findOne({where: {USER_TEL: user_tel}})
-            .catch(error => {
-                console.error('Erreur lors de la recherche de l\'utilisateur par téléphone :', error);
-                throw new Error('Erreur lors de la recherche de l\'utilisateur par téléphone');
-            });
-    },
+    
     insert: function(User, userData){
         return User.create(userData)
             .catch(error => {
