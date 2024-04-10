@@ -1,8 +1,10 @@
-import 'package:authentication_repository/authentication_repository.dart';
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:hive_stock/login/models/models.dart';
+import 'package:hive_stock/utils/app/authentication_repository.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -16,6 +18,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginBirthdayChanged>(_onBirthdayChanged);
     on<LoginPhoneChanged>(_onPhoneChanged);
     on<LoginOTPChanged>(_onOtpChanged);
+    on<LoginReset>(_onReset);
     on<LoginSubmitted>(_onSubmitted);
     on<LoginAttemptSubmitted>(_onAttemptSubmitted);
   }
@@ -75,6 +78,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     );
   }
 
+  FutureOr<void> _onReset(LoginReset event, Emitter<LoginState> emit) {
+    emit(state.copyWith(isValid: false, status: FormzSubmissionStatus.initial));
+  }
+
   Future<void> _onAttemptSubmitted(
     LoginAttemptSubmitted event,
     Emitter<LoginState> emit,
@@ -106,7 +113,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (state.isValid) {
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
       try {
-        if (state.isAttemptingLogin) {
+        if (state.isAttemptingLogin == null) {
+          throw AssertionError('isAttemptingLogin can not be null!');
+        }
+        if (state.isAttemptingLogin!) {
           await _authenticationRepository.logIn(
             username: state.username.value,
             email: state.email.value,

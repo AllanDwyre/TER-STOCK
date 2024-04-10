@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:hive_stock/utils/app/frontend_bridge/frontend_bridge.dart';
+import 'package:hive_stock/utils/app/frontend_bridge/request.dart';
+
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
 class AuthenticationRepository {
@@ -17,10 +20,12 @@ class AuthenticationRepository {
     required String email,
     required String otp,
   }) async {
-    await Future.delayed(
-      const Duration(milliseconds: 300),
-      () => _controller.add(AuthenticationStatus.authenticated),
-    );
+    // TODO transform parameter to json file
+    final response = await FrontEndBrige().post(request: RequestsName.logIn);
+
+    if (response.statusCode == 200) {
+      _controller.add(AuthenticationStatus.authenticated);
+    }
   }
 
   Future<void> register({
@@ -30,10 +35,12 @@ class AuthenticationRepository {
     required String phone,
     required String otp,
   }) async {
-    await Future.delayed(
-      const Duration(milliseconds: 300),
-      () => _controller.add(AuthenticationStatus.authenticated),
-    );
+    // TODO transform parameter to json file
+    final response = await FrontEndBrige().post(request: RequestsName.register);
+
+    if (response.statusCode == 200) {
+      _controller.add(AuthenticationStatus.authenticated);
+    }
   }
 
   // TODO : replace by the act to fecth the status from the backend
@@ -42,10 +49,11 @@ class AuthenticationRepository {
     required String username,
     required String email,
   }) async {
-    await Future.delayed(
-      const Duration(milliseconds: 300),
-    );
-    return true;
+    // TODO transform parameter to json file
+    final response =
+        await FrontEndBrige().post(request: RequestsName.isUserExists);
+
+    return response.statusCode == 200;
   }
 
   void logOut() {

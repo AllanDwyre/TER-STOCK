@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_stock/login/bloc/login_bloc.dart';
 import 'package:hive_stock/login/views/registration_widgets.dart';
 import 'package:hive_stock/utils/constants/constants.dart';
 import 'package:hive_stock/login/views/login_form.dart';
@@ -12,6 +14,7 @@ class BirthdayPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<LoginBloc>().add(const LoginReset());
     return const Scaffold(
       body: Padding(
         padding: defaultPagePadding,
@@ -34,6 +37,7 @@ class PhonePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<LoginBloc>().add(const LoginReset());
     return const Scaffold(
       body: Padding(
         padding: defaultPagePadding,

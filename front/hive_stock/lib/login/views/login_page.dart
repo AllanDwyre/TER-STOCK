@@ -15,6 +15,7 @@ class UsernamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<LoginBloc>().add(const LoginReset());
     return const Scaffold(
       body: Padding(
         padding: defaultPagePadding,
@@ -37,10 +38,13 @@ class EmailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<LoginBloc>().add(const LoginReset());
     return BlocListener<LoginBloc, LoginState>(
+      listenWhen: (previous, current) =>
+          previous.isAttemptingLogin != current.isAttemptingLogin,
       listener: (context, state) {
         debugPrint(state.isAttemptingLogin.toString());
-        if (state.isAttemptingLogin) {
+        if (state.isAttemptingLogin!) {
           Navigator.of(context).push<void>(OtpPage.route());
         } else {
           Navigator.of(context).push<void>(BirthdayPage.route());
@@ -69,6 +73,7 @@ class OtpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<LoginBloc>().add(const LoginReset());
     return const Scaffold(
       body: Padding(
         padding: defaultPagePadding,

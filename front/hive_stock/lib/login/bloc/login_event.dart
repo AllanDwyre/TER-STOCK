@@ -52,6 +52,10 @@ final class LoginPhoneChanged extends LoginEvent {
   List<Object> get props => [phone];
 }
 
+final class LoginReset extends LoginEvent {
+  const LoginReset();
+}
+
 final class LoginAttemptSubmitted extends LoginEvent {
   const LoginAttemptSubmitted();
 }

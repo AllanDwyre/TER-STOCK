@@ -98,18 +98,21 @@ class _DotIndicatorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      for (int i = 0; i < lenght; i++)
-        Container(
-          width: currentSelectionIndex == i ? 5 : 3,
-          height: currentSelectionIndex == i ? 5 : 3,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: currentSelectionIndex == i
-                ? colorScheme.primary
-                : colorScheme.secondary,
-          ),
-        )
-    ]);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        for (int i = 0; i < lenght; i++)
+          Container(
+            width: currentSelectionIndex == i ? 5 : 3,
+            height: currentSelectionIndex == i ? 5 : 3,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: currentSelectionIndex == i
+                  ? colorScheme.primary
+                  : colorScheme.secondary,
+            ),
+          )
+      ],
+    );
   }
 }
