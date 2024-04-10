@@ -21,10 +21,10 @@ transporter.verify().then(() => {
 console.log("Pret pour envoyer un email");
 });
 
-function envoyerEmail(otp) {
+function envoyerEmail(otp) { //remplacer par function envoyerEmail(otp, destinataire)
 const mailOptions = {
     from: '"HiveStock" <hivestock92@gmail.com>',
-    to: 'salhinina2002@gmail.com',
+    to: 'salhinina2002@gmail.com', //remplacer par destinataire
     subject: 'Hive stock - Code OTP',
     text: `Votre OTP est : ${otp}.\n
     Saissez ce code pour vérifier votre compte`
@@ -40,140 +40,67 @@ transporter.sendMail(mailOptions, (error, info) => {
 }
 
 module.exports = {
-    loginUserName: function (req, res) {
+    login: function (req, res) {
         console.log("page login");
     
-        // Créer une promesse pour attendre la saisie de l'utilisateur
-        const waitForUserName = new Promise((resolve, reject) => {
-            const { username } = req.body; 
-            if (username) {
-                // Si un nom d'utilisateur est fourni, résoudre la promesse avec le nom d'utilisateur
-                resolve(username);
-            } else {
-                // Si aucun nom d'utilisateur n'est fourni, rejeter la promesse avec une erreur
-                reject(new Error("Aucun nom d'utilisateur fourni"));
-            }
-        });
-    
-        // Attendre que la promesse soit résolue ou rejetée
-        waitForUserName.then((username) => {
-            Auth.selectLogInUserName(User, username) // Utiliser selectLogInUserName à la place de selectLogInUserID
-                .then((user) => {
-                    if (user) {
-                        // Si l'utilisateur est trouvé, stocker son USER_ID dans la session
-                        req.session.username = username; // Assurez-vous que le nom de la session correspond à votre modèle de données
-                        // Rediriger vers '/verifOTP'
-                        //res.redirect('/verifOTP');
-
-                        res.status(200).send("Success");
-                    } else {
-                        // Si l'utilisateur n'est pas trouvé, afficher un message et rediriger vers '/signUpEmail'
-                        res.status(201).send("Nom d'utilisateur inconnu, veuillez vous inscrire");
-                    }
-                })
-                .catch((error) => {
-                    // Gérer les erreurs, par exemple en renvoyant une réponse d'erreur
-                    res.status(400).send("Erreur lors de la recherche de l'utilisateur : " + error.message);
-                });
-        }).catch((error) => {
-            // Gérer les erreurs, par exemple en renvoyant une réponse d'erreur
-            res.status(400).send("Erreur lors de la validation du nom d'utilisateur : " + error.message);
-        });
-    },
-
-    signUpFirstName: function (req, res){
-        console.log("Page First Name");
-
-        const { name } = req.body.name;
-        const { firstname } = req.body.firstname;
-
-        if(!name || !firstname){
-            return res.status(400).send("Vous devez fourni un nom et un prénom.");
-        }
-
-        req.session.name = name;
-        req.session.firstname = firstname;
-        res.status(202).send("Success");
-    },
-
-    signUpEmail: function (req, res) {
-
-        console.log("Page Email");
-
-        const emailSaisi = new Promise((resolve, reject) => {
-            const { email } = req.body;
-            if (email) {
-                resolve(email);
-            } else {
-                reject(new Error("Aucun email fourni"));
-            }
-        });
-
-        emailSaisi.then((email) => {
-            Auth.selectLogInEmail(User, email)
-                .then(user =>{
-                    if(user){
-                        req.session.usermail = email;
-                        res.status(200).send("Success");
-                    }else{
-                        res.status(404).send("Email non reconnu");
-                    }
-                })
-                .catch((error) => {
-                    console.error(error);
-                    res.status(400).send("Erreur lors de la recherche du email : " + error.message);
-                })
-        }).catch((error) => {
-            res.status(400).send("Erreur lors de validation : " + error.message);
-        })
-    },
-
-    signupDate: function(req, res) {
-
-        const { date } = req.body;
-        const storeDateInSession = new Promise((resolve, reject) => {
-            if (date) {
-                resolve(date);
-            } else {
-                reject(new Error("Aucune date fournie"));
-            }
-        });
-    
-        storeDateInSession.then(() => {
-            req.session.date = date;
-            res.status(202).send("Success");
-        }).catch((error) => {
-            res.status(400).send("Erreur : " + error.message);
-        });
-    },
-    
-    
-    signupTel: function(req, res) {
-
-        const { user_tel } = req.body;
-       if(!user_tel){
-        return res.status(400).send("Aucun numéro de téléphone fourni");
-       }
-
-       Auth.selectSignUpTel(User, user_tel)
-            .then(user => {
+        Auth.selectLogInUserNameAndEmail(User, req.body.username, req.body.email) // Utiliser selectLogInUserName à la place de selectLogInUserID
+            .then((user) => {
                 if (user) {
-                    res.status(409).json({ success: false, message: "Le numéro de téléphone existe déjà. Veuillez saisir un autre numéro." });
+                    // Si l'utilisateur est trouvé, stocker son USERNAME et USER_MAIL dans la session
+                    req.session.username = User.USERNAME;
+                    req.session.email = User.USER_MAIL;
+
+                    res.status(200).send("Success");
                 } else {
-                    req.session.user_tel = user_tel;
-                    res.status(200).json({ success: true, message: "Numéro de téléphone disponible." });
+                    res.status(201).send("Nom d'utilisateur inconnu, veuillez vous inscrire");
                 }
             })
-            .catch(err => {
-                console.error(err);
-                res.status(500).json({ success: false, message: "Une erreur s'est produite lors de la vérification du numéro de téléphone." });
+            .catch((error) => {
+                // Gérer les erreurs, par exemple en renvoyant une réponse d'erreur
+                res.status(400).send("Erreur lors de la recherche de l'utilisateur : " + error.message);
             });
     },
 
+    signup: function (req, res){
+        console.log("Page First Name");
+
+        //const { name } = req.body.name;
+       // const { firstname } = req.body.firstname;
+        const { username } = req.body.username;
+        const { email } = req.body.email;
+        const { date } = req.body.date;
+        const { user_tel } = req.body.user_tel;
+
+        Auth.selectSignUpData(User, req.body.username, req.body.email, req.body.user_tel)
+            .then((user) =>{
+                if(user){
+                    // Si l'utilisateur est trouvé, dire qu'il existe déjà
+                    res.status(400).send("Une des ces données existe déjà, veuillez vous connecter ou changez les informations")
+                } else{
+                    //req.session.name = name;
+                    //req.session.firstname = firstname;
+                    req.session.username = username;
+                    req.session.usermail = email;
+                    req.session.date = date;
+                    req.session.user_tel = user_tel;
+
+                    res.status(202).send("Success, veuillez maintenant vérifier votre email");
+                }
+
+            })
+
+        /*
+        if(!name || !firstname){
+            return res.status(400).send("Vous devez fournir un nom et un prénom.");
+        }
+        */
+    },
+    
     verifOTP: function(req,res){
         
         const otp = otpGenerator.generate(6, { upperCase: false, specialChars: false, alphabets: false });
         envoyerEmail(otp);
+        //envoyerEmail(otp, req.session.usermail);
         const otp_user = req.body;
 
         Auth.selectLogInUserName(User, req.session.username)
@@ -219,7 +146,7 @@ module.exports = {
                         // Supprimer les variables de session une fois que les données sont insérées avec succès
                         delete req.session.name;
                         delete req.session.firstname;
-                        delete req.session.usermail;
+                        //delete req.session.usermail;
                         delete req.session.usertel;
                         delete req.session.userdate;
             
