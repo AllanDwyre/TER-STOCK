@@ -6,6 +6,7 @@ var jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
+const authModel = require("../model/authModel");
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -43,7 +44,7 @@ module.exports = {
     login: function (req, res) {
         console.log("page login");
     
-        Auth.selectLogInUserNameAndEmail(User, req.body.username, req.body.email) // Utiliser selectLogInUserName à la place de selectLogInUserID
+        authModel.selectLogInUserNameAndEmail(User, req.body.username, req.body.email) // Utiliser selectLogInUserName à la place de selectLogInUserID
             .then((user) => {
                 if (user) {
                     // Si l'utilisateur est trouvé, stocker son USERNAME et USER_MAIL dans la session
@@ -71,7 +72,7 @@ module.exports = {
         const { date } = req.body.date;
         const { user_tel } = req.body.user_tel;
 
-        Auth.selectSignUpData(User, req.body.username, req.body.email, req.body.user_tel)
+        authModel.selectSignUpData(User, req.body.username, req.body.email, req.body.user_tel)
             .then((user) =>{
                 if(user){
                     // Si l'utilisateur est trouvé, dire qu'il existe déjà
@@ -103,7 +104,7 @@ module.exports = {
         //envoyerEmail(otp, req.session.usermail);
         const otp_user = req.body;
 
-        Auth.selectLogInUserName(User, req.session.username)
+        authModel.selectLogInUserName(User, req.session.username)
             .then(userExistant => {
                 if(userExistant){
                     if (otp !== otp_user) {
@@ -119,7 +120,7 @@ module.exports = {
 
                 }else{
                     const userId = uuidv4().replace(/[^0-9]/g, '')
-                    while(Auth.selectLogInUserID(User, User.USER_ID) == userId){
+                    while(authModel.selectLogInUserID(User, User.USER_ID) == userId){
                         userId = uuidv4().replace(/[^0-9]/g, '');
                     }
 
@@ -133,7 +134,7 @@ module.exports = {
                         return res.status(400).json({ success: false, message: "Le code OTP est incorrect." });
                     }
 
-                    Auth.insert(User, {
+                    authModel.insert(User, {
                         USER_ID: userId,
                         USERNAME: username,
                         NAME_USER: name,
