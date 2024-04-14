@@ -4,7 +4,7 @@ const { Sequelize } = require('sequelize');
 const User = require('./model/users')(sequelize, Sequelize);
 
 var app = express();
-
+// test
 // Ajout des middlewares
 app.use(express.urlencoded());
 
