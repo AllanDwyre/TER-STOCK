@@ -177,15 +177,6 @@ module.exports = {
             res.status(401);
             res.send("Bad Token");
         }
-    },
-
-
-    pagePrincipale: function(req,res){
-        const 
-    }
-
-    afficheProd: function(req,res){
-
     }
 
 };
