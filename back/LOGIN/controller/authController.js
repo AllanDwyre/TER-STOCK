@@ -1,5 +1,5 @@
 const Auth = require("../model/authModel");
-const { User } = require('../model/users');
+const { User } = require('../model/tables/users');
 require("dotenv").config();
 const KEY = process.env.DEV_KEY;
 var jwt = require('jsonwebtoken');
