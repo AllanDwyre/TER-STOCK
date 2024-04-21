@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const authController = require("../controller/authController.js");
 const userController = require('../controller/userController');
-const userController = require('../controller');
+const addProductRouter = require("../controller/addProduct.js");
+const Controller = require('../controller');
 
 router.post('/login', authController.login);
 router.post('/register',authController.signup);
@@ -11,6 +12,11 @@ router.post('/otp',authController.verifOTP);
 router.get('/homePage', authController.home);
 router.get('/inventory', authController.pagePrincipale);
 router.get('/product', authController.afficheProd);
+
+//=========================PAGE====================================
+// Utilisation du routeur pour ajouter un produit
+router.use('/products', addProductRouter);
+
 
 //=============================CRUD===================================
 
