@@ -1,18 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controller/authController.js");
-const userController = require('../controller/userController');
-const userController = require('../controller');
+const userController = require('../controller/userController.js');
+//const userController = require('../controller');
 
 router.post('/login', authController.login);
 router.post('/register',authController.signup);
 router.post('/otp',authController.verifOTP);
 
 router.get('/homePage', authController.home);
-router.get('/inventory', authController.pagePrincipale);
-router.get('/product', authController.afficheProd);
+/*router.get('/inventory', authController.pagePrincipale);
+router.get('/product', authController.afficheProd);*/
 
-//=============================CRUD===================================
+/*=============================CRUD===================================
 
 // CRUD utilisateur:
 router.post('/create', userController.create);
@@ -32,7 +32,7 @@ router.post('/clients', userController.createClient);
 router.get('/clients/:id', userController.getClientById);
 router.put('/clients/:id', userController.updateClientById);
 router.delete('/clients/:id', userController.deleteClientById);
-
+*/
 
 module.exports = router;
-
+	

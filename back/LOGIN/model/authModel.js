@@ -1,5 +1,9 @@
+const { Sequelize } = require('sequelize');
+// Import du modèle User
+const User = require('../model/tables/users');
+
 module.exports={
-    selectLogInUserID: function(User, user_id){
+    selectLogInUserID: function(user_id){
         return User.findOne({ where: {USER_ID: user_id }})
             .catch(error => {
                 console.error('Erreur lors de la recherche de l\'utilisateur par ID :', error);
@@ -8,8 +12,8 @@ module.exports={
 
     },
 
-    selectLogInUserNameAndEmail: function(User, username, email){
-        return User.findOne({ where: { 
+    selectLogInUserNameAndEmail: function(username, email){
+        return  User.findOne({ where: { 
             $or: [
                 { USERNAME: username },
                 { USER_MAIL: email }
@@ -21,7 +25,7 @@ module.exports={
         });
     },
 
-    selectSignUpData: function(User, username, email, telephone){
+    selectSignUpData: function(username, email, telephone){
         return User.findOne({ where: { 
             $or: [
                 { USERNAME: username },
@@ -35,7 +39,7 @@ module.exports={
         });
     },
     
-    insert: function(User, userData){
+    insert: function(userData){
         return User.create(userData)
             .catch(error => {
                 console.error('Erreur lors de l\'insertion de l\'utilisateur :', error);

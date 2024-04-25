@@ -1,12 +1,12 @@
 var express = require('express');
 var sequelize = require('./config/db.js');
 const { Sequelize } = require('sequelize');
-const User = require('./model/users')(sequelize, Sequelize);
+const User = require('./model/tables/users')(sequelize, Sequelize);
 
 var app = express();
 // autre test bla
 // Ajout des middlewares
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 
 // Connexion de Sequelize à l'application Express
 app.use(function(req, res, next) {
