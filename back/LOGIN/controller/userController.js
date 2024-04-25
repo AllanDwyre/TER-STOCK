@@ -107,6 +107,72 @@ module.exports = {
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la suppression du client: ' + error.message });
     }
-  }
+  },
+  //---------------------- Produit ------------------------------
+  // Créer un nouveau produit
+  createProduct: async (req, res) => {
+    try {
+      const productData = req.body;
+      const newProduct = await Produit.create(productData);
+      res.status(201).json(newProduct);
+    } catch (error) {
+      res.status(500).json({ message: 'Erreur lors de la création du produit : ' + error.message });
+    }
+  },
 
+  // Récupérer tous les produits
+  getAllProducts: async (req, res) => {
+    try {
+      const produits = await Produit.findAll();
+      res.json(produits);
+    } catch (error) {
+      res.status(500).json({ message: 'Erreur lors de la récupération des produits : ' + error.message });
+    }
+  },
+
+  // Récupérer un produit par son ID
+  getProductById: async (req, res) => {
+    try {
+      const productId = req.params.id;
+      const produit = await Produit.findByPk(productId);
+      if (!produit) {
+        return res.status(404).json({ message: 'Produit non trouvé' });
+      }
+      res.json(produit);
+    } catch (error) {
+      res.status(500).json({ message: 'Erreur lors de la récupération du produit : ' + error.message });
+    }
+  },
+
+  // Mettre à jour un produit par son ID
+  updateProduct: async (req, res) => {
+    try {
+      const productId = req.params.id;
+      const newData = req.body;
+      const produit = await Produit.findByPk(productId);
+      if (!produit) {
+        return res.status(404).json({ message: 'Produit non trouvé' });
+      }
+      await produit.update(newData);
+      res.json(produit);
+    } catch (error) {
+      res.status(500).json({ message: 'Erreur lors de la mise à jour du produit : ' + error.message });
+    }
+  },
+
+  // Supprimer un produit par son ID
+  deleteProduct: async (req, res) => {
+    try {
+      const productId = req.params.id;
+      const produit = await Produit.findByPk(productId);
+      if (!produit) {
+        return res.status(404).json({ message: 'Produit non trouvé' });
+      }
+      await produit.destroy();
+      res.json({ message: 'Produit supprimé avec succès' });
+    } catch (error) {
+      res.status(500).json({ message: 'Erreur lors de la suppression du produit : ' + error.message });
+    }
+  }
 };
+
