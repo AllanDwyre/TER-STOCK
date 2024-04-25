@@ -14,8 +14,8 @@ router.get('/inventory', authController.pagePrincipale);
 router.get('/product', authController.afficheProd);
 
 //=========================PAGE====================================
-// Utilisation du routeur pour ajouter un produit
-router.use('/products', addProductRouter);
+// Route pour ajouter un produit
+router.post('/addProduit', addProductRouter.addProduit);
 
 
 //=============================CRUD===================================
