@@ -26,14 +26,14 @@ class _ProductBodyState extends State<ProductBody>
 
     return SingleChildScrollView(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Image.asset(widget.product.image),
           Container(
             width: size.width,
             color: colorTheme.onPrimary,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(kDefaultPadding,
-                  kDefaultPadding, kDefaultPadding, kDefaultPadding),
+              padding: const EdgeInsets.all(kDefaultPadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -100,7 +100,7 @@ class _ProductBodyState extends State<ProductBody>
           ),
           SizedBox(
             width: size.width,
-            height: 300,
+            height: size.height,
             child: TabBarView(
               controller: tabController,
               children: [

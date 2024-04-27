@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
 import "package:hive_stock/inventory/views/inventory_body.dart";
 import "package:hive_stock/product/models/product.dart";
+import "package:hive_stock/product/views/add_product_page.dart";
 import "package:hive_stock/scanner/views/scanner_page.dart";
 import "package:hive_stock/utils/constants/padding.dart";
 
@@ -25,8 +26,9 @@ class InventoryScreen extends StatelessWidget {
   }
 
   AppBar buildAppBar(BuildContext context){
+    ColorScheme colorTheme = Theme.of(context).colorScheme;
     return AppBar(
-      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+      backgroundColor: colorTheme.onPrimary,
       elevation: 0,
       leading: IconButton(
         icon: SvgPicture.asset("assets/icons/hivestock_logo.svg"),
@@ -34,9 +36,22 @@ class InventoryScreen extends StatelessWidget {
       ),
       title:const Text("Hivestock"),
       actions: <Widget>[
-        IconButton(
-          icon:const Icon(Icons.add_circle),
-          onPressed: () {},
+        TextButton(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddProductScreen(),
+            ),
+          ),
+          child: Container(
+            height: 25,
+            width: 100,
+            decoration: BoxDecoration(
+              color: colorTheme.primary,
+              borderRadius: const BorderRadius.all(Radius.circular(25)),
+            ),
+            child: Center(child: Text('+ Add Product', style:TextStyle(color:colorTheme.onPrimary, fontSize: 12))),
+          ),
         ),
         IconButton(
           icon:const Icon(Icons.qr_code_scanner),

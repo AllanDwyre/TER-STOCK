@@ -53,7 +53,7 @@ class ItemCard extends StatelessWidget {
                   subtitle: product.quantity == 0
                     ? Text("Out of stock", style: textTheme
                       .bodySmall
-                      ?.copyWith(color: lightCustomColors.sourceSuccess))
+                      ?.copyWith(color: lightColorScheme.outline))
                     : Row(
                       children: [
                         Padding(
