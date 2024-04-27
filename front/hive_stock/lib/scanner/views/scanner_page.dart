@@ -6,7 +6,7 @@ class ScannerScreen extends StatefulWidget {
   const ScannerScreen({super.key});
 
   @override
-  _ScannerScreenState createState() => _ScannerScreenState();
+  State<ScannerScreen> createState() => _ScannerScreenState();
 }
 
 class _ScannerScreenState extends State<ScannerScreen> {
@@ -14,7 +14,8 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
   Future<void> _scanBarcode() async {
     try {
-      String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode('#004297', 'Cancel', true, ScanMode.BARCODE);
+      String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#004297', 'Cancel', true, ScanMode.BARCODE);
       setState(() {
         _scanResult = barcodeScanRes;
       });
@@ -51,4 +52,3 @@ class _ScannerScreenState extends State<ScannerScreen> {
     );
   }
 }
-

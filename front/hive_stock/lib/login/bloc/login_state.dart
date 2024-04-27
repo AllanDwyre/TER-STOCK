@@ -9,7 +9,7 @@ final class LoginState extends Equatable {
     this.phone = const Phone.pure(),
     this.otp = const Otp.pure(),
     this.isValid = false,
-    this.isAttemptingLogin,
+    this.isAttemptingLogin = true,
   });
 
   final Username username;
@@ -25,7 +25,7 @@ final class LoginState extends Equatable {
   final FormzSubmissionStatus status;
 
   /// Indicates whether the user is in the process of logging in, not registering
-  final bool? isAttemptingLogin;
+  final bool isAttemptingLogin;
 
   LoginState copyWith({
     FormzSubmissionStatus? status,
@@ -49,5 +49,6 @@ final class LoginState extends Equatable {
       );
 
   @override
-  List<Object> get props => [status, username, email, birthday, phone, otp];
+  List<Object> get props =>
+      [status, isAttemptingLogin, username, email, birthday, phone, otp];
 }

@@ -1,18 +1,5 @@
-// Toutes les requetes existantes
-enum RequestsName {
-  logIn,
-  register,
-  isUserExists,
-}
-
 class ApiConfig {
-  static String get prodBaseUrl => "";
+  static String get prodBaseUrl =>
+      "https://b6jnkuawrcmeoh29csix-mysql.services.clever-cloud.com"; // TODO ? CEST b6jnkuawrcmeoh29csix-mysql.services.clever-cloud.com ???
   static String get debugBaseUrl => "localhost:3000";
-
-  /// Nous definissons le chemin de chaque requettes
-  static final Map<RequestsName, String> requests = {
-    RequestsName.logIn: '/login',
-  };
-
-  static String? requestToString(RequestsName request) => requests[request];
 }
