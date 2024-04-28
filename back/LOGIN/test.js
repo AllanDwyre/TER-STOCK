@@ -1,29 +1,37 @@
-var express = require('express');
-var sequelize = require('./config/db.js');
-var app = express();
+// Importer le module MySQL
+const mysql = require('mysql2');
 
-// Ajout des middlewares
-app.use(express.urlencoded());
-
-// Connexion de Sequelize à l'application Express
-app.use(function(req, res, next) {
-  req.sequelize = sequelize;
-  next();
+// Configuration de la connexion à la base de données
+const connection = mysql.createConnection({
+  host: 'b6jnkuawrcmeoh29csix-mysql.services.clever-cloud.com', // L'hôte de la base de données (par exemple, 'localhost' si la base de données est en local)
+  user: 'uefrf8nq9wkradre', // Le nom d'utilisateur de la base de données
+  password: '4aRbuicMDPUv4TLyZjkj', // Le mot de passe de la base de données
+  database: 'b6jnkuawrcmeoh29csix' // Le nom de la base de données à laquelle se connecter
 });
 
-// Import des routes
-const authRouter = require("./routes/routes");
+// Établir la connexion à la base de données
+connection.connect((err) => {
+  if (err) {
+    console.error('Erreur de connexion à la base de données :', err.stack);
+    return;
+  }
 
-// Utilisation des routes
-app.use("/", authRouter);
-
-// Route pour afficher un message sur la page localhost
-app.get('/', function(req, res) {
-  res.send('Bienvenue sur la page d\'accueil !');
+  console.log('Connecté à la base de données MySQL avec l\'identifiant', connection.threadId);
 });
 
-// Définition du port d'écoute
-let port = process.env.PORT || 8000;
-app.listen(port, function () {
-  return console.log("Serveur Login utilisateur en écoute sur le port " + port);
+// Exécuter une requête SQL
+connection.query('DESCRIBE EMPLACEMENT', (err, rows) => {
+  if (err) throw err;
+
+  console.log('Données récupérées de la base de données :', rows);
+});
+
+// Fermer la connexion à la base de données après avoir exécuté la requête
+connection.end((err) => {
+  if (err) {
+    console.error('Erreur lors de la fermeture de la connexion à la base de données :', err.stack);
+    return;
+  }
+
+  console.log('Connexion à la baseee de données fermée.');
 });

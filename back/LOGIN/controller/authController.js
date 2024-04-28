@@ -7,6 +7,7 @@ const { v4: uuidv4 } = require('uuid');
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
 const authModel = require("../model/authModel");
+const users = require("../model/tables/users");
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -43,13 +44,14 @@ transporter.sendMail(mailOptions, (error, info) => {
 module.exports = {
     login: function (req, res) {
         console.log("page login");
-    
-        Auth.selectLogInUserNameAndEmail(User, req.body.username, req.body.email) // Utiliser selectLogInUserName à la place de selectLogInUserID
-            .then((user) => {
-                if (user) {
+        
+        console.log(typeof(users));
+        Auth.selectLogInUserNameAndEmail(req.body.username, req.body.email) // Utiliser selectLogInUserName à la place de selectLogInUserID
+        .then((user) => {
+            if (user) {
                     // Si l'utilisateur est trouvé, stocker son USERNAME et USER_MAIL dans la session
-                    req.session.username = User.USERNAME;
-                    req.session.email = User.USER_MAIL;
+                    req.session.username = users.USERNAME;
+                    req.session.email = users.USER_MAIL;
 
                     res.status(200).send("Success");
                 } else {

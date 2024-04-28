@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_stock/home/views/home_page.dart';
-import 'package:hive_stock/login/bloc/login_bloc.dart';
+import 'package:hive_stock/inventory/views/inventory_page.dart';
 import 'package:hive_stock/onBording/views/onbording_page.dart';
 import 'package:hive_stock/splash/views/splash_page.dart';
 import 'package:hive_stock/utils/app/authentication_repository.dart';
@@ -42,20 +42,12 @@ class _AppState extends State<App> {
     //RepositoryProvider is used to provide the single instance of AuthenticationRepository to the entire application which will come in handy later on.
     return RepositoryProvider.value(
       value: _authenticationRepository,
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (_) => AuthenticationBloc(
-              authenticationRepository: _authenticationRepository,
-              userRepository: _userRepository,
-            ),
-          ),
-          BlocProvider(
-            create: (context) =>
-                LoginBloc(authenticationRepository: _authenticationRepository),
-          ),
-        ],
+      child: BlocProvider(
         child: const AppView(),
+        create: (_) => AuthenticationBloc(
+          authenticationRepository: _authenticationRepository,
+          userRepository: _userRepository,
+        ),
       ),
     );
   }

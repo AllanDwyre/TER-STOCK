@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 import 'package:hive_stock/login/models/models.dart';
 import 'package:hive_stock/utils/app/authentication_repository.dart';
@@ -18,9 +19,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginBirthdayChanged>(_onBirthdayChanged);
     on<LoginPhoneChanged>(_onPhoneChanged);
     on<LoginOTPChanged>(_onOtpChanged);
-    on<LoginReset>(_onReset);
+    on<LoginSwitch>(_onSwitch);
     on<LoginSubmitted>(_onSubmitted);
-    on<LoginAttemptSubmitted>(_onAttemptSubmitted);
   }
 
   final AuthenticationRepository _authenticationRepository;
@@ -31,7 +31,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(
       state.copyWith(
         username: username,
-        isValid: Formz.validate([username]),
+        isValid: state.isAttemptingLogin
+            ? Formz.validate([username, state.email])
+            : Formz.validate(
+                [username, state.email, state.birthday, state.phone]),
       ),
     );
   }
@@ -41,7 +44,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(
       state.copyWith(
         email: email,
-        isValid: Formz.validate([state.username, email]),
+        isValid: state.isAttemptingLogin
+            ? Formz.validate([state.username, email])
+            : Formz.validate(
+                [state.username, email, state.birthday, state.phone]),
       ),
     );
   }
@@ -52,7 +58,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(
       state.copyWith(
         birthday: birthday,
-        isValid: Formz.validate([birthday]),
+        isValid: Formz.validate(
+            [state.username, state.email, birthday, state.phone]),
       ),
     );
   }
@@ -62,7 +69,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(
       state.copyWith(
         phone: phone,
-        isValid: Formz.validate([phone]),
+        isValid: Formz.validate(
+            [state.username, state.email, state.birthday, phone]),
       ),
     );
   }
@@ -73,37 +81,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(
       state.copyWith(
         otp: otp,
-        isValid: Formz.validate([otp, state.username]),
+        isValid: Formz.validate([otp]),
       ),
     );
   }
 
-  FutureOr<void> _onReset(LoginReset event, Emitter<LoginState> emit) {
-    emit(state.copyWith(isValid: false, status: FormzSubmissionStatus.initial));
-  }
-
-  Future<void> _onAttemptSubmitted(
-    LoginAttemptSubmitted event,
-    Emitter<LoginState> emit,
-  ) async {
-    if (state.isValid) {
-      emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
-      try {
-        bool isUserExit = await _authenticationRepository.userExist(
-          username: state.username.value,
-          email: state.email.value,
-        );
-
-        emit(
-          state.copyWith(
-            isAttemptingLogin: isUserExit,
-            status: FormzSubmissionStatus.success,
-          ),
-        );
-      } catch (_) {
-        emit(state.copyWith(status: FormzSubmissionStatus.failure));
-      }
-    }
+  FutureOr<void> _onSwitch(LoginSwitch event, Emitter<LoginState> emit) {
+    emit(state.copyWith(
+        isAttemptingLogin: !state.isAttemptingLogin,
+        isValid: !state.isAttemptingLogin
+            ? Formz.validate([state.username, state.email])
+            : Formz.validate(
+                [state.username, state.email, state.birthday, state.phone])));
   }
 
   Future<void> _onSubmitted(
@@ -113,10 +102,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (state.isValid) {
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
       try {
-        if (state.isAttemptingLogin == null) {
-          throw AssertionError('isAttemptingLogin can not be null!');
-        }
-        if (state.isAttemptingLogin!) {
+        if (state.isAttemptingLogin) {
           await _authenticationRepository.logIn(
             username: state.username.value,
             email: state.email.value,
@@ -132,8 +118,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           );
         }
         emit(state.copyWith(status: FormzSubmissionStatus.success));
-      } catch (_) {
+      } catch (e) {
         emit(state.copyWith(status: FormzSubmissionStatus.failure));
+        debugPrint('$e');
       }
     }
   }
