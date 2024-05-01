@@ -60,10 +60,10 @@ module.exports = {
                     console.log("Trouvé !");
                     console.log(user);
                     // Si l'utilisateur est trouvé, stocker son USERNAME et USER_MAIL dans la session
-                    sharedData.username = user.dataValues.USERNAME;
-                    sharedData.email = user.dataValues.USER_MAIL;
+                    req.session.username = user.USERNAME;
+                    sharedData.email = user.USER_MAIL;
 
-                    const userN = user.dataValues.USERNAME;
+                    const userN = req.session.username;
                     const userE = sharedData.email;
 
                     console.log(userN);

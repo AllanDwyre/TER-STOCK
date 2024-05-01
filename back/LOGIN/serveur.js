@@ -7,7 +7,7 @@ const User = require('./model/tables/users')(sequelize, DataTypes);
 
 var app = express();
 
-// Configuration du middleware de session
+// Configuration du middleware de session pour utiliser les variables de session
 app.use(session({
   secret: 'votre_secret', // Changez ceci pour une valeur aléatoire pour sécuriser les sessions
   resave: false,
