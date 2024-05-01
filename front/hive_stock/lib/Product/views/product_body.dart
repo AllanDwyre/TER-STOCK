@@ -68,11 +68,14 @@ class _ProductBodyState extends State<ProductBody>
             padding: const EdgeInsets.fromLTRB(
                 kDefaultPadding, 0, kDefaultPadding, 0),
             child: (widget.product.specialHandling == null)
-                ? Text(
-                    "No special handling",
-                    style: textTheme.titleSmall
-                        ?.copyWith(color: colorTheme.outlineVariant),
-                  )
+                ? Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                      "No special handling",
+                      style: textTheme.titleSmall
+                          ?.copyWith(color: colorTheme.outlineVariant),
+                    ),
+                )
                 : CustomSnackbar(
                     type: SnackbarType.warning,
                     description:
@@ -100,7 +103,7 @@ class _ProductBodyState extends State<ProductBody>
           ),
           SizedBox(
             width: size.width,
-            height: size.height,
+            height: size.height / 2,
             child: TabBarView(
               controller: tabController,
               children: [
