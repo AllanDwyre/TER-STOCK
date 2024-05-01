@@ -28,6 +28,10 @@ Utilisez la commande suivante pour générer des modèles Sequelize à partir de
 exemple :
 npx sequelize-auto -h 127.0.0.1 -d stock -u root -x {MOT DE PASSE} --dialect mysql -o ./LOGIN/model
 
+Exemple Windows : 
+
+node ./node_modules/sequelize-auto/bin/sequelize-auto -h localhost -d hivestock -u root -x hai501 -p 3306 --dialect mysql -o ../testAutoSeq/models
+
 Assurez-vous de remplacer les paramètres entre crochets par les valeurs spécifiques à votre configuration.
 
 

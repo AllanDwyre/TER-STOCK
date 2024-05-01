@@ -1,6 +1,8 @@
 const express = require('express');
-const router = express.Router();
-const Product = require('../model/tables/produit')(sequelize, Sequelize);
+const DataTypes = require('sequelize');
+const sequelize = require('../config/db');
+//const router = express.Router();
+const Product = require('../model/tables/produit')(sequelize, DataTypes);
 
 module.exports = {
     addProduit: async function(req, res) {

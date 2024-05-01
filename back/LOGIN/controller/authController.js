@@ -1,13 +1,13 @@
+const DataTypes = require('sequelize');
+const sequelize = require('../config/db');
 const Auth = require("../model/authModel");
-const { User } = require('../model/tables/users');
-require("dotenv").config();
+const User = require('../model/tables/users')(sequelize, DataTypes);
+require('dotenv').config({ path: '../.env' });
 const KEY = process.env.DEV_KEY;
 var jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
-const authModel = require("../model/authModel");
-const users = require("../model/tables/users");
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -41,17 +41,44 @@ transporter.sendMail(mailOptions, (error, info) => {
 });
 }
 
+const sharedData = {
+    username: '',
+    email: ''
+  };
+
+
 module.exports = {
     login: function (req, res) {
         console.log("page login");
         
-        console.log(typeof(users));
-        Auth.selectLogInUserNameAndEmail(req.body.username, req.body.email) // Utiliser selectLogInUserName à la place de selectLogInUserID
+        console.log(typeof(User));
+        console.log(typeof(req.body.username));
+        console.log(typeof(req.body.email));
+        Auth.selectLogInUserNameAndEmail(User, req.body.username, req.body.email) // Utiliser selectLogInUserName à la place de selectLogInUserID
         .then((user) => {
             if (user) {
+                    console.log("Trouvé !");
+                    console.log(user);
                     // Si l'utilisateur est trouvé, stocker son USERNAME et USER_MAIL dans la session
-                    req.session.username = users.USERNAME;
-                    req.session.email = users.USER_MAIL;
+                    sharedData.username = user.dataValues.USERNAME;
+                    sharedData.email = user.dataValues.USER_MAIL;
+
+                    const userN = user.dataValues.USERNAME;
+                    const userE = sharedData.email;
+
+                    console.log(userN);
+                    console.log(userE);
+                    /*
+                    User.create({
+                        USER_ID : 3,
+                        USERNAME : userN,
+                        USER_MAIL : userE
+                    }).then(res => {
+                        console.log(res)
+                    }).catch((error) => {
+                        console.error('Failed to create a new record : ', error);
+                    });*/
+
 
                     res.status(200).send("Success");
                 } else {
@@ -60,7 +87,7 @@ module.exports = {
             })
             .catch((error) => {
                 // Gérer les erreurs, par exemple en renvoyant une réponse d'erreur
-                res.status(400).send("Erreur lors de la recherche de l'utilisateur : " + error.message);
+                res.status(400).send("Controller , Erreur lors de la recherche de l'utilisateur : " + error.message);
             });
     },
 

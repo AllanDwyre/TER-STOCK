@@ -14,16 +14,19 @@ async function testConnection() {
     console.log('Connexion à la base de données établie avec succès.');
   } catch (error) {
     console.error('Impossible de se connecter à la base de données:', error);
-  } finally {
+  }} 
+
+  /*
+  finally {
     // Fermer la connexion après le test
     await sequelize.close();
   }
-}
+}*/
 
 // Appeler la fonction de test de connexion
 testConnection();
 
-const User = require('../model/tables/users.js')(sequelize, DataTypes);
+//const User = require('../model/tables/users.js')(sequelize, DataTypes);
 
 /* Insérer une nouvelle ligne dans la table users
 User.create({

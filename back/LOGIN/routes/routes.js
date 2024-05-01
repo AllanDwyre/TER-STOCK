@@ -1,4 +1,5 @@
 const express = require("express");
+const session = require("express-session");
 const router = express.Router();
 const authController = require("../controller/authController.js");
 const userController = require('../controller/userController.js');
