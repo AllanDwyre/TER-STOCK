@@ -34,10 +34,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DECIMAL(20,0),
       allowNull: true
     },
-    QR_CODE_PRODUIT: {
-      type: DataTypes.DECIMAL(20,0),
-      allowNull: true
-    },
     CATEGORIE_ID: {
       type: DataTypes.DECIMAL(15,0),
       allowNull: true,

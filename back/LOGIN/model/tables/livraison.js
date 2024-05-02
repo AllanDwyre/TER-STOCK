@@ -4,11 +4,7 @@ module.exports = function(sequelize, DataTypes) {
     LIVRAISON_ID: {
       type: DataTypes.DECIMAL(15,0),
       allowNull: false,
-      primaryKey: true,
-      references: {
-        model: 'COMMANDE_SORTIE',
-        key: 'COMMANDE_S_ID'
-      }
+      primaryKey: true
     },
     DATE_LIVRAISON: {
       type: DataTypes.DATEONLY,

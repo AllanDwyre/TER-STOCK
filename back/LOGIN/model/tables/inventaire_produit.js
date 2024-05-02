@@ -22,11 +22,7 @@ module.exports = function(sequelize, DataTypes) {
         key: 'PRODUIT_ID'
       }
     },
-    QUANTITE_ENTREE_PAR_PROD: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    QUANTITE_SORTIE_PAR_PROD: {
+    QUANTITE_OBSERVEE: {
       type: DataTypes.INTEGER,
       allowNull: true
     },

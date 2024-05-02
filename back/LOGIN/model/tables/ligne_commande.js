@@ -1,31 +1,31 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('LOT_VENDU', {
-    LOT_ID: {
+  return sequelize.define('ligne_commande', {
+    PRODUIT_ID: {
       type: DataTypes.DECIMAL(15,0),
       allowNull: false,
       primaryKey: true,
       references: {
-        model: 'LOT_PRODUITS',
-        key: 'LOT_ID'
+        model: 'produit',
+        key: 'PRODUIT_ID'
       }
     },
-    VENTE_ID: {
-      type: DataTypes.DECIMAL(15,0),
+    COMMANDE_ID: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       references: {
-        model: 'VENTE',
-        key: 'VENTE_ID'
+        model: 'commande',
+        key: 'COMMANDE_ID'
       }
     },
-    QTE_LOT: {
-      type: DataTypes.DECIMAL(10,0),
+    QUANTITE: {
+      type: DataTypes.INTEGER,
       allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'LOT_VENDU',
+    tableName: 'ligne_commande',
     timestamps: false,
     indexes: [
       {
@@ -33,15 +33,15 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "LOT_ID" },
-          { name: "VENTE_ID" },
+          { name: "PRODUIT_ID" },
+          { name: "COMMANDE_ID" },
         ]
       },
       {
-        name: "FK_VENT_LOT",
+        name: "FK_LIGN_COMM",
         using: "BTREE",
         fields: [
-          { name: "VENTE_ID" },
+          { name: "COMMANDE_ID" },
         ]
       },
     ]

@@ -34,12 +34,15 @@ module.exports={
         })
     },
 
-    selectSignUpData: function(username, email, telephone){
-        return User.findOne({ where: { 
-            $or: [
+    selectSignUpData: function(User, username, email, telephone, password){
+        return User.findOne({
+            where: { 
+                [Op.or]: [
                 { USERNAME: username },
                 { USER_MAIL: email },
-                { USER_TEL: telephone}
+                { USER_TEL: telephone},
+                { }
+
             ]
         }})
         .catch(error => {
@@ -48,7 +51,7 @@ module.exports={
         });
     },
     
-    insert: function(userData){
+    insert: function(User,userData){
         return User.create(userData)
             .catch(error => {
                 console.error('Erreur lors de l\'insertion de l\'utilisateur :', error);

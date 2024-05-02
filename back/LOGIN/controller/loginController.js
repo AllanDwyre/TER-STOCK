@@ -6,45 +6,6 @@ require('dotenv').config({ path: '../.env' });
 const KEY = process.env.DEV_KEY;
 var jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
-const otpGenerator = require('otp-generator');
-const nodemailer = require('nodemailer');
-
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true, // Use `true` for port 465, `false` for all other ports
-    auth: {
-      user: "hivestock92@gmail.com",
-      pass: "isclwxtwlglfyspq",
-    },
-});
-
-transporter.verify().then(() => {
-console.log("Pret pour envoyer un email");
-});
-
-function envoyerEmail(otp) { //remplacer par function envoyerEmail(otp, destinataire)
-const mailOptions = {
-    from: '"HiveStock" <hivestock92@gmail.com>',
-    to: 'hivestock92@gmail.com', //remplacer par destinataire
-    subject: 'Hive stock - Code OTP',
-    text: `Votre OTP est : ${otp}.\n
-    Saissez ce code pour vérifier votre compte`
-};
-
-transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-    console.error('Erreur lors de l\'envoi de l\'e-mail:', error);
-    } else {
-    console.log('E-mail envoyé:', info.response);
-    }
-});
-}
-
-const sharedData = {
-    username: '',
-    email: ''
-  };
 
 
 module.exports = {
@@ -61,10 +22,10 @@ module.exports = {
                     console.log(user);
                     // Si l'utilisateur est trouvé, stocker son USERNAME et USER_MAIL dans la session
                     req.session.username = user.USERNAME;
-                    sharedData.email = user.USER_MAIL;
+                    req.session.email = user.USER_MAIL;
 
                     const userN = req.session.username;
-                    const userE = sharedData.email;
+                    const userE = req.session.email;
 
                     console.log(userN);
                     console.log(userE);
@@ -101,7 +62,7 @@ module.exports = {
         const date = req.body.date;
         const user_tel = req.body.user_tel;
 
-        Auth.selectSignUpData(User, req.body.username, req.body.email, req.body.user_tel)
+        Auth.selectSignUpData(User, req.body.username, req.body.email, req.body.user_tel, req.body.password)
             .then((user) =>{
                 if(user){
                     // Si l'utilisateur est trouvé, dire qu'il existe déjà

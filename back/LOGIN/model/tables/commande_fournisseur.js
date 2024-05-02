@@ -1,30 +1,30 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('EMPLOYE', {
-    EMPLOYE_ID: {
-      type: DataTypes.DECIMAL(15,0),
+  return sequelize.define('commande_fournisseur', {
+    COMM_FOURN_ID: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       references: {
-        model: 'USERS',
-        key: 'USER_ID'
+        model: 'commande',
+        key: 'COMMANDE_ID'
       }
     },
-    POSTE: {
-      type: DataTypes.STRING(255),
-      allowNull: true
+    TYPE_COMMANDE: {
+      type: DataTypes.ENUM('commande','retour'),
+      allowNull: false
     },
-    ADRESSE_ID: {
+    FOURNISSEUR_ID: {
       type: DataTypes.DECIMAL(15,0),
       allowNull: true,
       references: {
-        model: 'ADRESSE',
-        key: 'ADRESSE_ID'
+        model: 'fournisseur',
+        key: 'FOURNISSEUR_ID'
       }
     }
   }, {
     sequelize,
-    tableName: 'EMPLOYE',
+    tableName: 'commande_fournisseur',
     timestamps: false,
     indexes: [
       {
@@ -32,14 +32,14 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "EMPLOYE_ID" },
+          { name: "COMM_FOURN_ID" },
         ]
       },
       {
-        name: "FK_ADR_EMP",
+        name: "FL_CF_FOURNISSEUR",
         using: "BTREE",
         fields: [
-          { name: "ADRESSE_ID" },
+          { name: "FOURNISSEUR_ID" },
         ]
       },
     ]
