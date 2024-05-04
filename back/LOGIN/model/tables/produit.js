@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('PRODUIT', {
     PRODUIT_ID: {
-      type: DataTypes.DECIMAL(15,0),
+      type: DataTypes.NUMERIC(10),
       allowNull: false,
       primaryKey: true
     },
@@ -49,6 +49,14 @@ module.exports = function(sequelize, DataTypes) {
         model: 'EMPLACEMENT',
         key: 'EMPLACEMENT_ID'
       }
+    },
+    FOURNISSEUR_ID: {
+      type : DataTypes.NUMERIC(10),
+      allowNull: true,
+      references :{
+        model: 'FOURNISSEUR',
+        key: 'FOURNISSEUR_ID'
+      }
     }
   }, {
     sequelize,
@@ -75,6 +83,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "EMPLACEMENT_ID" },
+        ]
+      },
+      {
+        name : "FK_FOURN",
+        using: "BTREE",
+        fields: [
+          {name : "FOURNISSEUR_ID"},
         ]
       },
     ]

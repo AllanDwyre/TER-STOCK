@@ -11,12 +11,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true
     },
-    DEMANDEUR_ID: {
-      type: DataTypes.DECIMAL(15,0),
-      allowNull: true
-    },
     EMPLOYE_ID: {
-      type: DataTypes.DECIMAL(15,0),
+      type: DataTypes.NUMERIC(15),
       allowNull: true,
       references: {
         model: 'employe',

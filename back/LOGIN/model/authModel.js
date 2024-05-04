@@ -1,11 +1,16 @@
 const { Op } = require('sequelize');
+const crypto = require('crypto');
 module.exports={
     selectLogInUserID: function(User, user_id){
-        return User.findOne({ where: {USER_ID: user_id }})
-            .catch(error => {
-                console.error('Erreur lors de la recherche de l\'utilisateur par ID :', error);
-                throw new Error('Erreur lors de la recherche de l\'utilisateur par ID');
-            });
+        return User.findOne({
+            where: {
+                USER_ID: user_id 
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la recherche de l\'utilisateur par ID :', error);
+            throw new Error('Erreur lors de la recherche de l\'utilisateur par ID');
+        });
 
     },
 /*
@@ -34,15 +39,25 @@ module.exports={
         })
     },
 
-    selectSignUpData: function(User, username, email, telephone, password){
+    selectLogInUserNameAndPassword: function(User, username, password){
+        var cryptPassword = crypto.createHash('sha256').update(password).digest('hex');
+        return  User.findOne({
+            where: { 
+                [Op.and]: [
+                    { USERNAME: username },
+                    { USER_PASS: cryptPassword }
+                ],
+            }
+        })
+    },
+
+    selectSignUpData: function(User, username, email, telephone){
         return User.findOne({
             where: { 
                 [Op.or]: [
                 { USERNAME: username },
                 { USER_MAIL: email },
-                { USER_TEL: telephone},
-                { }
-
+                { USER_TEL: telephone}
             ]
         }})
         .catch(error => {
@@ -51,11 +66,21 @@ module.exports={
         });
     },
     
-    insert: function(User,userData){
-        return User.create(userData)
-            .catch(error => {
-                console.error('Erreur lors de l\'insertion de l\'utilisateur :', error);
-                throw new Error('Erreur lors de l\'insertion de l\'utilisateur');
-            });
+    insert: function(User,userid, username, nameuser, firstname, usermail, userpass, usertel, userdate){
+        var cryptPassword = crypto.createHash('sha256').update(userpass).digest('hex');
+        return User.create({
+            USER_ID : userid,
+            USERNAME : username,
+            NAME_USER : nameuser,
+            FIRST_NAME : firstname,
+            USER_MAIL : usermail,
+            USER_PASS : cryptPassword,
+            USER_TEL : usertel,
+            USER_DATE_NAISS : userdate
+        })
+        .catch(error => {
+            console.error('Erreur lors de l\'insertion de l\'utilisateur :', error);
+            throw new Error('Erreur lors de l\'insertion de l\'utilisateur');
+        });
     }
 };

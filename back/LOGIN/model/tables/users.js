@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('USERS', {
     USER_ID: {
-      type: DataTypes.DECIMAL(15,0),
+      type: DataTypes.NUMERIC(15),
       allowNull: false,
       primaryKey: true
     },
@@ -27,7 +27,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     USER_TEL: {
-      type: DataTypes.DECIMAL(10,0),
+      type: DataTypes.NUMERIC(10),
       allowNull: false
     },
     USER_DATE_NAISS: {
