@@ -17,10 +17,12 @@ module.exports = {
             productCategorie,
             quantiteProd,
             unitProd,
-            productBuyingPrice,
+            produitPrix,
+            dateOrder
             // il faut correpondre  les champs avec le front
           } = req.body;  
 
+        
 
     }
 

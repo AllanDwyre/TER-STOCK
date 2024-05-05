@@ -2,21 +2,19 @@ var express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 var sequelize = require('./config/db.js');
-const { DataTypes } = require('sequelize');
-const User = require('./model/tables/users')(sequelize, DataTypes);
 
 var app = express();
 
 // Configuration du middleware de session pour utiliser les variables de session
 app.use(session({
-  secret: 'votre_secret', // Changez ceci pour une valeur aléatoire pour sécuriser les sessions
+  secret: 'un_secretTresSecret', // valeur pour sécuriser les sessions
   resave: false,
   saveUninitialized: true
 }));
 
-// autre test bla
 // Ajout des middlewares
-//app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
+
 // Ajout des middlewares
 app.use(bodyParser.json()); // pour le format JSON brut
 app.use(bodyParser.raw()); // pour tout autre type de données brutes
