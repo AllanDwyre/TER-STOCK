@@ -1,27 +1,30 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('PRODUITS_ENTREES', {
-    PRODUIT_ID: {
-      type: DataTypes.DECIMAL(15,0),
+  return sequelize.define('commande_client', {
+    COMM_CLIENT_ID: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       references: {
-        model: 'PRODUIT',
-        key: 'PRODUIT_ID'
+        model: 'commande',
+        key: 'COMMANDE_ID'
       }
     },
-    COMMANDE_E_ID: {
+    TYPE_COMMANDE: {
+      type: DataTypes.ENUM('commande','retour'),
+      allowNull: false
+    },
+    CLIENT_ID: {
       type: DataTypes.DECIMAL(15,0),
-      allowNull: false,
-      primaryKey: true,
+      allowNull: true,
       references: {
-        model: 'COMMANDE_ENTREE',
-        key: 'COMMANDE_E_ID'
+        model: 'client',
+        key: 'CLIENT_ID'
       }
     }
   }, {
     sequelize,
-    tableName: 'PRODUITS_ENTREES',
+    tableName: 'commande_client',
     timestamps: false,
     indexes: [
       {
@@ -29,15 +32,14 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "PRODUIT_ID" },
-          { name: "COMMANDE_E_ID" },
+          { name: "COMM_CLIENT_ID" },
         ]
       },
       {
-        name: "FK_PR_CE",
+        name: "FL_CC_CLIENT",
         using: "BTREE",
         fields: [
-          { name: "COMMANDE_E_ID" },
+          { name: "CLIENT_ID" },
         ]
       },
     ]

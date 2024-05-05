@@ -1,21 +1,35 @@
 const express = require("express");
 const router = express.Router();
-const authController = require("../controller/authController.js");
+//const authController = require("../controller/authController.js");
 const userController = require('../controller/userController.js');
-const addProductRouter = require("../controller/addProduct.js");
+const addProduct = require("../controller/addProduct.js");
+const loginController = require("../controller/loginController.js");
 //const Controller = require('../controller');
+
+
+router.post('/login', loginController.login);
+router.post('/register', loginController.signup);
+router.get('/homePage', loginController.home);
+
+/* ------ SI ON A LE TEMPS D'INCLURE OTP ---- 
 
 router.post('/login', authController.login);
 router.post('/register',authController.signup);
 router.post('/otp',authController.verifOTP);
-
 router.get('/homePage', authController.home);
+ ---------- */
+
+
 /*router.get('/inventory', authController.pagePrincipale);
 router.get('/product', authController.afficheProd);*/
 
 //=========================PAGE====================================
 // Route pour ajouter un produit
-router.post('/addProduit', addProductRouter.addProduit);
+router.get('/Product/add', addProduct.addProduit);
+router.get('/Inventory', );
+router.get('/Order')
+router.get('Order/newOrder', );
+
 
 
 /*=============================CRUD===================================

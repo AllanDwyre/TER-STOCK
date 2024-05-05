@@ -1,26 +1,27 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('LIVRAISON', {
-    LIVRAISON_ID: {
-      type: DataTypes.DECIMAL(15,0),
+  return sequelize.define('commande', {
+    COMMANDE_ID: {
+      autoIncrement: true,
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    DATE_LIVRAISON: {
-      type: DataTypes.DATEONLY,
+    DATE_COMMANDE: {
+      type: DataTypes.DATE,
       allowNull: true
     },
     EMPLOYE_ID: {
-      type: DataTypes.DECIMAL(15,0),
+      type: DataTypes.NUMERIC(15),
       allowNull: true,
       references: {
-        model: 'EMPLOYE',
+        model: 'employe',
         key: 'EMPLOYE_ID'
       }
     }
   }, {
     sequelize,
-    tableName: 'LIVRAISON',
+    tableName: 'commande',
     timestamps: false,
     indexes: [
       {
@@ -28,11 +29,11 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "LIVRAISON_ID" },
+          { name: "COMMANDE_ID" },
         ]
       },
       {
-        name: "FK_EMPL",
+        name: "FK_CF_EMPLOYE",
         using: "BTREE",
         fields: [
           { name: "EMPLOYE_ID" },

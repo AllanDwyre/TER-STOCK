@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true,
       references: {
-        model: 'PRODUIT',
+        model: 'produit',
         key: 'PRODUIT_ID'
       }
     },
@@ -21,10 +21,6 @@ module.exports = function(sequelize, DataTypes) {
     },
     QUANTITE: {
       type: DataTypes.DECIMAL(10,0),
-      allowNull: true
-    },
-    PRIX_UNIT: {
-      type: DataTypes.STRING(255),
       allowNull: true
     }
   }, {

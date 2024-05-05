@@ -1,4 +1,6 @@
-const User = require('../model/tables/users.js');
+const sequelize = require('../config/db.js');
+const DataTypes = require('sequelize');
+const User = require('../model/tables/users.js')(sequelize,DataTypes);
 
 module.exports = {
   //----------------------utilisateur----------------------------
