@@ -14,6 +14,7 @@ module.exports = {
         
         console.log(typeof(User));
         console.log(typeof(req.body.password));
+        console.log(req.body.username);
         Auth.selectLogInUserNameAndPassword(User, req.body.username, req.body.password) // Utiliser selectLogInUserName à la place de selectLogInUserID
         .then((user) => {
             if (user) {

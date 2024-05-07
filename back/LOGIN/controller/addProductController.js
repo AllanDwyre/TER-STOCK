@@ -5,6 +5,9 @@ const Produit = require('../model/tables/produit')(sequelize, DataTypes);
 const Categorie = require('../model/tables/categorie')(sequelize, DataTypes);
 const Fournisseur = require('../model/tables/fournisseur')(sequelize, DataTypes);
 
+sharedData = {
+  
+}
 
 module.exports = {
     addProduit: async function(req, res) {
