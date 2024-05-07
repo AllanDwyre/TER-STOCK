@@ -170,15 +170,13 @@ module.exports = {
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la suppression de l\'employé : ' + error.message });
     }
-  }
-
-};
+  },
 
 
 //------------------------------- Vente -------------------------------
 
 // CREATE
-const createVente = async (req, res) => {
+ createVente : async (req, res) => {
     try {
         const venteData = req.body;
         const newVente = await Vente.create(venteData);
@@ -186,10 +184,10 @@ const createVente = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la création de la vente: ' + error.message });
     }
-};
+},
 
 // GET
-const getVenteById = async (req, res) => {
+getVenteById : async (req, res) => {
     try {
         const venteId = req.params.id;
         const vente = await Vente.findByPk(venteId);
@@ -200,10 +198,10 @@ const getVenteById = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la récupération de la vente: ' + error.message });
     }
-};
+},
 
 // UPDATE
-const updateVenteById = async (req, res) => {
+ updateVenteById : async (req, res) => {
     try {
         const venteId = req.params.id;
         const newData = req.body;
@@ -216,10 +214,10 @@ const updateVenteById = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la mise à jour de la vente: ' + error.message });
     }
-};
+},
 
 // DELETE
-const deleteVenteById = async (req, res) => {
+ deleteVenteById : async (req, res) => {
     try {
         const venteId = req.params.id;
         const vente = await Vente.findByPk(venteId);
@@ -231,14 +229,14 @@ const deleteVenteById = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la suppression de la vente: ' + error.message });
     }
-};
+},
 
 
 //------------------------------- Facture -------------------------------
 
 
 // CREATE
-const createFacture = async (req, res) => {
+ createFacture : async (req, res) => {
     try {
         const factureData = req.body;
         const newFacture = await Facture.create(factureData);
@@ -246,10 +244,10 @@ const createFacture = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la création de la facture: ' + error.message });
     }
-};
+},
 
 // GET
-const getFactureById = async (req, res) => {
+ getFactureById : async (req, res) => {
     try {
         const factureId = req.params.id;
         const facture = await Facture.findByPk(factureId);
@@ -260,10 +258,10 @@ const getFactureById = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la récupération de la facture: ' + error.message });
     }
-};
+},
 
 // UPDATE
-const updateFactureById = async (req, res) => {
+ updateFactureById : async (req, res) => {
     try {
         const factureId = req.params.id;
         const newData = req.body;
@@ -276,10 +274,10 @@ const updateFactureById = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la mise à jour de la facture: ' + error.message });
     }
-};
+},
 
 // DELETE
-const deleteFactureById = async (req, res) => {
+ deleteFactureById : async (req, res) => {
     try {
         const factureId = req.params.id;
         const facture = await Facture.findByPk(factureId);
@@ -291,8 +289,8 @@ const deleteFactureById = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la suppression de la facture: ' + error.message });
     }
-};
-  },
+},
+
   //---------------------- Produit ------------------------------
   // Créer un nouveau produit
   createProduct: async (req, res) => {
