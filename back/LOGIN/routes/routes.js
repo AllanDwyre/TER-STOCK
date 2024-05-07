@@ -34,5 +34,23 @@ router.put('/clients/:id', userController.updateClientById);
 router.delete('/clients/:id', userController.deleteClientById);
 
 
+// CRUD Employé :
+router.post('/employes', userController.createEmploye);
+router.get('/employes/:id', userController.getEmployeById);
+router.put('/employes/:id', userController.updateEmployeById);
+router.delete('/employes/:id', userController.deleteEmployeById);
+
+// CRUD Vente :
+router.post('/ventes', userController.createVente);
+router.get('/ventes/:id', userController.getVenteById);
+router.put('/ventes/:id', userController.updateVenteById);
+router.delete('/ventes/:id', userController.deleteVenteById);
+
+// CRUD Facture :
+router.post('/factures', userController.createVente);
+router.get('/factures/:id', userController.getVenteById);
+router.put('/factures/:id', userController.updateVenteById);
+router.delete('/factures/:id', userController.deleteVenteById);
+
 module.exports = router;
 
