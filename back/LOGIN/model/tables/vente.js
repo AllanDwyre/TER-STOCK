@@ -4,22 +4,10 @@ module.exports = function(sequelize, DataTypes) {
     VENTE_ID: {
       type: DataTypes.DECIMAL(15,0),
       allowNull: false,
-      primaryKey: true,
-      references: {
-        model: 'COMMANDE_SORTIE',
-        key: 'COMMANDE_S_ID'
-      }
+      primaryKey: true
     },
     DATE_VENTE: {
       type: DataTypes.DATEONLY,
-      allowNull: true
-    },
-    MONTANT_TOTAL: {
-      type: DataTypes.DECIMAL(8,2),
-      allowNull: true
-    },
-    MODE_PAIEMENT: {
-      type: DataTypes.STRING(255),
       allowNull: true
     },
     EMPLOYE_ID: {

@@ -20,7 +20,7 @@ class ItemCard extends StatelessWidget {
       onTap: press,
       child: Container(
         decoration: BoxDecoration(
-          color: darkColorScheme.inverseSurface,
+          color: const Color.fromARGB(234, 236, 236, 236),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           boxShadow: [
             BoxShadow(
@@ -53,7 +53,7 @@ class ItemCard extends StatelessWidget {
                   subtitle: product.quantity == 0
                     ? Text("Out of stock", style: textTheme
                       .bodySmall
-                      ?.copyWith(color: lightCustomColors.sourceSuccess))
+                      ?.copyWith(color: lightColorScheme.outline))
                     : Row(
                       children: [
                         Padding(
@@ -67,7 +67,7 @@ class ItemCard extends StatelessWidget {
                       ],
                     )
                     ,
-                  trailing: Text("${product.price ?? "N/A"}/unit", style: textTheme
+                  trailing: Text("${product.price ?? "-"}€/unit", style: textTheme
                     .bodyLarge
                     ?.copyWith(color: colorTheme.secondary)),
                 ),
@@ -84,9 +84,12 @@ class ItemCard extends StatelessWidget {
                           ?.copyWith(color: colorTheme.secondary)),
                   ),
                   product.specialHandling == null
-                  ? Text("Non renseigné", style: textTheme
-                      .bodyMedium
-                      ?.copyWith(color: colorTheme.secondary))
+                  ? Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Non renseigné", style: textTheme
+                        .bodyMedium
+                        ?.copyWith(color: colorTheme.secondary)),
+                  )
                   : Row(
                     children: <Widget>[
                       Text("${product.specialHandling!.capitalize()} : ", style: textTheme

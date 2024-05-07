@@ -22,10 +22,6 @@ module.exports = function(sequelize, DataTypes) {
     QTE_LOT: {
       type: DataTypes.DECIMAL(10,0),
       allowNull: true
-    },
-    PRIX_LOT: {
-      type: DataTypes.STRING(255),
-      allowNull: true
     }
   }, {
     sequelize,

@@ -1,6 +1,8 @@
-# hive_stock
+# Liens utiles
 
-A new Flutter project.
+[Google icons](https://fonts.google.com/icons)
+
+[How to center content Column/Row](https://stackoverflow.com/questions/50871033/how-to-center-column-and-row-item-in-flutter)
 
 ## Getting Started
 

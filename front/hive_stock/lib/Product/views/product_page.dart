@@ -16,7 +16,7 @@ class ProductScreen extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 30.0),
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 30.0),
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: Colors.transparent,

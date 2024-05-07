@@ -21,10 +21,6 @@ module.exports = function(sequelize, DataTypes) {
     CB_LOT: {
       type: DataTypes.DECIMAL(15,0),
       allowNull: true
-    },
-    QR_LOT: {
-      type: DataTypes.DECIMAL(15,0),
-      allowNull: true
     }
   }, {
     sequelize,
