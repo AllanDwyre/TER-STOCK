@@ -1,15 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:hive_stock/authentication/bloc/authentication_bloc.dart';
-import 'package:hive_stock/home/views/home_body.dart';
 import 'package:hive_stock/home/views/home_page.dart';
 import 'package:hive_stock/inventory/views/inventory_page.dart';
-import 'package:hive_stock/utils/constants/colors.dart';
 import 'package:hive_stock/utils/constants/padding.dart';
 import 'package:hive_stock/utils/widgets/bar_chart.dart';
 import 'package:hive_stock/utils/widgets/search_bar.dart';
@@ -73,7 +66,7 @@ class _HomeBodyState extends State<HomeBody> {
                       width: size.width - 2*kDefaultPadding,
                       decoration: BoxDecoration(
                         color: colorTheme.outlineVariant,
-                        borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                        borderRadius: const BorderRadius.all(Radius.circular(6.0)),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(kDefaultPadding/2),
@@ -99,8 +92,8 @@ class _HomeBodyState extends State<HomeBody> {
                                         Padding(
                                           padding: const EdgeInsets.all(2.0),
                                           child: Container(
-                                            color: Color.fromARGB(27, 255, 197, 37),
-                                            child: Icon(Icons.inventory_2_outlined, color: Color.fromARGB(255, 240, 179, 47))
+                                            color: const Color.fromARGB(27, 255, 197, 37),
+                                            child: const Icon(Icons.inventory_2_outlined, color: Color.fromARGB(255, 240, 179, 47))
                                             ),
                                         ),
                                         Padding(
@@ -134,8 +127,8 @@ class _HomeBodyState extends State<HomeBody> {
                                         Padding(
                                           padding: const EdgeInsets.all(2.0),
                                           child: Container(
-                                            color: Color.fromARGB(25, 177, 174, 241),
-                                            child: Icon(Icons.pending_actions, color: Color.fromARGB(255, 129, 122, 243))
+                                            color: const Color.fromARGB(25, 177, 174, 241),
+                                            child: const Icon(Icons.pending_actions, color: Color.fromARGB(255, 129, 122, 243))
                                             ),
                                         ),
                                         Padding(
@@ -180,7 +173,7 @@ class _HomeBodyState extends State<HomeBody> {
                       width: size.width - 2*kDefaultPadding,
                       decoration: BoxDecoration(
                         color: colorTheme.outlineVariant,
-                        borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                        borderRadius: const BorderRadius.all(Radius.circular(6.0)),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(kDefaultPadding/2),
@@ -206,8 +199,8 @@ class _HomeBodyState extends State<HomeBody> {
                                         Padding(
                                           padding: const EdgeInsets.all(2.0),
                                           child: Container(
-                                            color: Color.fromARGB(27, 36, 184, 241),
-                                            child: Icon(Icons.person_outlined, color: Color.fromARGB(255, 36, 184, 241))
+                                            color: const Color.fromARGB(27, 36, 184, 241),
+                                            child: const Icon(Icons.person_outlined, color: Color.fromARGB(255, 36, 184, 241))
                                             ),
                                         ),
                                         Padding(
@@ -241,8 +234,8 @@ class _HomeBodyState extends State<HomeBody> {
                                         Padding(
                                           padding: const EdgeInsets.all(2.0),
                                           child: Container(
-                                            color: Color.fromARGB(25, 177, 174, 241),
-                                            child: Icon(Icons.list_alt, color: Color.fromARGB(255, 129, 122, 243))
+                                            color: const Color.fromARGB(25, 177, 174, 241),
+                                            child: const Icon(Icons.list_alt, color: Color.fromARGB(255, 129, 122, 243))
                                             ),
                                         ),
                                         Padding(
@@ -278,7 +271,7 @@ class _HomeBodyState extends State<HomeBody> {
                     width: size.width - 2*kDefaultPadding,
                     decoration: BoxDecoration(
                       color: colorTheme.outlineVariant,
-                      borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                      borderRadius: const BorderRadius.all(Radius.circular(6.0)),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(kDefaultPadding/2),
@@ -306,7 +299,7 @@ class _HomeBodyState extends State<HomeBody> {
             if(widget.profilePageDisplayed == ProfilePage.on) Container(
               width: size.width,
               height: size.height,
-              color: Color.fromARGB(133, 205, 205, 205),
+              color: const Color.fromARGB(133, 205, 205, 205),
               child: Padding(
                 padding: EdgeInsets.only(top: size.height/3),
                 child: Column(
