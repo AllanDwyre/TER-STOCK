@@ -12,7 +12,6 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorTheme = Theme.of(context).colorScheme;
 
@@ -20,7 +19,7 @@ class ItemCard extends StatelessWidget {
       onTap: press,
       child: Container(
         decoration: BoxDecoration(
-          color: darkColorScheme.inverseSurface,
+          color: const Color.fromARGB(234, 236, 236, 236),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           boxShadow: [
             BoxShadow(
@@ -47,29 +46,29 @@ class ItemCard extends StatelessWidget {
                       child: Image.asset(product.image),
                     ),
                   ),
-                  title: Text(product.name, style: textTheme
-                    .titleLarge
-                    ?.copyWith(color: colorTheme.secondary)),
+                  title: Text(product.name,
+                      style: textTheme.titleLarge
+                          ?.copyWith(color: colorTheme.secondary)),
                   subtitle: product.quantity == 0
-                    ? Text("Out of stock", style: textTheme
-                      .bodySmall
-                      ?.copyWith(color: lightColorScheme.outline))
-                    : Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: kDefaultPadding),
-                          child: Text("In-stock", style: textTheme
-                            .bodySmall
-                            ?.copyWith(color: lightCustomColors.sourceSuccess)),
+                      ? Text("Out of stock",
+                          style: textTheme.bodySmall
+                              ?.copyWith(color: lightColorScheme.outline))
+                      : Row(
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(right: kDefaultPadding),
+                              child: Text("In-stock",
+                                  style: textTheme.bodySmall?.copyWith(
+                                      color: lightCustomColors.sourceSuccess)),
+                            ),
+                            Text("${product.quantity} in stock",
+                                style: textTheme.bodySmall),
+                          ],
                         ),
-                        Text("${product.quantity} in stock", style: textTheme
-                          .bodySmall),
-                      ],
-                    )
-                    ,
-                  trailing: Text("${product.price ?? "N/A"}/unit", style: textTheme
-                    .bodyLarge
-                    ?.copyWith(color: colorTheme.secondary)),
+                  trailing: Text("${product.price}€/unit",
+                      style: textTheme.bodyLarge
+                          ?.copyWith(color: colorTheme.secondary)),
                 ),
               ),
             ),
@@ -79,24 +78,27 @@ class ItemCard extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text("Additionnal Information", style: textTheme
-                          .bodyLarge
-                          ?.copyWith(color: colorTheme.secondary)),
+                    child: Text("Additionnal Information",
+                        style: textTheme.bodyLarge
+                            ?.copyWith(color: colorTheme.secondary)),
                   ),
                   product.specialHandling == null
-                  ? Text("Non renseigné", style: textTheme
-                      .bodyMedium
-                      ?.copyWith(color: colorTheme.secondary))
-                  : Row(
-                    children: <Widget>[
-                      Text("${product.specialHandling!.capitalize()} : ", style: textTheme
-                            .bodyMedium
-                            ?.copyWith(color: colorTheme.secondary)),
-                      Text("infos", style: textTheme
-                            .bodyMedium
-                            ?.copyWith(color: colorTheme.secondary)),
-                    ],
-                  ),                  
+                      ? Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("Non renseigné",
+                              style: textTheme.bodyMedium
+                                  ?.copyWith(color: colorTheme.secondary)),
+                        )
+                      : Row(
+                          children: <Widget>[
+                            Text("${product.specialHandling!.capitalize()} : ",
+                                style: textTheme.bodyMedium
+                                    ?.copyWith(color: colorTheme.secondary)),
+                            Text("infos",
+                                style: textTheme.bodyMedium
+                                    ?.copyWith(color: colorTheme.secondary)),
+                          ],
+                        ),
                 ],
               ),
             ),

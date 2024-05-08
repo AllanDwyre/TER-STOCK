@@ -1,9 +1,11 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_stock/inventory/views/inventory_page.dart';
+import 'package:hive_stock/product/models/product.dart';
 import 'package:hive_stock/utils/constants/padding.dart';
 
-import 'package:file_picker/file_picker.dart';// https://pub.dev/packages/file_picker
+import 'package:file_picker/file_picker.dart';
+import 'package:hive_stock/utils/methods/string_extension.dart';// https://pub.dev/packages/file_picker
 
 class AddProductBody extends StatefulWidget {
   const AddProductBody({super.key});
@@ -18,22 +20,39 @@ class _AddProductBodyState extends State<AddProductBody> {
   String defaultPathImage = "/Users/denilb/AndroidStudioProjects/TER-STOCK/front/hive_stock/assets/images(for_test)/image_not_rendering.png";
   AssetImage productImage = const AssetImage("/Users/denilb/AndroidStudioProjects/TER-STOCK/front/hive_stock/assets/images(for_test)/image_not_rendering.png");
 
-  final _controllerProductName = TextEditingController();
-  final _controllerProductId = TextEditingController();
-  final _controllerBuyingPrice = TextEditingController();
-  bool _validateProductName = false;
-  bool _validateProductId = false;
-  bool _validateBuyingPrice = false;
+  final Map<String,TextEditingController> _controller = {
+    "Product Name *":TextEditingController(),
+    "Product ID *":TextEditingController(),
+    "Supplier":TextEditingController(),
+    "Category":TextEditingController(),
+    "Quantity *":TextEditingController(),
+    "Buying Price *":TextEditingController(),
+  };
+
+  final Map<String,bool> _validate = {
+    "Product Name *":true,
+    "Product ID *":true,
+    "Supplier":true,
+    "Category":true,
+    "Quantity *":true,
+    "Buying Price *":true,
+  };
 
   @override
   void dispose() {
-    _controllerProductName.dispose();
-    _controllerProductId.dispose();
-    _controllerBuyingPrice.dispose();
+    _controller.forEach((key, value) {value.dispose();});
     super.dispose();
   }
 
-  Future<void> finishAdd(BuildContext context, String productName, String productId, String productBuyingPrice) async {
+  Future<void> finishAdd(BuildContext context) async {
+    products.insert(0, Product(
+      name: _controller["Product Name *"]!.text.capitalize(),
+      sku: _controller["Product ID *"]!.text,
+      image: "./assets/images(for_test)/${productImageName!}",
+      category: _controller["Category"]?.text,
+      price: double.parse(_controller["Buying Price *"]!.text),
+      quantity: int.parse(_controller["Quantity *"]!.text),
+    ));
     ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
     ..showSnackBar(
@@ -42,10 +61,29 @@ class _AddProductBodyState extends State<AddProductBody> {
         backgroundColor: Color.fromARGB(255, 118, 177, 91)
         ),
     );
-    await Future.delayed(const Duration(seconds: 1), () async {
+    await Future.delayed(const Duration(milliseconds: 1500), () async {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const InventoryScreen()));
     });
+  }
+
+  Container myInputField(myLabelText, myHintText){
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: kDefaultPadding/2),
+      child: Center(
+        child: TextField(
+          controller: _controller[myLabelText],
+          decoration: InputDecoration(
+            labelStyle: const TextStyle(fontSize:16),
+            labelText: myLabelText,
+            errorText: _validate[myLabelText]! ? null : "Value Can't Be Empty",
+            border: const OutlineInputBorder(),
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            hintText: myHintText,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -108,12 +146,12 @@ class _AddProductBodyState extends State<AddProductBody> {
               ),
             ),
           ),
-          myInputField(_controllerProductName, _validateProductName, "Product Name *", "Enter product name"),
-          myInputField(_controllerProductId, _validateProductId, "Product ID *", "Enter product id"),
-          myInputField(null, false, "Supplier", "Enter supplier name"),
-          myInputField(null, false, "Category", "Enter product category"),
-          myInputField(null, false, "Unit", "Enter product unit mesure"),
-          myInputField(_controllerBuyingPrice, _validateBuyingPrice, "Buying price *", "Enter product buying price"),
+          myInputField("Product Name *", "Enter product name"),
+          myInputField("Product ID *", "Enter product id"),
+          myInputField("Supplier", "Enter supplier name"),
+          myInputField("Category", "Enter product category"),
+          myInputField("Quantity *", "Enter product quantity"),
+          myInputField("Buying Price *", "Enter product buying price"),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2*kDefaultPadding, vertical: kDefaultPadding),
             child: Row(
@@ -140,13 +178,11 @@ class _AddProductBodyState extends State<AddProductBody> {
                   child: TextButton(
                     onPressed: () {
                       setState(() {
-                        _validateProductName = _controllerProductName.text.isEmpty;
-                        _validateProductId = _controllerProductId.text.isEmpty;
-                        _validateBuyingPrice = _controllerBuyingPrice.text.isEmpty;
+                        _controller.forEach((k, C) => _validate[k] = (k[k.length-1] != '*') || C.text.isNotEmpty);
                       });
-                      if(!(_validateProductName || _validateProductId || _validateBuyingPrice)){
-                        finishAdd(context, _controllerProductName.text, _controllerProductId.text, _controllerBuyingPrice.text);
-                      };
+                      if(!_validate.values.any((v) => !v)){
+                        finishAdd(context);
+                      }
                     },
                     child: Container(
                       height: 50,
@@ -169,23 +205,4 @@ class _AddProductBodyState extends State<AddProductBody> {
       ),
     );
   }
-}
-
-Container myInputField(myController, myValidate, myLabelText, myHintText){
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: kDefaultPadding/2),
-    child: Center(
-      child: TextField(
-        controller: myController,
-        decoration: InputDecoration(
-          labelStyle: const TextStyle(fontSize:16),
-          labelText: myLabelText,
-          errorText: myValidate ? "Value Can't Be Empty" : null,
-          border: const OutlineInputBorder(),
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: myHintText,
-        ),
-      ),
-    ),
-  );
 }

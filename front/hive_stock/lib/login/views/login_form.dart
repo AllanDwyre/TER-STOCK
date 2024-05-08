@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:hive_stock/home/home.dart';
 import 'package:hive_stock/login/views/auth_button.dart';
 import 'package:hive_stock/utils/constants/constants.dart';
 import 'package:hive_stock/utils/widgets/custom_app_bar.dart';
 import 'package:hive_stock/login/bloc/login_bloc.dart';
 import 'package:hive_stock/utils/widgets/snackbars.dart';
-
-import 'otp_page.dart';
 
 class LoginBody extends StatefulWidget {
   const LoginBody({super.key});
@@ -25,12 +24,17 @@ class _LoginBodyState extends State<LoginBody> {
       listenWhen: (previous, current) => previous.status != current.status,
       listener: (BuildContext context, LoginState state) {
         if (state.status.isSuccess) {
-          Navigator.of(context).push(OtpPage.route()); // TODO : params -> user
+          Navigator.of(context).pushAndRemoveUntil(
+            HomePage.route(),
+            (route) => false,
+          );
         } else if (state.status.isFailure) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              const SnackBar(content: Text('Authentication Failure')),
+              SnackBar(
+                  content:
+                      Text('Authentication Failure ${state.errorMessage}')),
             );
         }
       },
@@ -115,18 +119,21 @@ class _Form extends StatelessWidget {
                   context.read<LoginBloc>().add(LoginUsernameChanged(username)),
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
+                floatingLabelBehavior: FloatingLabelBehavior.always,
                 labelText: 'Username',
                 hintText: 'Your Username',
               ),
             ),
             const SizedBox(height: 20),
             TextField(
-              onChanged: (email) =>
-                  context.read<LoginBloc>().add(LoginEmailChanged(email)),
+              obscureText: true,
+              onChanged: (psw) =>
+                  context.read<LoginBloc>().add(LoginPasswordChanged(psw)),
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Email',
-                hintText: 'Your Email',
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                labelText: 'Password',
+                hintText: 'Your Password',
               ),
             ),
             Visibility(
@@ -135,10 +142,22 @@ class _Form extends StatelessWidget {
                 children: [
                   const SizedBox(height: 20),
                   TextField(
+                    onChanged: (email) =>
+                        context.read<LoginBloc>().add(LoginEmailChanged(email)),
+                    decoration: const InputDecoration(
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      border: OutlineInputBorder(),
+                      labelText: 'Email',
+                      hintText: 'Your Email',
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
                     onChanged: (birthday) => context
                         .read<LoginBloc>()
                         .add(LoginBirthdayChanged(birthday)),
                     decoration: const InputDecoration(
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
                       border: OutlineInputBorder(),
                       labelText: 'Birthday',
                       hintText: 'Your Birthday',
@@ -149,6 +168,7 @@ class _Form extends StatelessWidget {
                     onChanged: (phone) =>
                         context.read<LoginBloc>().add(LoginPhoneChanged(phone)),
                     decoration: const InputDecoration(
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
                       border: OutlineInputBorder(),
                       labelText: 'Phone',
                       hintText: 'Your Phone',

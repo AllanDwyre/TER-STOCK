@@ -46,18 +46,17 @@ class _InventoryBodyState extends State<InventoryBody> {
               myLabelStyle: const TextStyle(fontSize:12),
               myLabelText: "Search product, supplier, order",
               myOnChanged: onQueryChanged,
+              myHeight: 110.0,
             ),
-            if (searchQuery == '') Expanded(
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(kDefaultPadding, 0, kDefaultPadding, kDefaultPadding/2),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Overall Inventory",
-                    style: textTheme
-                    .headlineSmall
-                    ?.copyWith(color: colorTheme.onBackground),
-                  ),
+            if (searchQuery == '') Container(
+              padding: const EdgeInsets.fromLTRB(kDefaultPadding, 0, kDefaultPadding, kDefaultPadding/2),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Overall Inventory",
+                  style: textTheme
+                  .headlineSmall
+                  ?.copyWith(color: colorTheme.onBackground),
                 ),
               ),
             ),

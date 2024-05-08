@@ -22,13 +22,16 @@ class _ProductBodyState extends State<ProductBody>
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorTheme = Theme.of(context).colorScheme;
 
-    TabController tabController = TabController(length:4, vsync:this);
+    TabController tabController = TabController(length: 4, vsync: this);
 
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Image.asset(widget.product.image),
+          Hero(
+            tag: widget.product.name,
+            child: Image.asset(widget.product.image),
+          ),
           Container(
             width: size.width,
             color: colorTheme.onPrimary,
@@ -68,10 +71,13 @@ class _ProductBodyState extends State<ProductBody>
             padding: const EdgeInsets.fromLTRB(
                 kDefaultPadding, 0, kDefaultPadding, 0),
             child: (widget.product.specialHandling == null)
-                ? Text(
-                    "No special handling",
-                    style: textTheme.titleSmall
-                        ?.copyWith(color: colorTheme.outlineVariant),
+                ? Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "No special handling",
+                      style: textTheme.titleSmall
+                          ?.copyWith(color: colorTheme.outlineVariant),
+                    ),
                   )
                 : CustomSnackbar(
                     type: SnackbarType.warning,
@@ -89,18 +95,19 @@ class _ProductBodyState extends State<ProductBody>
               labelColor: colorTheme.primary,
               unselectedLabelColor: colorTheme.secondary,
               dividerColor: Colors.transparent,
-              indicator: UnderlineTabIndicator(borderSide: BorderSide(color:colorTheme.primary, width: 1)),
+              indicator: UnderlineTabIndicator(
+                  borderSide: BorderSide(color: colorTheme.primary, width: 1)),
               tabs: const [
-                Tab(text:"Overview"),
-                Tab(text:"Purchases"),
-                Tab(text:"Adjustement"),
-                Tab(text:"History"),
+                Tab(text: "Overview"),
+                Tab(text: "Purchases"),
+                Tab(text: "Adjustement"),
+                Tab(text: "History"),
               ],
             ),
           ),
           SizedBox(
             width: size.width,
-            height: size.height,
+            height: size.height / 2,
             child: TabBarView(
               controller: tabController,
               children: [
@@ -111,32 +118,43 @@ class _ProductBodyState extends State<ProductBody>
                     children: <Widget>[
                       Text(
                         "Primary Details",
-                        style: textTheme.titleLarge?.copyWith(color: colorTheme.secondary),
+                        style: textTheme.titleLarge
+                            ?.copyWith(color: colorTheme.secondary),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(kDefaultPadding),
                         child: Column(
                           children: [
-                            displayDetails(context, widget, "Product Name", widget.product.name),
-                            displayDetails(context, widget, "Product SKU", widget.product.sku),
-                            displayDetails(context, widget, "Product Class", "${widget.product.class_}"),
-                            displayDetails(context, widget, "Product Category", "${widget.product.category}"),
-                            displayDetails(context, widget, "Storage Date", "${widget.product.storageDate}"),
+                            displayDetails(context, widget, "Product Name",
+                                widget.product.name),
+                            displayDetails(context, widget, "Product SKU",
+                                widget.product.sku),
+                            displayDetails(context, widget, "Product Class",
+                                "${widget.product.class_}"),
+                            displayDetails(context, widget, "Product Category",
+                                "${widget.product.category}"),
+                            displayDetails(context, widget, "Storage Date",
+                                "${widget.product.storageDate}"),
                           ],
                         ),
                       ),
                       Text(
                         "Quantity Details",
-                        style: textTheme.titleLarge?.copyWith(color: colorTheme.secondary),
+                        style: textTheme.titleLarge
+                            ?.copyWith(color: colorTheme.secondary),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(kDefaultPadding),
                         child: Column(
                           children: [
-                            displayDetails(context, widget, "Quantity", "${widget.product.quantity}"),
-                            displayDetails(context, widget, "At preparation", "${widget.product.atPreparation}"),
-                            displayDetails(context, widget, "On the way", "${widget.product.onTheWay}"),
-                            displayDetails(context, widget, "Arrival date", "${widget.product.arrivalDate}"),
+                            displayDetails(context, widget, "Quantity",
+                                "${widget.product.quantity}"),
+                            displayDetails(context, widget, "At preparation",
+                                "${widget.product.atPreparation}"),
+                            displayDetails(context, widget, "On the way",
+                                "${widget.product.onTheWay}"),
+                            displayDetails(context, widget, "Arrival date",
+                                "${widget.product.arrivalDate}"),
                           ],
                         ),
                       ),
@@ -206,7 +224,7 @@ class _ProductBodyState extends State<ProductBody>
   }
 }
 
-dynamic displayDetails(context, widget, text1, text2){
+dynamic displayDetails(context, widget, text1, text2) {
   return Row(
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
@@ -215,13 +233,19 @@ dynamic displayDetails(context, widget, text1, text2){
           text1,
           maxLines: 1,
           softWrap: false,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.secondary),
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall
+              ?.copyWith(color: Theme.of(context).colorScheme.secondary),
         ),
       ),
       Expanded(
         child: Text(
           text2,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.secondary),
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall
+              ?.copyWith(color: Theme.of(context).colorScheme.secondary),
         ),
       ),
     ],
