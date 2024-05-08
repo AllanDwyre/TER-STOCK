@@ -2,16 +2,16 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('PRODUIT_VENDU', {
     PRODUIT_ID: {
-      type: DataTypes.DECIMAL(15,0),
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       references: {
-        model: 'produit',
+        model: 'PRODUIT',
         key: 'PRODUIT_ID'
       }
     },
     VENTE_ID: {
-      type: DataTypes.DECIMAL(15,0),
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       references: {
