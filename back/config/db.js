@@ -26,8 +26,12 @@ async function testConnection() {
 // Appeler la fonction de test de connexion
 testConnection();
 
-//const User = require('../model/tables/users.js')(sequelize, DataTypes);
+/*const User = require('../model/tables/users.js')(sequelize, DataTypes);
 
+
+User.findAll().then( res => {
+  console.log(res);
+})*/
 /* Insérer une nouvelle ligne dans la table users
 User.create({
   USER_ID: 1,
