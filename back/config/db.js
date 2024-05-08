@@ -2,7 +2,7 @@ const { Sequelize , DataTypes} = require('sequelize');
 require("dotenv").config();
 
 // Configuration de la connexion à la base de données  yes 
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
+const sequelizeLocal = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
   host: process.env.DB_HOST,
   dialect: 'mysql',
 });
@@ -10,21 +10,32 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
 // Tester la connexion
 async function testConnection() {
   try {
-    await sequelize.authenticate();
-    console.log('Connexion à la base de données établie avec succès.');
+    await sequelizeLocal.authenticate();
+    console.log('Connexion à la base de données Locale établie avec succès.');
   } catch (error) {
     console.error('Impossible de se connecter à la base de données:', error);
   }} 
+  testConnection();
 
-  /*
-  finally {
-    // Fermer la connexion après le test
-    await sequelize.close();
-  }
-}*/
+// Connexion à la base de données cloud
+const sequelizeCloud = new Sequelize(process.env.DB_NAMEC, process.env.DB_USERC, process.env.DB_PASSC, {
+    host: process.env.DB_HOSTC,
+    dialect: 'mysql',
+  });
 
-// Appeler la fonction de test de connexion
-testConnection();
+// Tester la connexion
+async function testConnectionCloud() {
+    try {
+      await sequelizeCloud.authenticate();
+      console.log('Connexion à la base de données Cloud établie avec succès.');
+    } catch (error) {
+      console.error('Impossible de se connecter à la base de données:', error);
+    }} 
+testConnectionCloud();
+
+const modelLocal = require('../model/tables/categorie')(sequelizeLocal, DataTypes);
+const modelCloud = require('../model/tables/categorie')(sequelizeCloud, DataTypes);
+
 
 /*const User = require('../model/tables/users.js')(sequelize, DataTypes);
 
@@ -48,4 +59,4 @@ User.create({
 });*/
 
 // Exporter l'objet Sequelize configuré
-module.exports = sequelize;
+module.exports = sequelizeCloud;

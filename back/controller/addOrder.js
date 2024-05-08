@@ -44,7 +44,7 @@ module.exports = {
                 PRODUCT_CATEGORIE: req.session.categorie_id,
                 DIMENSIONS: productDimensions,
                 PRIX_UNIT: productPrix,
-            // Affectez d'autres champs de produit ici selon les données reçues
+ 
             }).then(res => {
             console.log(res)
             }).catch(error =>{
