@@ -12,10 +12,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     EMPLOYE_ID: {
-      type: DataTypes.NUMERIC(15),
+      type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'employe',
+        model: 'EMPLOYE',
         key: 'EMPLOYE_ID'
       }
     }

@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('LOT_VENDU', {
     LOT_ID: {
-      type: DataTypes.DECIMAL(15,0),
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       references: {
@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     VENTE_ID: {
-      type: DataTypes.DECIMAL(15,0),
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       references: {
