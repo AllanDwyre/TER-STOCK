@@ -1,5 +1,5 @@
 const { Sequelize , DataTypes} = require('sequelize');
-require("dotenv").config();
+require("dotenv").config({path: '../.env'});
 
 // Configuration de la connexion à la base de données  yes 
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
@@ -22,9 +22,19 @@ async function testConnection() {
     await sequelize.close();
   }
 }*/
-
+const Orders = require('../model/tables/commande')(sequelize, DataTypes);
 // Appeler la fonction de test de connexion
 testConnection();
+
+Orders.findOne()
+.then(res => {
+    console.log(res);
+})
+.catch(error => {
+    console.log("Error" + error);
+})
+
+
 
 //const User = require('../model/tables/users.js')(sequelize, DataTypes);
 
