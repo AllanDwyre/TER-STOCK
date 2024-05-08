@@ -1,5 +1,6 @@
 const { Sequelize , DataTypes} = require('sequelize');
 require("dotenv").config({path: '../.env'});
+var express = require('express');
 
 // Configuration de la connexion à la base de données  yes 
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
@@ -22,17 +23,25 @@ async function testConnection() {
     await sequelize.close();
   }
 }*/
-const Orders = require('../model/tables/commande')(sequelize, DataTypes);
+const Product = require('../model/tables/produit')(sequelize, DataTypes);
 // Appeler la fonction de test de connexion
 testConnection();
 
-Orders.findOne()
-.then(res => {
-    console.log(res);
-})
-.catch(error => {
-    console.log("Error" + error);
-})
+const app = express();
+// Route pour récupérer toutes les informations sur les produits
+app.get('/envoieproduits', async (req, res) => {
+  try {
+    // Récupérer tous les produits depuis la base de données
+    const produits = await Product.findAll();
+
+    // Envoyer les produits au format JSON en réponse
+    res.json(produits);
+  } catch (error) {
+    // En cas d'erreur, renvoyer un code d'erreur avec un message approprié
+    console.error('Erreur lors de la récupération des produits:', error);
+    res.status(500).json({ message: 'Erreur lors de la récupération des produits.' });
+  }
+});
 
 
 
