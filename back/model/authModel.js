@@ -66,10 +66,9 @@ module.exports={
         });
     },
     
-    insert: function(User,userid, username, nameuser, firstname, usermail, userpass, usertel, userdate){
+    insert: function(User, username, nameuser, firstname, usermail, userpass, usertel, userdate){
         var cryptPassword = crypto.createHash('sha256').update(userpass).digest('hex');
         return User.create({
-            USER_ID : userid,
             USERNAME : username,
             NAME_USER : nameuser,
             FIRST_NAME : firstname,

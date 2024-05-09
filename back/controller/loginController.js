@@ -2,11 +2,15 @@ const DataTypes = require('sequelize');
 const sequelize = require('../config/db');
 const Auth = require("../model/authModel");
 const User = require('../model/tables/users')(sequelize, DataTypes);
+const Employe = require('../model/tables/employe')(sequelize,DataTypes);
 require('dotenv').config({ path: '../.env' });
 const KEY = process.env.DEV_KEY;
 var jwt = require('jsonwebtoken');
-const { v4: uuidv4 } = require('uuid');
+//const { v4: uuidv4 } = require('uuid');
 
+const sharedData ={
+    userId : ''
+}
 
 module.exports = {
     login: function (req, res) {
@@ -56,17 +60,28 @@ module.exports = {
                     // Si l'utilisateur est trouvé, dire qu'il existe déjà
                     res.status(401).send("Une des ces données existe déjà, veuillez vous connecter ou changez les informations")
                 } else{
-                    var userId = uuidv4().replace(/[^0-9]/g, '').slice(0, 10);
+                    /*var userId = uuidv4().replace(/[^0-9]/g, '').slice(0, 10);
                     Auth.selectLogInUserID(User, userId)
                     .then((existinguser)=>{
                         if(existinguser){
                             userId = uuidv4().replace(/[^0-9]/g, '').slice(0,10);
                         }   
-                    })
+                    })*/
 
-                    Auth.insert(User, userId, req.body.username, req.body.nameuser, req.body.firstname, 
+                    Auth.insert(User, req.body.username, req.body.nameuser, req.body.firstname, 
                         req.body.email, req.body.password, req.body.user_tel, req.body.user_date)
-                    .then(() =>{
+                    .then((resultat) =>{
+                        console.log(resultat);
+                        Employe.create({
+                            EMPLOYE_ID : resultat.dataValues.USER_ID
+                        }).then( resultat => {
+                            console.log("Les données ont été insérées dans Employe.");
+                            console.log(resultat);
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            res.status(500).json({success:false, message: "Erreur lors de creation employé"});
+                        });
                         var payload = {
                             username: req.body.username,
                         };
@@ -78,6 +93,7 @@ module.exports = {
                         console.error(err);
                         res.status(500).json({ success: false, message: "Une erreur s'est produite lors de l'insertion des données dans la base de données." });
                     });
+
                 }
             })
             .catch(error => {

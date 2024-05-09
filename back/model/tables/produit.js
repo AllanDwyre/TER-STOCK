@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     PRIX_UNIT: {
-      type: DataTypes.DECIMAL(5,2),
+      type: DataTypes.DECIMAL(6,2),
       allowNull: true
     },
     POIDS: {
