@@ -30,7 +30,6 @@ module.exports = {
         
                     var payload = {
                         username: req.body.username,
-                        password: req.body.password
                     };
                     var token = jwt.sign(payload, KEY, { algorithm: 'HS256', expiresIn: "15d" });
 
@@ -84,8 +83,7 @@ module.exports = {
                             res.status(500).json({success:false, message: "Erreur lors de creation employé"});
                         });
                         var payload = {
-                            username: req.body.username,
-                            password: req.body.password
+                            username: req.body.username
                         };
                         var token = jwt.sign(payload, KEY, { algorithm: 'HS256', expiresIn: "15d" });
                         res.send(token);
@@ -122,15 +120,12 @@ module.exports = {
             return res.status(401).send('Token d\'authentification manquant');
         }
 
-        // Récupérez le token d'authentification de l'en-tête Authorization
-
-        // Vérifiez et décodez le token
+        // On vérifie et on décode le token le token
         jwt.verify(authHeader, KEY, { algorithm: 'HS256' }, (err, decoded) => {
             if (err) {
                 return res.status(401).send('Token d\'authentification invalide');
             }
-            // Maintenant que le token est vérifié, vous pouvez envoyer les informations utilisateur
-            // Vous pouvez récupérer les informations supplémentaires de l'utilisateur depuis la base de données si nécessaire
+            // Maintenant que le token est vérifié, on peut envoyer les informations de l'utilisateur
             User.findOne({
                 where:{
                     USERNAME: decoded.username
@@ -143,14 +138,11 @@ module.exports = {
                     name : result.dataValues.NAME_USER,
                     firstname : result.dataValues.FIRST_NAME,
                     usermail: result.dataValues.USER_MAIL,
-                    userpass : decoded.password,
                     usertel: result.dataValues.USER_TEL,
                     userdate: result.dataValues.USER_DATE_NAISS
-                    // Ajoutez d'autres champs d'informations utilisateur si nécessaire
                 };
                 res.status(200).json(userInfo);
             })
-            // Envoyez les informations utilisateur au front-end
         });
     }
 

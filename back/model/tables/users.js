@@ -28,7 +28,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     USER_TEL: {
-      type: DataTypes.NUMERIC(10),
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     USER_DATE_NAISS: {
