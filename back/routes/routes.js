@@ -12,6 +12,7 @@ const addOrderController = require("../controller/addOrderController.js");
 router.post('/login', loginController.login);
 router.post('/register', loginController.signup);
 router.get('/homePage', loginController.home);
+router.get('/homePage/getUser', loginController.getUser);
 
 /* ------ SI ON A LE TEMPS D'INCLURE OTP ---- 
 
