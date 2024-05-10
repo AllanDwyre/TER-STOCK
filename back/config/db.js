@@ -8,14 +8,14 @@ const sequelizeLocal = new Sequelize(process.env.DB_NAME, process.env.DB_USER, p
 });
 
 // Tester la connexion
-async function testConnection() {
+async function testConnectionLocale() {
   try {
     await sequelizeLocal.authenticate();
     console.log('Connexion à la base de données Locale établie avec succès.');
   } catch (error) {
     console.error('Impossible de se connecter à la base de données:', error);
   }} 
-  testConnection();
+  testConnectionLocale();
 
 // Connexion à la base de données cloud
 const sequelizeCloud = new Sequelize(process.env.DB_NAMEC, process.env.DB_USERC, process.env.DB_PASSC, {
