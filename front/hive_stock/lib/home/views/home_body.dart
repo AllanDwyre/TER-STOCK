@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_stock/authentication/bloc/authentication_bloc.dart';
 import 'package:hive_stock/home/views/home_page.dart';
-import 'package:hive_stock/inventory/views/inventory_page.dart';
+import 'package:hive_stock/product/views/inventory_page.dart';
 import 'package:hive_stock/utils/constants/padding.dart';
 import 'package:hive_stock/utils/widgets/bar_chart.dart';
 import 'package:hive_stock/utils/widgets/search_bar.dart';
@@ -58,7 +58,7 @@ class _HomeBodyState extends State<HomeBody> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const InventoryScreen(),
+                        builder: (context) => const InventoryPage(),
                       ),
                     );
                   },
@@ -180,7 +180,7 @@ class _HomeBodyState extends State<HomeBody> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const InventoryScreen(),
+                        builder: (context) => const InventoryPage(),
                       ),
                     );
                   },

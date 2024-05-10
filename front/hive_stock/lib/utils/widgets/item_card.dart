@@ -18,17 +18,9 @@ class ItemCard extends StatelessWidget {
     return GestureDetector(
       onTap: press,
       child: Container(
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(234, 236, 236, 236),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 3,
-              blurRadius: 7,
-              offset: const Offset(0, 2), // changes position of shadow
-            ),
-          ],
+        decoration: const BoxDecoration(
+          color: Color.fromARGB(255, 234, 239, 241),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
