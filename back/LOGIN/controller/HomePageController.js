@@ -26,3 +26,32 @@ Orders.findOne()
 })
 console.log(orders.every(order => order instanceof Orders));
 console.log('All orders:', JSON.stringify(orders, null, 2));
+
+
+
+// Route pour récupérer toutes les informations sur les produits
+app.get('/produits', async (req, res) => {
+    try {
+      // Récupérer tous les produits depuis la base de données
+      const produits = await Produit.findAll();
+  
+      // Envoyer les produits au format JSON en réponse
+      res.json(produits);
+    } catch (error) {
+      // En cas d'erreur, renvoyer un code d'erreur avec un message approprié
+      console.error('Erreur lors de la récupération des produits:', error);
+      res.status(500).json({ message: 'Erreur lors de la récupération des produits.' });
+    }
+  });
+// envoie une liste de json
+  module.exports = {
+    envoieProduit: async function(req, res) {
+        try {
+            const produits = await produit.findAll();
+            res.json(produits);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des produits :', error);
+            res.status(500).json({ error: 'Erreur lors de la récupération des produits : ' });
+        }
+    }
+};

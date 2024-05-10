@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 //const authController = require("../controller/authController.js");
 const userController = require('../controller/userController.js');
-const addProduct = require("../controller/addProduct.js");
+const addProduct = require("../controller/addProductController.js");
 const loginController = require("../controller/loginController.js");
+const addProductController = require("../controller/addProductController.js");
 //const Controller = require('../controller');
 
 
