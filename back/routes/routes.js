@@ -5,12 +5,14 @@ const userController = require('../controller/userController.js');
 const addProduct = require("../controller/addProductController.js");
 const loginController = require("../controller/loginController.js");
 const addProductController = require("../controller/addProductController.js");
-//const Controller = require('../controller');
+const orderController = require('../controller/orderController.js');
+const addOrderController = require("../controller/addOrderController.js");
 
 
 router.post('/login', loginController.login);
 router.post('/register', loginController.signup);
 router.get('/homePage', loginController.home);
+router.get('/homePage/getUser', loginController.getUser);
 
 /* ------ SI ON A LE TEMPS D'INCLURE OTP ---- 
 
@@ -28,8 +30,8 @@ router.get('/product', authController.afficheProd);*/
 // Route pour ajouter un produit
 router.get('/Product/add', addProduct.addProduit);
 router.get('/Inventory', );
-router.get('/Order')
-router.get('Order/newOrder', );
+router.get('/Order', orderController.showOrders);
+router.get('Order/newOrder', addOrderController.newOrder);
 
 
 

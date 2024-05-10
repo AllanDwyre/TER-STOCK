@@ -2,7 +2,8 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('PRODUIT', {
     PRODUIT_ID: {
-      type: DataTypes.NUMERIC(10),
+      autoIncrement: true,
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
@@ -15,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     PRIX_UNIT: {
-      type: DataTypes.DECIMAL(5,2),
+      type: DataTypes.DECIMAL(6,2),
       allowNull: true
     },
     POIDS: {
@@ -35,7 +36,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     CATEGORIE_ID: {
-      type: DataTypes.DECIMAL(15,0),
+      type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'CATEGORIE',
@@ -43,7 +44,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     EMPLACEMENT_ID: {
-      type: DataTypes.DECIMAL(15,0),
+      type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'EMPLACEMENT',
@@ -51,7 +52,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     FOURNISSEUR_ID: {
-      type : DataTypes.NUMERIC(10),
+      type : DataTypes.INTEGER,
       allowNull: true,
       references :{
         model: 'FOURNISSEUR',

@@ -2,12 +2,13 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('INVENTAIRE_PRODUIT', {
     INVENTAIRE_ID: {
-      type: DataTypes.DECIMAL(15,0),
+      autoIncrement: true,
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
     EMPLOYE_ID: {
-      type: DataTypes.DECIMAL(15,0),
+      type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'EMPLOYE',
@@ -15,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     PRODUIT_ID: {
-      type: DataTypes.DECIMAL(15,0),
+      type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'PRODUIT',

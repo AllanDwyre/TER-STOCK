@@ -2,7 +2,8 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('USERS', {
     USER_ID: {
-      type: DataTypes.NUMERIC(15),
+      autoIncrement: true,
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
@@ -27,7 +28,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     USER_TEL: {
-      type: DataTypes.NUMERIC(10),
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     USER_DATE_NAISS: {
