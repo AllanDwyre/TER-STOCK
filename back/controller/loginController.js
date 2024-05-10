@@ -30,6 +30,7 @@ module.exports = {
         
                     var payload = {
                         username: req.body.username,
+                        password: req.body.password
                     };
                     var token = jwt.sign(payload, KEY, { algorithm: 'HS256', expiresIn: "15d" });
 
@@ -84,6 +85,7 @@ module.exports = {
                         });
                         var payload = {
                             username: req.body.username,
+                            password: req.body.password
                         };
                         var token = jwt.sign(payload, KEY, { algorithm: 'HS256', expiresIn: "15d" });
                         res.send(token);
@@ -136,10 +138,12 @@ module.exports = {
             }).then(result => {
                 console.log(result);
                 const userInfo = {
+                    userid: result.dataValues.USER_ID,
                     username: decoded.username,
                     name : result.dataValues.NAME_USER,
                     firstname : result.dataValues.FIRST_NAME,
                     usermail: result.dataValues.USER_MAIL,
+                    userpass : decoded.password,
                     usertel: result.dataValues.USER_TEL,
                     userdate: result.dataValues.USER_DATE_NAISS
                     // Ajoutez d'autres champs d'informations utilisateur si nécessaire
