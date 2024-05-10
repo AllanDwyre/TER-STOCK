@@ -1,13 +1,13 @@
 const { Sequelize , DataTypes} = require('sequelize');
 require("dotenv").config();
 
-// Configuration de la connexion à la base de données  yes 
+// Configuration de la connexion à la base de données  
 const sequelizeLocal = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
   host: process.env.DB_HOST,
   dialect: 'mysql',
 });
 
-// Tester la connexion
+// Ici on teste la connexion à la base de données locale
 async function testConnectionLocale() {
   try {
     await sequelizeLocal.authenticate();
@@ -23,7 +23,7 @@ const sequelizeCloud = new Sequelize(process.env.DB_NAMEC, process.env.DB_USERC,
     dialect: 'mysql',
   });
 
-// Tester la connexion
+// Ici on teste la connexion à la base de données cloud
 async function testConnectionCloud() {
     try {
       await sequelizeCloud.authenticate();
