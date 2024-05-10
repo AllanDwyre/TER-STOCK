@@ -110,6 +110,44 @@ module.exports = {
             res.status(401);
             res.send("Bad Token");
         }
+    },
+
+    getUser: function(req,res){
+        // Vérifiez d'abord si l'en-tête Authorization est présent dans la requête
+        const authHeader = req.headers['authorization'];
+        console.log(authHeader);
+        if (!authHeader) {
+            return res.status(401).send('Token d\'authentification manquant');
+        }
+
+        // Récupérez le token d'authentification de l'en-tête Authorization
+
+        // Vérifiez et décodez le token
+        jwt.verify(authHeader, KEY, { algorithm: 'HS256' }, (err, decoded) => {
+            if (err) {
+                return res.status(401).send('Token d\'authentification invalide');
+            }
+            // Maintenant que le token est vérifié, vous pouvez envoyer les informations utilisateur
+            // Vous pouvez récupérer les informations supplémentaires de l'utilisateur depuis la base de données si nécessaire
+            User.findOne({
+                where:{
+                    USERNAME: decoded.username
+                }
+            }).then(result => {
+                console.log(result);
+                const userInfo = {
+                    username: decoded.username,
+                    name : result.dataValues.NAME_USER,
+                    firstname : result.dataValues.FIRST_NAME,
+                    usermail: result.dataValues.USER_MAIL,
+                    usertel: result.dataValues.USER_TEL,
+                    userdate: result.dataValues.USER_DATE_NAISS
+                    // Ajoutez d'autres champs d'informations utilisateur si nécessaire
+                };
+                res.status(200).json(userInfo);
+            })
+            // Envoyez les informations utilisateur au front-end
+        });
     }
 
 };
