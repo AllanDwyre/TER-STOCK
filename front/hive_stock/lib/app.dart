@@ -15,7 +15,7 @@ import 'package:hive_stock/authentication/bloc/authentication_bloc.dart';
 /// App is responsible for creating/providing the AuthenticationBloc which will be consumed by the AppView.
 /// This decoupling will enable us to easily test both the App and AppView widgets later on.
 class App extends StatefulWidget {
-  const App({Key? key}) : super(key: key);
+  const App({super.key});
 
   @override
   State<App> createState() => _AppState();
@@ -31,7 +31,7 @@ class _AppState extends State<App> {
     _bridgeRepository = BridgeRepository();
     _authenticationRepository =
         AuthenticationRepository(bridge: _bridgeRepository);
-    _userRepository = UserRepository();
+    _userRepository = UserRepository(bridge: _bridgeRepository);
   }
 
   @override

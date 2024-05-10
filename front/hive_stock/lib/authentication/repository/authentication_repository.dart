@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:hive_stock/utils/app/bridge_repository.dart';
+import 'package:hive_stock/utils/methods/logger.dart';
 import 'package:hive_stock/utils/methods/token_access_utils.dart';
 
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
@@ -13,9 +14,19 @@ class AuthenticationRepository {
 
   Stream<AuthenticationStatus> get status async* {
     await Future<void>.delayed(const Duration(seconds: 1));
-    yield await AccessTokenUtils.retrieveUserToken() == null
+    final token = await AccessTokenUtils.retrieveUserToken();
+
+    final initialStatus = token == null
         ? AuthenticationStatus.unauthenticated
         : AuthenticationStatus.authenticated;
+
+    if (token != null) {
+      bridge.getAuthentified(token);
+    }
+
+    logger.t("Initial user state : $initialStatus");
+
+    yield initialStatus;
 
     yield* _controller.stream;
   }

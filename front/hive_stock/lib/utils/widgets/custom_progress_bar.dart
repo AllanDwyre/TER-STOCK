@@ -5,10 +5,10 @@ class CustomProgressBar extends StatefulWidget {
   final int stepNumber;
 
   const CustomProgressBar({
-    Key? key,
+    super.key,
     required this.currentStep,
     required this.stepNumber,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomProgressBar> createState() => _CustomProgressBarState();

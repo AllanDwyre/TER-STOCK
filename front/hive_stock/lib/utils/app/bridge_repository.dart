@@ -16,7 +16,7 @@ class BridgeRepository {
   }
 
   void getAuthentified(String token) =>
-      request.options.headers["authorization"] = "token $token";
+      request.options.headers["authorization"] = token;
 
   void getUnauthentified() => request.options.headers["authorization"] = "";
 }
