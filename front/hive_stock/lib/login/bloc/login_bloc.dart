@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 import 'package:hive_stock/login/models/models.dart';
 import 'package:hive_stock/login/models/password.dart';
-import 'package:hive_stock/utils/app/authentication_repository.dart';
+import 'package:hive_stock/authentication/repository/authentication_repository.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';

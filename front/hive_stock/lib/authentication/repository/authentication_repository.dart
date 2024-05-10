@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:hive_stock/utils/app/bridge_repository.dart';
+import 'package:hive_stock/utils/methods/token_access_utils.dart';
 
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
@@ -11,11 +11,12 @@ class AuthenticationRepository {
   final BridgeRepository bridge;
   final _controller = StreamController<AuthenticationStatus>();
 
-  // TODO : replace by the act to fecth the actual status : maybe caching in the app.
   Stream<AuthenticationStatus> get status async* {
-    // data persistence
     await Future<void>.delayed(const Duration(seconds: 1));
-    yield AuthenticationStatus.unauthenticated;
+    yield await AccessTokenUtils.retrieveUserToken() == null
+        ? AuthenticationStatus.unauthenticated
+        : AuthenticationStatus.authenticated;
+
     yield* _controller.stream;
   }
 
@@ -30,9 +31,9 @@ class AuthenticationRepository {
     final response = await bridge.request.post('/login', data: data);
 
     if (response.statusCode == 200) {
-      _controller.add(AuthenticationStatus.authenticated);
+      _getAuthentified(response.data);
     } else {
-      throw Exception("Failed Login");
+      throw Exception("Couldn't find your HiveStock account");
     }
   }
 
@@ -54,13 +55,23 @@ class AuthenticationRepository {
     final response = await bridge.request.post('/register', data: data);
 
     if (response.statusCode == 200) {
-      _controller.add(AuthenticationStatus.authenticated);
+      _getAuthentified(response.data);
+    } else {
+      throw Exception("${response.data}");
     }
   }
 
   void logOut() {
     _controller.add(AuthenticationStatus.unauthenticated);
+    AccessTokenUtils.saveUserToken(null);
+    bridge.getUnauthentified();
   }
 
   void dispose() => _controller.close();
+
+  void _getAuthentified(String token) {
+    AccessTokenUtils.saveUserToken(token);
+    bridge.getAuthentified(token);
+    _controller.add(AuthenticationStatus.authenticated);
+  }
 }

@@ -1,4 +1,3 @@
-
 part of 'authentication_bloc.dart';
 
 class AuthenticationState extends Equatable {

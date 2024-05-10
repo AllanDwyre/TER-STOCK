@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_stock/utils/constants/boxes_hive.dart';
+
 import 'app.dart';
 
-void main() => runApp(const App());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
 
-class Test extends StatelessWidget {
-  const Test({super.key});
+  secureStorage = const FlutterSecureStorage();
 
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: "hihi",
-      home: Scaffold(
-        body: Center(
-          child: Text("lol"),
-        ),
-      ),
-    );
-  }
+  runApp(const App());
 }
