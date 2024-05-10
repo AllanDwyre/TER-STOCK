@@ -60,15 +60,7 @@ module.exports = {
                     // Si l'utilisateur est trouvé, dire qu'il existe déjà
                     res.status(401).send("Une des ces données existe déjà, veuillez vous connecter ou changez les informations")
                 } else{
-                    /*var userId = uuidv4().replace(/[^0-9]/g, '').slice(0, 10);
-                    Auth.selectLogInUserID(User, userId)
-                    .then((existinguser)=>{
-                        if(existinguser){
-                            userId = uuidv4().replace(/[^0-9]/g, '').slice(0,10);
-                        }   
-                    })*/
-
-                    Auth.insert(User, req.body.username, req.body.nameuser, req.body.firstname, 
+                    Auth.insert(User, req.body.username, req.body.firstname, req.body.lastname, 
                         req.body.email, req.body.password, req.body.user_tel, req.body.user_date)
                     .then((resultat) =>{
                         console.log(resultat);
@@ -113,7 +105,7 @@ module.exports = {
     },
 
     getUser: function(req,res){
-        // Vérifiez d'abord si l'en-tête Authorization est présent dans la requête
+        // On vérifie d'abord si l'en-tête Authorization est présente dans la requête
         const authHeader = req.headers['authorization'];
         console.log(authHeader);
         if (!authHeader) {
@@ -135,8 +127,8 @@ module.exports = {
                 const userInfo = {
                     userid: result.dataValues.USER_ID,
                     username: decoded.username,
-                    name : result.dataValues.NAME_USER,
-                    firstname : result.dataValues.FIRST_NAME,
+                    firstname : result.dataValues.NAME_USER,
+                    lastname : result.dataValues.FIRST_NAME,
                     usermail: result.dataValues.USER_MAIL,
                     usertel: result.dataValues.USER_TEL,
                     userdate: result.dataValues.USER_DATE_NAISS
