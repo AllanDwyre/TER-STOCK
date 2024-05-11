@@ -19,7 +19,7 @@ async function testConnectionLocale() {
     await sequelizeLocal.authenticate();
     console.log("Connexion à la base de données Locale établie avec succès.");
   } catch (error) {
-    console.error('Impossible de se connecter à la base de données:', error);
+    console.error("Impossible de se connecter à la base de données:", error);
   }} 
   testConnectionLocale();
 
