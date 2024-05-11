@@ -5,7 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 import 'package:hive_stock/login/models/models.dart';
-import 'package:hive_stock/utils/app/authentication_repository.dart';
+import 'package:hive_stock/login/models/password.dart';
+import 'package:hive_stock/authentication/repository/authentication_repository.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -15,6 +16,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       : _authenticationRepository = authenticationRepository,
         super(const LoginState()) {
     on<LoginUsernameChanged>(_onUsernameChanged);
+    on<LoginPasswordChanged>(_onPasswordChanged);
     on<LoginEmailChanged>(_onEmailChanged);
     on<LoginBirthdayChanged>(_onBirthdayChanged);
     on<LoginPhoneChanged>(_onPhoneChanged);
@@ -32,9 +34,42 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       state.copyWith(
         username: username,
         isValid: state.isAttemptingLogin
-            ? Formz.validate([username, state.email])
+            ? Formz.validate(
+                [
+                  username,
+                  state.password,
+                ],
+              )
             : Formz.validate(
-                [username, state.email, state.birthday, state.phone]),
+                [
+                  username,
+                  state.password,
+                  state.email,
+                  state.birthday,
+                  state.phone
+                ],
+              ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onPasswordChanged(
+      LoginPasswordChanged event, Emitter<LoginState> emit) {
+    final password = Password.dirty(event.password);
+    emit(
+      state.copyWith(
+        password: password,
+        isValid: state.isAttemptingLogin
+            ? Formz.validate([password, state.username])
+            : Formz.validate(
+                [
+                  state.username,
+                  password,
+                  state.email,
+                  state.birthday,
+                  state.phone
+                ],
+              ),
       ),
     );
   }
@@ -44,10 +79,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(
       state.copyWith(
         email: email,
-        isValid: state.isAttemptingLogin
-            ? Formz.validate([state.username, email])
-            : Formz.validate(
-                [state.username, email, state.birthday, state.phone]),
+        isValid: Formz.validate([
+          state.username,
+          state.password,
+          email,
+          state.birthday,
+          state.phone
+        ]),
       ),
     );
   }
@@ -58,8 +96,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(
       state.copyWith(
         birthday: birthday,
-        isValid: Formz.validate(
-            [state.username, state.email, birthday, state.phone]),
+        isValid: Formz.validate([
+          state.username,
+          state.password,
+          state.email,
+          birthday,
+          state.phone
+        ]),
       ),
     );
   }
@@ -69,8 +112,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(
       state.copyWith(
         phone: phone,
-        isValid: Formz.validate(
-            [state.username, state.email, state.birthday, phone]),
+        isValid: Formz.validate([
+          state.username,
+          state.password,
+          state.email,
+          state.birthday,
+          phone
+        ]),
       ),
     );
   }
@@ -91,8 +139,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         isAttemptingLogin: !state.isAttemptingLogin,
         isValid: !state.isAttemptingLogin
             ? Formz.validate([state.username, state.email])
-            : Formz.validate(
-                [state.username, state.email, state.birthday, state.phone])));
+            : Formz.validate([
+                state.username,
+                state.password,
+                state.email,
+                state.birthday,
+                state.phone
+              ])));
   }
 
   Future<void> _onSubmitted(
@@ -105,21 +158,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (state.isAttemptingLogin) {
           await _authenticationRepository.logIn(
             username: state.username.value,
-            email: state.email.value,
-            otp: state.otp.value,
+            password: state.password.value,
           );
         } else {
           await _authenticationRepository.register(
             username: state.username.value,
+            password: state.password.value,
             email: state.email.value,
             birthday: state.birthday.value,
             phone: state.phone.value,
-            otp: state.otp.value,
+            // otp: state.otp.value,
           );
         }
         emit(state.copyWith(status: FormzSubmissionStatus.success));
       } catch (e) {
-        emit(state.copyWith(status: FormzSubmissionStatus.failure));
+        emit(state.copyWith(
+            status: FormzSubmissionStatus.failure, errorMessage: e.toString()));
         debugPrint('$e');
       }
     }

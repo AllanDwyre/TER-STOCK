@@ -25,6 +25,15 @@ final class LoginOTPChanged extends LoginEvent {
   List<Object> get props => [otp];
 }
 
+final class LoginPasswordChanged extends LoginEvent {
+  const LoginPasswordChanged(this.password);
+
+  final String password;
+
+  @override
+  List<Object> get props => [password];
+}
+
 final class LoginEmailChanged extends LoginEvent {
   const LoginEmailChanged(this.email);
 

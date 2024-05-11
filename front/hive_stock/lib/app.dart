@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hive_stock/home/views/home_page.dart';
-import 'package:hive_stock/inventory/views/inventory_page.dart';
 import 'package:hive_stock/onBording/views/onbording_page.dart';
 import 'package:hive_stock/splash/views/splash_page.dart';
-import 'package:hive_stock/utils/app/authentication_repository.dart';
-import 'package:user_repository/user_repository.dart';
+import 'package:hive_stock/authentication/repository/authentication_repository.dart';
+import 'package:hive_stock/user/repository/user_repository.dart';
+import 'package:hive_stock/utils/app/bridge_repository.dart';
+import 'package:hive_stock/utils/app/configuration.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_stock/utils/constants/colors.dart';
@@ -14,7 +15,7 @@ import 'package:hive_stock/authentication/bloc/authentication_bloc.dart';
 /// App is responsible for creating/providing the AuthenticationBloc which will be consumed by the AppView.
 /// This decoupling will enable us to easily test both the App and AppView widgets later on.
 class App extends StatefulWidget {
-  const App({Key? key}) : super(key: key);
+  const App({super.key});
 
   @override
   State<App> createState() => _AppState();
@@ -23,16 +24,19 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   late final AuthenticationRepository _authenticationRepository;
   late final UserRepository _userRepository;
-
+  late final BridgeRepository _bridgeRepository;
   @override
   void initState() {
     super.initState();
-    _authenticationRepository = AuthenticationRepository();
-    _userRepository = UserRepository();
+    _bridgeRepository = BridgeRepository();
+    _authenticationRepository =
+        AuthenticationRepository(bridge: _bridgeRepository);
+    _userRepository = UserRepository(bridge: _bridgeRepository);
   }
 
   @override
   void dispose() {
+    // _bridgeRepository.
     _authenticationRepository.dispose();
     super.dispose();
   }
@@ -40,14 +44,21 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     //RepositoryProvider is used to provide the single instance of AuthenticationRepository to the entire application which will come in handy later on.
-    return RepositoryProvider.value(
-      value: _authenticationRepository,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider.value(
+          value: _authenticationRepository,
+        ),
+        RepositoryProvider.value(
+          value: _bridgeRepository,
+        ),
+      ],
       child: BlocProvider(
-        child: const AppView(),
-        create: (_) => AuthenticationBloc(
+        create: (context) => AuthenticationBloc(
           authenticationRepository: _authenticationRepository,
           userRepository: _userRepository,
         ),
+        child: const AppView(),
       ),
     );
   }
@@ -68,11 +79,16 @@ class _AppViewState extends State<AppView> {
   NavigatorState get _navigator => _navigatorKey.currentState!;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // début section test page produit
     return MaterialApp(
       title: 'HiveStock',
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: ApiConfiguration.isDebugMode,
       theme: ThemeData(
         colorScheme: lightColorScheme,
         textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme),
