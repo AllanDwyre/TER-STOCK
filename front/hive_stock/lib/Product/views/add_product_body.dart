@@ -48,27 +48,28 @@ class _AddProductBodyState extends State<AddProductBody> {
   }
 
   Future<void> finishAdd(BuildContext context) async {
-    products.insert(
-        0,
-        Product(
-          name: _controller["Product Name *"]!.text.capitalize(),
-          sku: _controller["Product ID *"]!.text,
-          image: "./assets/images(for_test)/${productImageName!}",
-          category: _controller["Category"]?.text,
-          price: double.parse(_controller["Buying Price *"]!.text),
-          quantity: int.parse(_controller["Quantity *"]!.text),
-        ));
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        const SnackBar(
-            content: Center(child: Text('Product Added !')),
-            backgroundColor: Color.fromARGB(255, 118, 177, 91)),
-      );
-    await Future.delayed(const Duration(milliseconds: 1500), () async {
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const InventoryPage()));
-    });
+    // products.insert(
+    //     0,
+    //     Product(
+    //       name: _controller["Product Name *"]!.text.capitalize(),
+    //       sku: _controller["Product ID *"]!.text,
+    //       image: "./assets/images(for_test)/${productImageName!}",
+    //       category: _controller["Category"]?.text,
+    //       price: double.parse(_controller["Buying Price *"]!.text),
+    //       quantity: int.parse(_controller["Quantity *"]!.text),
+    //     ),
+    //     );
+    // ScaffoldMessenger.of(context)
+    //   ..hideCurrentSnackBar()
+    //   ..showSnackBar(
+    //     const SnackBar(
+    //         content: Center(child: Text('Product Added !')),
+    //         backgroundColor: Color.fromARGB(255, 118, 177, 91)),
+    //   );
+    // await Future.delayed(const Duration(milliseconds: 1500), () async {
+    //   Navigator.pushReplacement(context,
+    //       MaterialPageRoute(builder: (context) => const InventoryPage()));
+    // });
   }
 
   Container myInputField(myLabelText, myHintText) {

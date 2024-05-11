@@ -1,16 +1,18 @@
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
 import "package:flutter_svg/svg.dart";
+import "package:hive_stock/product/bloc/product_bloc.dart";
+import "package:hive_stock/product/repository/product_repository.dart";
 import "package:hive_stock/product/views/inventory_body.dart";
 import "package:hive_stock/product/models/product.dart";
 import "package:hive_stock/product/views/add_product_page.dart";
 import "package:hive_stock/scanner/views/scanner_page.dart";
+import "package:hive_stock/utils/app/bridge_repository.dart";
 import "package:hive_stock/utils/constants/padding.dart";
 import "package:hive_stock/utils/widgets/bottom_nav_bar.dart";
 
-class InventoryPage extends StatelessWidget {
-  static List<Product> productList = products;
-
+class InventoryPage extends StatefulWidget {
   const InventoryPage({super.key});
 
   static Route<void> route() {
@@ -18,10 +20,34 @@ class InventoryPage extends StatelessWidget {
   }
 
   @override
+  State<InventoryPage> createState() => _InventoryPageState();
+}
+
+class _InventoryPageState extends State<InventoryPage> {
+  // static List<Product> productList = products;
+  late final ProductRepository _productRepository;
+
+  @override
+  void initState() {
+    _productRepository = ProductRepository(
+        bridge: RepositoryProvider.of<BridgeRepository>(context));
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: buildAppBar(context),
-      body: InventoryBody(productList),
+      body: RepositoryProvider.value(
+        value: _productRepository,
+        child: BlocProvider(
+          create: (context) =>
+              ProductBloc(productRepository: _productRepository)
+                ..add(ProductFetched()), // we do the initial fetch
+          child: const InventoryBody(),
+        ),
+      ),
       bottomNavigationBar: const BottomNavBar(initialTab: 1),
     );
   }

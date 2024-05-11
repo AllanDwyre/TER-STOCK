@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
-import 'package:hive_stock/product/models/product.dart';
-import 'package:hive_stock/utils/app/bridge_repository.dart';
+import 'package:hive_stock/product/models/product_inventory.dart';
+import 'package:hive_stock/product/repository/product_repository.dart';
 import 'package:hive_stock/utils/methods/logger.dart';
 import 'package:stream_transform/stream_transform.dart';
 
@@ -22,9 +22,11 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 }
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
-  final BridgeRepository bridge;
+  final ProductRepository _productRepository;
 
-  ProductBloc({required this.bridge}) : super(const ProductState()) {
+  ProductBloc({required ProductRepository productRepository})
+      : _productRepository = productRepository,
+        super(const ProductState()) {
     on<ProductFetched>(_onProductFetched);
   }
 
@@ -55,28 +57,15 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     }
   }
 
-  // TODO : product repository
-  Future<List<Product>> _fetchProducts([int startIndex = 0]) async {
-    // final response = await httpClient.get(
-    //   Uri.https(
-    //     'jsonplaceholder.typicode.com',
-    //     '/posts',
-    //     <String, String>{'_start': '$startIndex', '_limit': '$_productLimit'},
-    //   ),
-    // );
+  Future<List<ProductInventory>> _fetchProducts([int startIndex = 0]) async {
+    try {
+      final List<ProductInventory> products = await _productRepository
+          .fetchProducts(start: startIndex, limit: _productLimit);
 
-    // if (response.statusCode == 200) {
-    //   final body = json.decode(response.body) as List;
-    //   return body.map((dynamic json) {
-    //     final map = json as Map<String, dynamic>;
-    //     return Product(
-    //       id: map['id'] as int,
-    //       title: map['title'] as String,
-    //       body: map['body'] as String,
-    //     );
-    //   }).toList();
-    // }
-    // throw Exception('error fetching posts');
-    throw UnimplementedError("It's not currently Implemented");
+      return products;
+    } catch (e) {
+      logger.e("error fetching posts: $e", error: 'Product Bloc');
+      throw Exception('error fetching posts: $e');
+    }
   }
 }

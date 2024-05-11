@@ -72,4 +72,5 @@ module.exports = {
         res.status(500).json({ success: false, message: "Une erreur s'est produite lors de l'ajout du produit." });
       }
     }
+    
   };

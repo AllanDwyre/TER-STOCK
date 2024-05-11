@@ -1,21 +1,27 @@
 import 'dart:async';
-import 'package:hive_stock/user/model/user.dart';
+import 'package:hive_stock/product/models/product_inventory.dart';
 import 'package:hive_stock/utils/app/bridge_repository.dart';
-import 'package:hive_stock/utils/methods/logger.dart';
 
 class ProductRepository {
   ProductRepository({required this.bridge});
   final BridgeRepository bridge;
 
-  Future<User?> getProductById(int id) async {
+  Future<List<ProductInventory>> fetchProducts(
+      {int start = 0, required int limit}) async {
+    final params = {"start": start, "limit": limit};
 
-    final response = await bridge.request.get("/homePage/getUser");
+    final response = await bridge.request
+        .get("/Inventory/fetchPagination", queryParameters: params);
 
     if (response.statusCode != 200) {
-      logger.e("Get user request fail ! \n=> $response", error: "Fail Request");
-      return null;
+      throw Exception(response);
     }
 
-    return User.fromJson(response.data);
+    final List<dynamic> body = response.data as List;
+
+    return body.map((dynamic json) {
+      final map = json as Map<String, dynamic>;
+      return ProductInventory.fromJson(map);
+    }).toList();
   }
 }

@@ -18,5 +18,7 @@ void main() async {
 
   Logger.level = ApiConfiguration.isDebugMode ? Level.trace : Level.error;
 
+  // Bloc.observer = const SimpleBlocObserver(); // * https://bloclibrary.dev/bloc-concepts/#blocobserver
+
   runApp(const App());
 }
