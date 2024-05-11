@@ -8,7 +8,10 @@ const addProductController = require("../controller/addProductController.js");
 const orderController = require("../controller/orderController.js");
 const addOrderController = require("../controller/addOrderController.js");
 const productController = require("../controller/productController.js");
+const inventoryController = require("../controller/inventoryController.js");
 
+
+/* -------- LOGIN ----------- */
 router.post("/login", loginController.login);
 router.post("/register", loginController.signup);
 router.get("/homePage", loginController.home);
@@ -24,6 +27,9 @@ router.get('/homePage', authController.home);
 
 /*router.get('/inventory', authController.pagePrincipale);
 router.get('/product', authController.afficheProd);*/
+
+
+router.get("/Inventrory/getTopSelling", inventoryController.getProduitPlusVendu);
 
 //=========================PAGE====================================
 // Route pour ajouter un produit
