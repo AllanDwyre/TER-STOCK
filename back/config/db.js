@@ -14,7 +14,7 @@ const sequelizeLocal = new Sequelize(
 );
 
 // Tester la connexion
-async function testConnection() {
+async function testConnectionLocale() {
   try {
     await sequelizeLocal.authenticate();
     console.log("Connexion à la base de données Locale établie avec succès.");
@@ -22,7 +22,29 @@ async function testConnection() {
     console.error("Impossible de se connecter à la base de données:", error);
   }
 }
-testConnection();
+testConnectionLocale();
+
+const sequelizeHeroku = new Sequelize(
+  process.env.DB_NAMEH,
+  process.env.DB_USERH,
+  process.env.DB_PASSH,
+  {
+    host: process.env.DB_HOSTH,
+    dialect: "mysql",
+    logging: false,
+  }
+);
+
+async function testConnectionHeroku() {
+  try {
+    await sequelizeHeroku.authenticate();
+    console.log("Connexion à la base de données Heroku établie avec succès.");
+  } catch (error) {
+    console.error("Impossible de se connecter à la base de données:", error);
+  }
+}
+testConnectionHeroku();
+
 
 // Connexion à la base de données cloud
 const sequelizeCloud = new Sequelize(
