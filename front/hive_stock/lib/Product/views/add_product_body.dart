@@ -1,11 +1,10 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_stock/product/views/inventory_page.dart';
-import 'package:hive_stock/product/models/product.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:hive_stock/utils/constants/padding.dart';
-
 import 'package:file_picker/file_picker.dart';
-import 'package:hive_stock/utils/methods/string_extension.dart'; // https://pub.dev/packages/file_picker
+// import 'package:hive_stock/product/views/inventory_page.dart';
+// import 'package:hive_stock/product/models/product.dart';
+// import 'package:hive_stock/utils/methods/string_extension.dart'; // https://pub.dev/packages/file_picker
 
 class AddProductBody extends StatefulWidget {
   const AddProductBody({super.key});

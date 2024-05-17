@@ -25,4 +25,12 @@ class ProductInventory {
           DateTime.parse(json['inventaire_produits'][0]['DATE_INV'] as String),
     );
   }
+
+  static final empty = ProductInventory(
+    product: Product.empty,
+    inventaireId: -1,
+    staffId: -1,
+    quantity: -1,
+    inventoryDate: DateTime.now(),
+  );
 }
