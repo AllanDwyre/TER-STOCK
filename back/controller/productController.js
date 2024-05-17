@@ -137,4 +137,53 @@ module.exports = {
       });
     }
   },
+
+  getTopSellingProduct: async (req, res) => {
+    // On vérifie d'abord si l'en-tête Authorization est présente dans la requête
+    const authHeader = req.headers["authorization"];
+    if (!authHeader) {
+      return res.status(401).send("Token d'authentification manquant");
+    }
+    jwt.verify(authHeader, KEY, { algorithm: "HS256" }, (err, decoded) => {
+      if (err) {
+        return res.status(401).send("Token d'authentification invalide");
+      }
+      // Maintenant que le token est vérifié, on peut envoyer les informations
+
+      try {
+        models.produit_vendu
+        .findAll({
+          include: [
+            {
+              model: models.produit,
+              as: "PRODUITS",
+              required: true,
+            },
+          ],
+          order: [["QUANTITE", "DESC"]],
+          limit: 1,
+        })
+        .then((result) => {
+          const formattedResult = result.map((produit_vendu) => {
+            return produit_vendu.dataValues;
+          });
+          console.table(formattedResult);
+          console.table(
+            formattedResult.map((produit_vendu) => {
+              return produit_vendu.produit[0].dataValues;
+            })
+          );
+          res.status(200).json(result);
+        })
+        .catch((error) => {
+          console.error("Error fetching top selling product:", error);
+        });
+    } catch (error) {
+      res.status(500).json({
+        message:
+          "Erreur lors de la récupération du top selling product: " + error.message,
+      });
+    }
+  });
+}
 };
