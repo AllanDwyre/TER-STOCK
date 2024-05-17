@@ -40,4 +40,18 @@ class Product {
       supplierId: json['FOURNISSEUR_ID'],
     );
   }
+
+  static final empty = Product(
+    productId: -1,
+    name: '-',
+    description: '-',
+    unitPrice: -1,
+    weight: -1,
+    dimensions: '-',
+    warehouse: '-',
+    barcode: '-',
+    categoryId: -1,
+    locationId: -1,
+    supplierId: -1,
+  );
 }

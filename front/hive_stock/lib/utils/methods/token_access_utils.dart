@@ -29,7 +29,7 @@ class AccessTokenUtils {
   static Future<String?> retrieveUserToken() async {
     try {
       final String? secureKey =
-          await secureStorage.read(key: SECURE_STORAGE_KEY);
+            await secureStorage.read(key: SECURE_STORAGE_KEY);
 
       if (secureKey == null || secureKey.isEmpty) {
         return null;

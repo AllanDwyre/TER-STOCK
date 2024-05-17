@@ -2,10 +2,9 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 import "package:flutter_svg/svg.dart";
-import "package:hive_stock/product/bloc/product_bloc.dart";
+import "package:hive_stock/product/bloc/inventory_bloc.dart";
 import "package:hive_stock/product/repository/product_repository.dart";
 import "package:hive_stock/product/views/inventory_body.dart";
-import "package:hive_stock/product/models/product.dart";
 import "package:hive_stock/product/views/add_product_page.dart";
 import "package:hive_stock/scanner/views/scanner_page.dart";
 import "package:hive_stock/utils/app/bridge_repository.dart";
@@ -43,8 +42,8 @@ class _InventoryPageState extends State<InventoryPage> {
         value: _productRepository,
         child: BlocProvider(
           create: (context) =>
-              ProductBloc(productRepository: _productRepository)
-                ..add(ProductFetched()), // we do the initial fetch
+              InventoryBloc(productRepository: _productRepository)
+                ..add(InventoryFetched()), // we do the initial fetch
           child: const InventoryBody(),
         ),
       ),
