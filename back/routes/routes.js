@@ -16,8 +16,11 @@ router.post('/otp',authController.verifOTP);
 router.get('/homePage', controllers.authController.home);
  ---------- */
 
-/*router.get('/inventory', controllers.authController.pagePrincipale);
-router.get('/product', controllers.authController.afficheProd);*/
+/*router.get('/inventory', authController.pagePrincipale);
+router.get('/product', authController.afficheProd);*/
+
+
+router.get("/Inventrory/getTopSelling", inventoryController.getProduitPlusVendu);
 
 //=========================PAGE====================================
 //produit

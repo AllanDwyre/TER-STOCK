@@ -142,17 +142,7 @@ module.exports = {
   },
 
   getUser: function (req, res) {
-    // On vérifie d'abord si l'en-tête Authorization est présente dans la requête
-    const authHeader = req.headers["authorization"];
-    if (!authHeader) {
-      return res.status(401).send("Token d'authentification manquant");
-    }
-
-    // On vérifie et on décode le token le token
-    jwt.verify(authHeader, KEY, { algorithm: "HS256" }, (err, decoded) => {
-      if (err) {
-        return res.status(401).send("Token d'authentification invalide");
-      }
+  
       // Maintenant que le token est vérifié, on peut envoyer les informations de l'utilisateur
       User.findOne({
         where: {
@@ -171,6 +161,6 @@ module.exports = {
         console.table(userInfo);
         res.status(200).json(userInfo);
       });
-    });
+    
   },
 };

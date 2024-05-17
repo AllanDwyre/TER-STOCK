@@ -13,7 +13,7 @@ const sequelizeLocal = new Sequelize(
   }
 );
 
-// Tester la connexion
+// Ici on teste la connexion à la base de données locale
 async function testConnectionLocale() {
   try {
     await sequelizeLocal.authenticate();
@@ -58,7 +58,7 @@ const sequelizeCloud = new Sequelize(
   }
 );
 
-// Tester la connexion
+// Ici on teste la connexion à la base de données cloud
 async function testConnectionCloud() {
   try {
     await sequelizeCloud.authenticate();
