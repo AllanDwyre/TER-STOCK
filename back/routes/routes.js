@@ -1,18 +1,20 @@
 const express = require("express");
 const router = express.Router();
 //const authController = require("../controller/authController.js");
-const userController = require('../controller/userController.js');
+const userController = require("../controller/userController.js");
 const addProduct = require("../controller/addProductController.js");
 const loginController = require("../controller/loginController.js");
 const addProductController = require("../controller/addProductController.js");
-const orderController = require('../controller/orderController.js');
+const orderController = require("../controller/orderController.js");
 const addOrderController = require("../controller/addOrderController.js");
+const productController = require("../controller/productController.js");
+const inventoryNINAController = require("../controller/inventoryNINAController.js");
+const ordersController = require("../controller/ordersController.js");
 
-
-router.post('/login', loginController.login);
-router.post('/register', loginController.signup);
-router.get('/homePage', loginController.home);
-router.get('/homePage/getUser', loginController.getUser);
+router.post("/login", loginController.login);
+router.post("/register", loginController.signup);
+router.get("/homePage", loginController.home);
+router.get("/homePage/getUser", loginController.getUser);
 
 /* ------ SI ON A LE TEMPS D'INCLURE OTP ---- 
 
@@ -22,18 +24,30 @@ router.post('/otp',authController.verifOTP);
 router.get('/homePage', authController.home);
  ---------- */
 
-
 /*router.get('/inventory', authController.pagePrincipale);
 router.get('/product', authController.afficheProd);*/
 
+
+
+router.get("/Inventory/orderfetchPagination",orderController.getOrderPagination);
+router.get("/Inventory/totalProducts",inventoryNINAController.getTotalProductsCount);
+router.get("/inventory/totalCategories",inventoryNINAController.getTotalCategories);
+
+router.get("/Order/totalOrdres",ordersController.getTotalOrdersCount);
+router.get("/Inventory/TopSelling",inventoryNINAController.getTopSellingProduct);
+router.get("/Inventory/lowStock",inventoryNINAController.getLowStockProductsCount);
+
+
 //=========================PAGE====================================
 // Route pour ajouter un produit
-router.get('/Product/add', addProduct.addProduit);
-router.get('/Inventory', );
-router.get('/Order', orderController.showOrders);
-router.get('Order/newOrder', addOrderController.newOrder);
-
-
+router.get("/Product/add", addProduct.addProduit);
+router.get("/Inventory");
+router.get(
+  "/Inventory/fetchPagination",
+  productController.getProductPagination
+);
+router.get("/Order", orderController.showOrders);
+router.get("Order/newOrder", addOrderController.newOrder);
 
 /*=============================CRUD===================================
 
@@ -58,4 +72,3 @@ router.delete('/clients/:id', userController.deleteClientById);
 */
 
 module.exports = router;
-	

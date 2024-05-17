@@ -5,6 +5,9 @@ final RegExp phoneValidatorRegExp =
 final RegExp birthdayValidatorRegExp = RegExp(
     r"/^(?:0[1-9]|[12]\d|3[01])([ \/.-])(?:0[1-9]|1[012])\1(?:19|20)\d\d$");
 final RegExp isnumericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
+final RegExp passwordValidatorRegExp =
+    RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
+
 
 // const String kEmailNullError = "Please enter your email";
 // const String kInvalidEmail = "Please enter a valid email";

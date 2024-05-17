@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_stock/product/models/product.dart';
+import 'package:hive_stock/utils/constants/constants.dart';
 import 'package:hive_stock/utils/constants/padding.dart';
 import 'package:hive_stock/utils/widgets/snackbars.dart';
 import "package:hive_stock/utils/utils/string_extension.dart";
@@ -30,7 +31,7 @@ class _ProductBodyState extends State<ProductBody>
         children: <Widget>[
           Hero(
             tag: widget.product.name,
-            child: Image.asset(widget.product.image),
+            child: Image.asset(CustomIcons.productImageTest),
           ),
           Container(
             width: size.width,
@@ -46,7 +47,8 @@ class _ProductBodyState extends State<ProductBody>
                         ?.copyWith(color: colorTheme.onBackground),
                   ),
                   Text(
-                    "Class ${widget.product.class_ ?? "null"} | Sku : ${widget.product.sku}",
+                    // "Class ${widget.product.class_ ?? "null"} | Sku : ${widget.product.sku}", // TODO : get the class and sku from backend modification
+                    "-",
                     style: textTheme.titleSmall
                         ?.copyWith(color: colorTheme.onBackground),
                   ),
@@ -67,26 +69,26 @@ class _ProductBodyState extends State<ProductBody>
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-                kDefaultPadding, 0, kDefaultPadding, 0),
-            child: (widget.product.specialHandling == null)
-                ? Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "No special handling",
-                      style: textTheme.titleSmall
-                          ?.copyWith(color: colorTheme.outlineVariant),
-                    ),
-                  )
-                : CustomSnackbar(
-                    type: SnackbarType.warning,
-                    description:
-                        "Please ensure special handling for this package, as it requires temperature maintenant below 5°C throughout transit and storage",
-                    title: (widget.product.specialHandling ?? "non renseigné")
-                        .capitalize(),
-                  ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.fromLTRB(
+          //       kDefaultPadding, 0, kDefaultPadding, 0),
+          //   child: (widget.product.specialHandling == null)
+          //       ? Align(
+          //           alignment: Alignment.centerLeft,
+          //           child: Text(
+          //             "No special handling",
+          //             style: textTheme.titleSmall
+          //                 ?.copyWith(color: colorTheme.outlineVariant),
+          //           ),
+          //         )
+          //       : CustomSnackbar(
+          //           type: SnackbarType.warning,
+          //           description:
+          //               "Please ensure special handling for this package, as it requires temperature maintenant below 5°C throughout transit and storage",
+          //           title: (widget.product.specialHandling ?? "non renseigné")
+          //               .capitalize(),
+          //         ),
+          // ),
           Container(
             color: colorTheme.onPrimary,
             child: TabBar(
@@ -127,14 +129,14 @@ class _ProductBodyState extends State<ProductBody>
                           children: [
                             displayDetails(context, widget, "Product Name",
                                 widget.product.name),
-                            displayDetails(context, widget, "Product SKU",
-                                widget.product.sku),
-                            displayDetails(context, widget, "Product Class",
-                                "${widget.product.class_}"),
-                            displayDetails(context, widget, "Product Category",
-                                "${widget.product.category}"),
-                            displayDetails(context, widget, "Storage Date",
-                                "${widget.product.storageDate}"),
+                            // displayDetails(context, widget, "Product SKU",
+                            //     widget.product.sku),
+                            // displayDetails(context, widget, "Product Class",
+                            //     "${widget.product.class_}"),
+                            // displayDetails(context, widget, "Product Category",
+                            //     "${widget.product.category}"),
+                            // displayDetails(context, widget, "Storage Date",
+                            //     "${widget.product.storageDate}"),
                           ],
                         ),
                       ),
@@ -147,14 +149,14 @@ class _ProductBodyState extends State<ProductBody>
                         padding: const EdgeInsets.all(kDefaultPadding),
                         child: Column(
                           children: [
-                            displayDetails(context, widget, "Quantity",
-                                "${widget.product.quantity}"),
-                            displayDetails(context, widget, "At preparation",
-                                "${widget.product.atPreparation}"),
-                            displayDetails(context, widget, "On the way",
-                                "${widget.product.onTheWay}"),
-                            displayDetails(context, widget, "Arrival date",
-                                "${widget.product.arrivalDate}"),
+                            // displayDetails(context, widget, "Quantity",
+                            //     "${widget.product.quantity}"),
+                            // displayDetails(context, widget, "At preparation",
+                            //     "${widget.product.atPreparation}"),
+                            // displayDetails(context, widget, "On the way",
+                            //     "${widget.product.onTheWay}"),
+                            // displayDetails(context, widget, "Arrival date",
+                            //     "${widget.product.arrivalDate}"),
                           ],
                         ),
                       ),
