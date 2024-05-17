@@ -19,17 +19,6 @@ module.exports = {
         });
       }
     },
-  //////totale commande////
-  getTotalOrdersCount: async (req, res) => {
-    try {
-      const totalOrdersCount = await models.commande.count();
-      res.status(200).json({ totalOrdersCount });
-    } catch (error) {
-      res.status(500).json({
-        message: "Erreur lors de la récupération du nombre total de commande: " + error.message,
-      });
-    }
-  },
   ////// totale categorie/////
   getTotalCategories: async (req, res) => {
     try{
