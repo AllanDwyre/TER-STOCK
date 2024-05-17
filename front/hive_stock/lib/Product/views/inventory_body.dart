@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_stock/product/bloc/product_bloc.dart';
+import 'package:hive_stock/product/bloc/inventory_bloc.dart';
 import 'package:hive_stock/product/models/product_inventory.dart';
+import 'package:hive_stock/product/views/product_page.dart';
 import 'package:hive_stock/utils/widgets/item_card.dart';
 import 'package:hive_stock/utils/widgets/search_bar.dart';
 import 'package:hive_stock/utils/constants/padding.dart';
@@ -40,7 +39,7 @@ class _InventoryBodyState extends State<InventoryBody> {
   }
 
   void _onScroll() {
-    if (_isBottom) context.read<ProductBloc>().add(ProductFetched());
+    if (_isBottom) context.read<InventoryBloc>().add(InventoryFetched());
   }
 
   bool get _isBottom {
@@ -80,12 +79,12 @@ class _InventoryBodyState extends State<InventoryBody> {
             ],
           ),
         ),
-        BlocBuilder<ProductBloc, ProductState>(
+        BlocBuilder<InventoryBloc, InventoryState>(
           builder: (context, state) {
             switch (state.status) {
-              case ProductStatus.failure:
+              case InventoryStatus.failure:
                 return const Center(child: Text('failed to fetch products'));
-              case ProductStatus.success:
+              case InventoryStatus.success:
                 if (state.products.isEmpty) {
                   return const SliverToBoxAdapter(
                     child: Center(
@@ -98,59 +97,26 @@ class _InventoryBodyState extends State<InventoryBody> {
                   itemBuilder: (BuildContext context, int index) {
                     return index >= state.products.length
                         ? const BottomLoader()
-                        : ProductCard(productInventory: state.products[index]);
+                        : ProductCard(
+                            productInventory: state.products[index],
+                            onTap: () => Navigator.of(context).push(
+                                ProductPage.route(
+                                    produitId: state
+                                        .products[index].product.productId)),
+                          );
                   },
                   itemCount: state.hasReachedMax
                       ? state.products.length
                       : state.products.length +
                           1, // +1 to add the bottom loader
                 );
-              case ProductStatus.initial:
+              case InventoryStatus.initial:
                 return const SliverToBoxAdapter(
                     child: Center(child: CircularProgressIndicator()));
             }
           },
         ),
       ],
-    );
-  }
-}
-
-class _ProductsListWidget extends StatelessWidget {
-  const _ProductsListWidget({this.products});
-  final List<ProductInventory>? products;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: double.maxFinite,
-      child: Column(
-        children: [
-          _ProductTitleWFilter(),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
-              child: products?.isEmpty ?? true
-                  ? const Text("No result")
-                  : ListView.builder(
-                      itemCount: products?.length,
-                      itemBuilder: (context, index) => ProductCard(
-                        productInventory: products![index],
-                        // press: () => Navigator.push(
-                        //   context,
-                        //   // TODO : Ne respecte pas la convention de navigation
-                        //   MaterialPageRoute(
-                        //     builder: (context) => ProductPage(
-                        //       product: products![index],
-                        //     ),
-                        //   ),
-                        // ),
-                      ),
-                    ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

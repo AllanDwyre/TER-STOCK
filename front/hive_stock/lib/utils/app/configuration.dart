@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 enum ConfigurationModeEnum { debug, production }
 
 class ApiConfiguration {
@@ -15,5 +17,13 @@ class ApiConfiguration {
 
   //TODO : HERE the url of prod backend !!
   static const String _prodBaseUrl = '';
-  static const String _debugBaseUrl = 'http://10.0.2.2:3000'; // alias localhost
+
+  static String get _debugBaseUrl =>
+      Platform.isAndroid ? _debugBaseUrlAndroid : _debugBaseUrlIOS;
+
+  static const String _debugBaseUrlAndroid =
+      'http://10.0.2.2:3000'; // alias localhost
+
+  static const String _debugBaseUrlIOS =
+      'http://192.168.1.102:3000'; // alias localhost
 }
