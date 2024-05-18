@@ -20,7 +20,7 @@ router.get('/homePage', controllers.authController.home);
 router.get('/product', authController.afficheProd);*/
 
 
-router.get("/Inventrory/getTopSelling", inventoryController.getProduitPlusVendu);
+//router.get("/Inventrory/getTopSelling", inventoryController.getProduitPlusVendu);
 
 //=========================PAGE====================================
 //produit

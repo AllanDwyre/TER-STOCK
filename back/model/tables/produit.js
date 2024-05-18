@@ -58,7 +58,16 @@ module.exports = function(sequelize, DataTypes) {
         model: 'FOURNISSEUR',
         key: 'FOURNISSEUR_ID'
       }
-    }
+    },
+    SEUIL: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 5
+    },
+    QUANTITE: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
   }, {
     sequelize,
     tableName: 'PRODUIT',

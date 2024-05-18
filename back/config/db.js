@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 require("dotenv").config();
+const cron = require('node-cron');
 
 // Configuration de la connexion à la base de données  yes
 const sequelizeLocal = new Sequelize(
@@ -40,7 +41,7 @@ async function testConnectionHeroku() {
     await sequelizeHeroku.authenticate();
     console.log("Connexion à la base de données Heroku établie avec succès.");
   } catch (error) {
-    console.error("Impossible de se connecter à la base de données:", error);
+    console.error("Impossible de se connecter à la base de données Heroku:", error);
   }
 }
 testConnectionHeroku();
@@ -64,49 +65,43 @@ async function testConnectionCloud() {
     await sequelizeCloud.authenticate();
     console.log("Connexion à la base de données Cloud établie avec succès.");
   } catch (error) {
-    console.error("Impossible de se connecter à la base de données:", error);
+    console.error("Impossible de se connecter à la base de données Cloud:", error);
   }
 }
 testConnectionCloud();
 
-const modelLocal = require("../model/tables/categorie")(
-  sequelizeLocal,
-  DataTypes
-);
-const modelCloud = require("../model/tables/categorie")(
-  sequelizeCloud,
-  DataTypes
-);
+const initModels = require("../model/tables/init-models").initModels;
+const modelsLocale = initModels(sequelizeLocal, DataTypes);
+const modelsCloud = initModels(sequelizeCloud, DataTypes);
 
-const currentDate = new Date();
-const year = currentDate.getFullYear(); // Année
-const month = currentDate.getMonth() + 1; // Mois (janvier est 0, donc on ajoute 1)
-const day = currentDate.getDate(); // Jour du mois
-const formattedDate = `${year}-${month < 10 ? "0" : ""}${month}-${
-  day < 10 ? "0" : ""
-}${day}`;
-console.log(formattedDate);
+/*for(const model in modelsCloud ){
+  console.log(model);
+}*/
 
-/*const User = require('../model/tables/users.js')(sequelize, DataTypes);
+// Fonction de synchronisation des données pour chaque modèle
+async function synchronizeTables() {
+  try {
+    for(const model in modelsCloud ){
+      const tableLocale = modelsLocale[model];
+      const tableCloud = modelsCloud[model];
+      const localModels = await tableLocale.findAll();
+      for (const local of localModels){
+        const localModel = local.dataValues;
+        await tableCloud.upsert(localModel);
+      }
+    }
+    console.log("Toutes les données ont été synchronisées avec succès.");
+  } catch (error) {
+    console.error('Erreur lors de la synchronisation des données :', error);
+  }
+}
+
+cron.schedule('0 0 1 * *', () => { // Exécuter le 1er de chaque mois à minuit (00:00)
+  console.log('Début de la synchronisation mensuelle.');
+  synchronizeTables();
+});
 
 
-User.findAll().then( res => {
-  console.log(res);
-})*/
-/* Insérer une nouvelle ligne dans la table users
-User.create({
-  USER_ID: 1,
-  USERNAME: 'utilisateur1',
-  NAME_USER: 'NomUtilisateur1',
-  FIRST_NAME: 'PrénomUtilisateur1',
-  USER_MAIL: 'utilisateur1@example.com',
-  USER_TEL: 1234567890,
-  USER_DATE_NAISS: '1990-01-01' // ou null si non spécifié
-}).then(user => {
-  console.log("Utilisateur créé avec succès :", user);
-}).catch(err => {
-  console.error("Erreur lors de la création de l'utilisateur :", err);
-});*/
 
 // Exporter l'objet Sequelize configuré
 module.exports = sequelizeCloud;
