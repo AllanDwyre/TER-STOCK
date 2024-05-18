@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 require("dotenv").config();
+const cron = require('node-cron');
 
 // Configuration de la connexion à la base de données  yes
 const sequelizeLocal = new Sequelize(
@@ -94,7 +95,12 @@ async function synchronizeTables() {
     console.error('Erreur lors de la synchronisation des données :', error);
   }
 }
-synchronizeTables();
+
+cron.schedule('0 0 1 * *', () => { // Exécuter le 1er de chaque mois à minuit (00:00)
+  console.log('Début de la synchronisation mensuelle.');
+  synchronizeTables();
+});
+
 
 
 // Exporter l'objet Sequelize configuré
