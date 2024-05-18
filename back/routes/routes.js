@@ -45,6 +45,15 @@ router.get("/Order/TotalOrdersreturned",auth,controllers.ordersController.getRet
 router.get("/Order/TotalOrdersInTransit",auth,controllers.ordersController.getOrdersInTransit);
 
 
+//Home Page 
+router.get("/homePage/totalProducts", auth, controllers.HomePageController.getTotalProductsCount);
+// marche pas encore 
+router.get("/homePage/totalStock", auth, controllers.HomePageController.getTotalStockPrice);
+router.get("/homePage/totalfournisseur", auth, controllers.HomePageController.getNumberSupplier);
+router.get("/homePage/seuilProducts", auth, controllers.HomePageController.getReplenishmentLevel);
+
+
+
 /*=============================CRUD===================================
 
 // CRUD utilisateur:
