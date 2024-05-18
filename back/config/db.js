@@ -78,7 +78,7 @@ const modelsCloud = initModels(sequelizeCloud, DataTypes);
   console.log(model);
 }*/
 
-// Synchronisation des données pour chaque modèle
+// Fonction de synchronisation des données pour chaque modèle
 async function synchronizeTables() {
   try {
     for(const model in modelsCloud ){
