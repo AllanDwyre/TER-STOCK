@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 require("dotenv").config();
+const cron = require('node-cron');
 
 // // Configuration de la connexion à la base de données  yes
 // const sequelizeLocal = new Sequelize(
@@ -40,7 +41,7 @@ async function testConnectionHeroku() {
     await sequelizeHeroku.authenticate();
     console.log("Connexion à la base de données Heroku établie avec succès.");
   } catch (error) {
-    console.error("Impossible de se connecter à la base de données:", error);
+    console.error("Impossible de se connecter à la base de données Heroku:", error);
   }
 }
 testConnectionHeroku();
@@ -64,10 +65,42 @@ async function testConnectionCloud() {
     await sequelizeCloud.authenticate();
     console.log("Connexion à la base de données Cloud établie avec succès.");
   } catch (error) {
-    console.error("Impossible de se connecter à la base de données:", error);
+    console.error("Impossible de se connecter à la base de données Cloud:", error);
   }
 }
 testConnectionCloud();
+
+const initModels = require("../model/tables/init-models").initModels;
+const modelsLocale = initModels(sequelizeLocal, DataTypes);
+const modelsCloud = initModels(sequelizeCloud, DataTypes);
+
+/*for(const model in modelsCloud ){
+  console.log(model);
+}*/
+
+// Fonction de synchronisation des données pour chaque modèle
+async function synchronizeTables() {
+  try {
+    for(const model in modelsCloud ){
+      const tableLocale = modelsLocale[model];
+      const tableCloud = modelsCloud[model];
+      const localModels = await tableLocale.findAll();
+      for (const local of localModels){
+        const localModel = local.dataValues;
+        await tableCloud.upsert(localModel);
+      }
+    }
+    console.log("Toutes les données ont été synchronisées avec succès.");
+  } catch (error) {
+    console.error('Erreur lors de la synchronisation des données :', error);
+  }
+}
+
+cron.schedule('0 0 1 * *', () => { // Exécuter le 1er de chaque mois à minuit (00:00)
+  console.log('Début de la synchronisation mensuelle.');
+  synchronizeTables();
+});
+
 
 // const modelLocal = require("../model/tables/categorie")(
 //   sequelizeLocal,
