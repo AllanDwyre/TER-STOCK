@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_stock/product/bloc/product_bloc.dart';
 import 'package:hive_stock/product/repository/product_repository.dart';
 import 'package:hive_stock/utils/app/bridge_repository.dart';
+import 'package:hive_stock/utils/methods/logger.dart';
 
 import 'product_body.dart';
 
@@ -34,19 +35,12 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    logger.t('access to produc n° ${widget.produitId}');
     return Scaffold(
       extendBodyBehindAppBar: true,
       //resizeToAvoidBottomInset: false,
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new,
-              color: Colors.white, size: 30.0),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+
       body: BlocProvider(
         create: (context) => ProductBloc(productRepository: _productRepository)
           ..add(ProductFetched(id: widget.produitId)),
@@ -55,3 +49,14 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 }
+
+
+      // appBar: AppBar(
+      //   leading: IconButton(
+      //     icon: const Icon(Icons.arrow_back_ios_new,
+      //         color: Colors.white, size: 30.0),
+      //     onPressed: () => Navigator.of(context).pop(),
+      //   ),
+      //   backgroundColor: Colors.transparent,
+      //   elevation: 0,
+      // ),

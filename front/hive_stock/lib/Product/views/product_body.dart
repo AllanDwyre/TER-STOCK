@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_stock/product/bloc/product_bloc.dart';
+import 'package:hive_stock/product/models/product.dart';
 import 'package:hive_stock/utils/constants/constants.dart';
+import 'package:hive_stock/utils/widgets/snackbars.dart';
 
 class ProductBody extends StatefulWidget {
   const ProductBody({super.key});
@@ -12,246 +15,266 @@ class ProductBody extends StatefulWidget {
 
 class _ProductBodyState extends State<ProductBody>
     with TickerProviderStateMixin {
+  late TabController tabController;
+  @override
+  void initState() {
+    tabController = TabController(length: 4, vsync: this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Hauteur et largeur totales
     Size size = MediaQuery.of(context).size;
-    TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorTheme = Theme.of(context).colorScheme;
-
-    TabController tabController = TabController(length: 4, vsync: this);
-
     return BlocBuilder<ProductBloc, ProductState>(
-      builder: (context, state) {
-        String productName = state.productdetails?.product.name ?? "-";
-        return SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Hero(
-                tag: productName,
-                child: Image.asset(CustomIcons.productImageTest),
+      builder: ((context, state) {
+        Product? product = state.productdetails?.product;
+        return CustomScrollView(
+          slivers: [
+            _ProductAppBar(
+              productName: state.productdetails?.product.name,
+            ),
+            _ProductHeader(product: product),
+            SliverAppBar(
+              automaticallyImplyLeading: false,
+              pinned: true,
+              primary: false,
+              title: TabBar(
+                controller: tabController,
+                labelPadding: const EdgeInsets.symmetric(horizontal: 5),
+                labelColor: colorTheme.primary,
+                unselectedLabelColor: colorTheme.secondary,
+                dividerColor: Colors.transparent,
+                indicator: UnderlineTabIndicator(
+                    borderSide:
+                        BorderSide(color: colorTheme.primary, width: 1)),
+                tabs: const [
+                  Tab(text: "Overview"),
+                  Tab(text: "Purchases"),
+                  Tab(text: "Adjustement"),
+                  Tab(text: "History"),
+                ],
               ),
-              Container(
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                height: size.height,
                 width: size.width,
-                color: colorTheme.onPrimary,
-                child: Padding(
-                  padding: const EdgeInsets.all(kDefaultPadding),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        productName,
-                        style: textTheme.displayMedium
-                            ?.copyWith(color: colorTheme.onBackground),
-                      ),
-                      Text(
-                        // "Class ${widget.product.class_ ?? "null"} | Sku : ${widget.product.sku}", // TODO : get the class and sku from backend modification
-                        "Class A",
-                        style: textTheme.titleSmall
-                            ?.copyWith(color: colorTheme.onBackground),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                width: size.width,
-                color: colorTheme.onPrimary,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                      kDefaultPadding, 0, kDefaultPadding, kDefaultPadding / 2),
-                  child: Text(
-                    "Special handling",
-                    style: textTheme.headlineMedium
-                        ?.copyWith(color: colorTheme.onBackground),
-                  ),
-                ),
-              ),
-              // Padding(
-              //   padding: const EdgeInsets.fromLTRB(
-              //       kDefaultPadding, 0, kDefaultPadding, 0),
-              //   child: (widget.product.specialHandling == null)
-              //       ? Align(
-              //           alignment: Alignment.centerLeft,
-              //           child: Text(
-              //             "No special handling",
-              //             style: textTheme.titleSmall
-              //                 ?.copyWith(color: colorTheme.outlineVariant),
-              //           ),
-              //         )
-              //       : CustomSnackbar(
-              //           type: SnackbarType.warning,
-              //           description:
-              //               "Please ensure special handling for this package, as it requires temperature maintenant below 5°C throughout transit and storage",
-              //           title: (widget.product.specialHandling ?? "non renseigné")
-              //               .capitalize(),
-              //         ),
-              // ),
-              Container(
-                color: colorTheme.onPrimary,
-                child: TabBar(
-                  controller: tabController,
-                  labelPadding: const EdgeInsets.symmetric(horizontal: 10),
-                  labelColor: colorTheme.primary,
-                  unselectedLabelColor: colorTheme.secondary,
-                  dividerColor: Colors.transparent,
-                  indicator: UnderlineTabIndicator(
-                      borderSide:
-                          BorderSide(color: colorTheme.primary, width: 1)),
-                  tabs: const [
-                    Tab(text: "Overview"),
-                    Tab(text: "Purchases"),
-                    Tab(text: "Adjustement"),
-                    Tab(text: "History"),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: size.width,
-                height: size.height / 2,
+                padding: defaultPagePadding.copyWith(top: 20),
                 child: TabBarView(
                   controller: tabController,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(kDefaultPadding),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Primary Details",
-                            style: textTheme.titleLarge
-                                ?.copyWith(color: colorTheme.secondary),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(kDefaultPadding),
-                            child: Column(
-                              children: [
-                                displayDetails(context, widget, "Product Name",
-                                    productName),
-                                // displayDetails(context, widget, "Product SKU",
-                                //     widget.product.sku),
-                                // displayDetails(context, widget, "Product Class",
-                                //     "${widget.product.class_}"),
-                                // displayDetails(context, widget, "Product Category",
-                                //     "${widget.product.category}"),
-                                // displayDetails(context, widget, "Storage Date",
-                                //     "${widget.product.storageDate}"),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            "Quantity Details",
-                            style: textTheme.titleLarge
-                                ?.copyWith(color: colorTheme.secondary),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(kDefaultPadding),
-                            child: Column(
-                              children: [
-                                // displayDetails(context, widget, "Quantity",
-                                //     "${widget.product.quantity}"),
-                                // displayDetails(context, widget, "At preparation",
-                                //     "${widget.product.atPreparation}"),
-                                // displayDetails(context, widget, "On the way",
-                                //     "${widget.product.onTheWay}"),
-                                // displayDetails(context, widget, "Arrival date",
-                                //     "${widget.product.arrivalDate}"),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(kDefaultPadding),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Primary Details",
-                            style: textTheme.titleLarge
-                                ?.copyWith(color: colorTheme.onBackground),
-                          ),
-                          Text(
-                            "Text",
-                            style: textTheme.titleSmall
-                                ?.copyWith(color: colorTheme.onBackground),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(kDefaultPadding),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Primary Details",
-                            style: textTheme.titleLarge
-                                ?.copyWith(color: colorTheme.onBackground),
-                          ),
-                          Text(
-                            "Text",
-                            style: textTheme.titleSmall
-                                ?.copyWith(color: colorTheme.onBackground),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(kDefaultPadding),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Primary Details",
-                            style: textTheme.titleLarge
-                                ?.copyWith(color: colorTheme.onBackground),
-                          ),
-                          Text(
-                            "Text",
-                            style: textTheme.titleSmall
-                                ?.copyWith(color: colorTheme.onBackground),
-                          ),
-                        ],
-                      ),
-                    ),
+                    _Overview(product: product),
+                    const _Purchases(),
+                    const _Adjustement(),
+                    const _History(),
                   ],
                 ),
               ),
-            ],
-          ),
+            )
+          ],
         );
-      },
+      }),
     );
   }
 }
 
-dynamic displayDetails(context, widget, text1, text2) {
-  return Row(
-    mainAxisSize: MainAxisSize.min,
-    children: <Widget>[
-      Expanded(
-        child: Text(
-          text1,
-          maxLines: 1,
-          softWrap: false,
-          style: Theme.of(context)
-              .textTheme
-              .titleSmall
-              ?.copyWith(color: Theme.of(context).colorScheme.secondary),
+class _History extends StatelessWidget {
+  const _History({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('data');
+  }
+}
+
+class _Adjustement extends StatelessWidget {
+  const _Adjustement({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('data');
+  }
+}
+
+class _Purchases extends StatelessWidget {
+  const _Purchases({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('data');
+  }
+}
+
+class _Overview extends StatelessWidget {
+  const _Overview({this.product});
+
+  final Product? product;
+
+  Text InformationSection(
+      {required String title, required BuildContext context}) {
+    return Text(
+      title,
+      style: Theme.of(context)
+          .textTheme
+          .titleMedium
+          ?.copyWith(color: Theme.of(context).colorScheme.secondary),
+    );
+  }
+
+  String checkValue(String? value) => value ?? '-';
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InformationSection(title: 'Primary Details', context: context),
+        _TableRowProduct(title: 'Name', value: checkValue(product?.name)),
+        _TableRowProduct(
+            title: 'Product Sku', value: checkValue(product?.barcode)),
+        _TableRowProduct(
+            title: 'Product Class', value: checkValue(product?.dimensions)),
+        _TableRowProduct(
+            title: 'Product Price',
+            value: checkValue(product?.unitPrice.toString())),
+        const _TableRowProduct(title: 'Product category', value: 'Pharmacy'),
+        const _TableRowProduct(title: 'Storage date', value: '15/02/2023'),
+        InformationSection(title: 'Quantity Details', context: context),
+      ],
+    );
+  }
+}
+
+class _ProductHeader extends StatelessWidget {
+  const _ProductHeader({
+    required this.product,
+  });
+
+  final Product? product;
+
+  @override
+  Widget build(BuildContext context) {
+    TextTheme textTheme = Theme.of(context).textTheme;
+    ColorScheme colorTheme = Theme.of(context).colorScheme;
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: defaultPagePadding.copyWith(bottom: 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              product?.name ?? '-',
+              style: textTheme.headlineLarge,
+            ),
+            const SizedBox(height: 5),
+            Text(
+              // "Class ${widget.product.class_ ?? "null"} | Sku : ${widget.product.sku}", // TODO : get the class and sku from backend modification
+              "Class A | Sku : ABC-12345-S-BL",
+              style: textTheme.titleSmall
+                  ?.copyWith(color: colorTheme.onBackground),
+            ),
+            const SizedBox(height: 10),
+            Visibility(
+              visible:
+                  (product?.productId ?? 1) % 2 == 0, //TODO : change that lol
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Special handling",
+                    style: textTheme.headlineMedium
+                        ?.copyWith(color: colorTheme.onBackground),
+                  ),
+                  const SizedBox(height: 10),
+                  // TODO : Make it recursive
+                  // ? : Sliver List ?
+                  CustomSnackbar(
+                    type: SnackbarType.warning,
+                    title: 'Temperature',
+                    description:
+                        'Please ensure special handling for this package, as it requires  temperature maintenance below 5°C throughout transit and storage.',
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
-      Expanded(
-        child: Text(
-          text2,
-          style: Theme.of(context)
-              .textTheme
-              .titleSmall
-              ?.copyWith(color: Theme.of(context).colorScheme.secondary),
-        ),
+    );
+  }
+}
+
+class _ProductAppBar extends StatelessWidget {
+  const _ProductAppBar({
+    required this.productName,
+  });
+
+  final String? productName;
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return SliverAppBar(
+        pinned: true,
+        floating: true,
+        expandedHeight: size.height * 0.25,
+        flexibleSpace: FlexibleSpaceBar(
+          centerTitle: false,
+          titlePadding: const EdgeInsetsDirectional.all(15),
+          background: Image.asset(
+            CustomIcons.productImageTest,
+            fit: BoxFit.cover,
+          ),
+        ));
+  }
+}
+
+class _TableRowProduct extends StatelessWidget {
+  const _TableRowProduct({
+    super.key,
+    required this.title,
+    required this.value,
+  });
+  final String title;
+  final String value;
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    TextTheme textTheme = Theme.of(context).textTheme;
+    ColorScheme colorTheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      width: size.width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            title,
+            maxLines: 1,
+            softWrap: false,
+            style: textTheme.titleSmall?.copyWith(color: colorTheme.secondary),
+          ),
+          Text(
+            value,
+            style: textTheme.titleSmall?.copyWith(color: colorTheme.secondary),
+          ),
+        ],
       ),
-    ],
-  );
+    );
+  }
 }

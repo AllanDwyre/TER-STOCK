@@ -40,6 +40,21 @@ class Product {
       supplierId: json['FOURNISSEUR_ID'],
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'PRODUIT_ID': productId,
+      'NOM': name,
+      'DESCR': description,
+      'PRIX_UNIT': unitPrice.toString(),
+      'POIDS': weight.toString(),
+      'DIMENSIONS': dimensions,
+      'MAGASIN_ENTREPOT': warehouse,
+      'CODE_BARRE_PRODUIT': barcode,
+      'CATEGORIE_ID': categoryId,
+      'EMPLACEMENT_ID': locationId,
+      'FOURNISSEUR_ID': supplierId,
+    };
+  }
 
   static final empty = Product(
     productId: -1,

@@ -8,8 +8,8 @@ class BridgeRepository {
     request = Dio();
     request.options
       ..baseUrl = ApiConfiguration.baseUrl
-      ..connectTimeout = const Duration(seconds: 5)
-      ..receiveTimeout = const Duration(seconds: 5)
+      ..connectTimeout = const Duration(seconds: 25)
+      ..receiveTimeout = const Duration(seconds: 25)
       ..validateStatus = (int? status) {
         return status != null && status > 0;
       };
