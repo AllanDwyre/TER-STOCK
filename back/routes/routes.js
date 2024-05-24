@@ -20,7 +20,7 @@ router.get('/homePage', controllers.authController.home);
 router.get('/product', authController.afficheProd);*/
 
 
-router.get("/Inventrory/getTopSelling", inventoryController.getProduitPlusVendu);
+// router.get("/Inventrory/getTopSelling", inventoryController.getProduitPlusVendu);
 
 //=========================PAGE====================================
 // Route pour ajouter un produit
@@ -32,8 +32,19 @@ router.get(
   auth,
   controllers.productController.getProductPagination
 );
+router.get(
+  "/Inventory/orderPagination",
+  auth,
+  controllers.orderController.getOrderPagination
+);
 router.get("/Order", auth, controllers.orderController.showOrders);
-router.get("Order/newOrder", auth, controllers.addOrderController.newOrder);
+router.get("/Order/newOrder", auth, controllers.addOrderController.newOrder);
+router.get(
+  "/Product/topSelling",
+   auth, 
+   controllers.productController.getTopSellingProduct
+  );
+
 
 /*=============================CRUD===================================
 
@@ -57,22 +68,22 @@ router.put('/clients/:id', controllers.userController.updateClientById);
 router.delete('/clients/:id', controllers.userController.deleteClientById);
 */
 
-// CRUD Employé :
-router.post('/employes', userController.createEmploye);
-router.get('/employes/:id', userController.getEmployeById);
-router.put('/employes/:id', userController.updateEmployeById);
-router.delete('/employes/:id', userController.deleteEmployeById);
+// // CRUD Employé :
+// router.post('/employes', userController.createEmploye);
+// router.get('/employes/:id', userController.getEmployeById);
+// router.put('/employes/:id', userController.updateEmployeById);
+// router.delete('/employes/:id', userController.deleteEmployeById);
 
-// CRUD Vente :
-router.post('/ventes', userController.createVente);
-router.get('/ventes/:id', userController.getVenteById);
-router.put('/ventes/:id', userController.updateVenteById);
-router.delete('/ventes/:id', userController.deleteVenteById);
+// // CRUD Vente :
+// router.post('/ventes', userController.createVente);
+// router.get('/ventes/:id', userController.getVenteById);
+// router.put('/ventes/:id', userController.updateVenteById);
+// router.delete('/ventes/:id', userController.deleteVenteById);
 
-// CRUD Facture :
-router.post('/factures', userController.createVente);
-router.get('/factures/:id', userController.getVenteById);
-router.put('/factures/:id', userController.updateVenteById);
-router.delete('/factures/:id', userController.deleteVenteById);
+// // CRUD Facture :
+// router.post('/factures', userController.createVente);
+// router.get('/factures/:id', userController.getVenteById);
+// router.put('/factures/:id', userController.updateVenteById);
+// router.delete('/factures/:id', userController.deleteVenteById);
 
 module.exports = router;

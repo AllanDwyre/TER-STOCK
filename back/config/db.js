@@ -1,28 +1,28 @@
 const { Sequelize, DataTypes } = require("sequelize");
 require("dotenv").config();
 
-// Configuration de la connexion à la base de données  yes
-const sequelizeLocal = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASS,
-  {
-    host: process.env.DB_HOST,
-    dialect: "mysql",
-    logging: false,
-  }
-);
+// // Configuration de la connexion à la base de données  yes
+// const sequelizeLocal = new Sequelize(
+//   process.env.DB_NAME,
+//   process.env.DB_USER,
+//   process.env.DB_PASS,
+//   {
+//     host: process.env.DB_HOST,
+//     dialect: "mysql",
+//     logging: false,
+//   }
+// );
 
-// Ici on teste la connexion à la base de données locale
-async function testConnectionLocale() {
-  try {
-    await sequelizeLocal.authenticate();
-    console.log("Connexion à la base de données Locale établie avec succès.");
-  } catch (error) {
-    console.error("Impossible de se connecter à la base de données:", error);
-  }
-}
-testConnectionLocale();
+// // Ici on teste la connexion à la base de données locale
+// async function testConnectionLocale() {
+//   try {
+//     await sequelizeLocal.authenticate();
+//     console.log("Connexion à la base de données Locale établie avec succès.");
+//   } catch (error) {
+//     console.error("Impossible de se connecter à la base de données:", error);
+//   }
+// }
+// testConnectionLocale();
 
 const sequelizeHeroku = new Sequelize(
   process.env.DB_NAMEH,
@@ -69,10 +69,10 @@ async function testConnectionCloud() {
 }
 testConnectionCloud();
 
-const modelLocal = require("../model/tables/categorie")(
-  sequelizeLocal,
-  DataTypes
-);
+// const modelLocal = require("../model/tables/categorie")(
+//   sequelizeLocal,
+//   DataTypes
+// );
 const modelCloud = require("../model/tables/categorie")(
   sequelizeCloud,
   DataTypes

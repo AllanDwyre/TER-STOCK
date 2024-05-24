@@ -1,9 +1,9 @@
 const sequelize = require('../config/db.js');
 const DataTypes = require('sequelize');
 const User = require('../model/tables/users.js')(sequelize,DataTypes);
-const Vente = require('./model').VENTE;
-const Employe = require('./model').EMPLOYE;
-const Facture = require('./model').FACTURE;
+// const Vente = require('./model').VENTE;
+// const Employe = require('./model').EMPLOYE;
+// const Facture = require('./model').FACTURE;
 
 
 module.exports = {
