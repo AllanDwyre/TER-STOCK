@@ -116,6 +116,9 @@ class _InventoryBodyState extends State<InventoryBody> {
             }
           },
         ),
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 100),
+        )
       ],
     );
   }

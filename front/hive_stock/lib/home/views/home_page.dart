@@ -22,57 +22,55 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: _appBar(context),
+      body: HomeBody(profilePageDisplayed: profilePageDisplayed),
+      bottomNavigationBar:
+          BottomNavBar(initialTab: 0, onTabChange: onTabChange),
+    );
+  }
+
+  AppBar _appBar(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorTheme = Theme.of(context).colorScheme;
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: colorTheme.onPrimary,
-        elevation: 0,
-        leading: IconButton(
-          icon: SvgPicture.asset("assets/icons/hivestock_logo.svg"),
-          onPressed: () {},
-        ),
-        title: const Text("Hivestock"),
-        actions: <Widget>[
-          GestureDetector(
-            onTap: () {},
-            child: Text(
-              "Store mode",
-              style:
-                  textTheme.labelSmall?.copyWith(color: colorTheme.secondary),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.notifications_none),
-            onPressed: () => {},
-          ),
-          IconButton(
-            icon: ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              child: Image.asset("./assets/images(for_test)/pdp.png"),
-            ),
-            iconSize: 50,
-            onPressed: () => setState(() {
-              profilePageDisplayed = profilePageDisplayed == ProfilePage.on
-                  ? ProfilePage.off
-                  : ProfilePage.on;
-            }),
-          ),
-          const SizedBox(width: kDefaultPadding / 2),
-        ],
+    return AppBar(
+      backgroundColor: colorTheme.onPrimary,
+      elevation: 0,
+      leading: IconButton(
+        icon: SvgPicture.asset("assets/icons/hivestock_logo.svg"),
+        onPressed: () {},
       ),
-      body: GestureDetector(
-          onTap: () {
-            if (profilePageDisplayed == ProfilePage.on) {
-              setState(() {
-                profilePageDisplayed = ProfilePage.off;
-              });
-            }
-          },
-          child: HomeBody(profilePageDisplayed: profilePageDisplayed)),
-      bottomNavigationBar: const BottomNavBar(initialTab: 0),
+      title: const Text("Hivestock"),
+      actions: <Widget>[
+        GestureDetector(
+          onTap: () {},
+          child: Text(
+            "Store mode",
+            style: textTheme.labelSmall?.copyWith(color: colorTheme.secondary),
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.notifications_none),
+          onPressed: () => {},
+        ),
+        IconButton(
+          icon: ClipRRect(
+            borderRadius: BorderRadius.circular(30),
+            child: Image.asset("./assets/images(for_test)/pdp.png"),
+          ),
+          iconSize: 50,
+          onPressed: () => setState(() {
+            profilePageDisplayed = profilePageDisplayed == ProfilePage.on
+                ? ProfilePage.off
+                : ProfilePage.on;
+          }),
+        ),
+        const SizedBox(width: kDefaultPadding / 2),
+      ],
     );
+  }
+
+  onTabChange(int newIndex) {
+    setState(() {});
   }
 }

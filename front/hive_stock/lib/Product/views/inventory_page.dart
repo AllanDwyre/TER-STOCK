@@ -4,8 +4,8 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_svg/svg.dart";
 import "package:hive_stock/product/bloc/inventory_bloc.dart";
 import "package:hive_stock/product/repository/product_repository.dart";
-import "package:hive_stock/product/views/inventory_body.dart";
 import "package:hive_stock/product/views/add_product_page.dart";
+import "package:hive_stock/product/views/inventory_body.dart";
 import "package:hive_stock/scanner/views/scanner_page.dart";
 import "package:hive_stock/utils/app/bridge_repository.dart";
 import "package:hive_stock/utils/constants/padding.dart";
@@ -38,6 +38,11 @@ class _InventoryPageState extends State<InventoryPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: buildAppBar(context),
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text("Add a product"),
+        icon: const Icon(Icons.add),
+        onPressed: () => Navigator.push(context, AddProductPage.route()),
+      ),
       body: RepositoryProvider.value(
         value: _productRepository,
         child: BlocProvider(
@@ -62,27 +67,6 @@ class _InventoryPageState extends State<InventoryPage> {
       ),
       title: const Text("Hivestock"),
       actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.push(
-            context,
-            //TODO : ne respecte pas les normes
-            MaterialPageRoute(
-              builder: (context) => const AddProductScreen(),
-            ),
-          ),
-          child: Container(
-            height: 25,
-            width: 100,
-            decoration: BoxDecoration(
-              color: colorTheme.primary,
-              borderRadius: const BorderRadius.all(Radius.circular(25)),
-            ),
-            child: Center(
-                child: Text('+ Add Product',
-                    style:
-                        TextStyle(color: colorTheme.onPrimary, fontSize: 12))),
-          ),
-        ),
         IconButton(
           icon: const Icon(Icons.qr_code_scanner),
           onPressed: () => Navigator.push(context, ScannerScreen.route()),
