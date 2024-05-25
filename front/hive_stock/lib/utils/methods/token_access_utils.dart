@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_stock/utils/constants/boxes_hive.dart';
 import 'package:hive_stock/utils/constants/keys_constants.dart';
+import 'package:hive_stock/utils/methods/logger.dart';
 
 class AccessTokenUtils {
   static Future<void> saveUserToken(String? token) async {
@@ -28,8 +31,10 @@ class AccessTokenUtils {
 
   static Future<String?> retrieveUserToken() async {
     try {
-      final String? secureKey =
-            await secureStorage.read(key: SECURE_STORAGE_KEY);
+      // Workaround -- `key` will be `null` if not present
+      //final String? secureKey = (await secureStorage.readAll())[SECURE_STORAGE_KEY];
+  // ! to modify in the next 
+       final String? secureKey = await secureStorage.read(key: SECURE_STORAGE_KEY);
 
       if (secureKey == null || secureKey.isEmpty) {
         return null;
@@ -48,6 +53,9 @@ class AccessTokenUtils {
       encryptedBox.close();
 
       return token;
+    } on PlatformException catch (e){
+      logger.e('$e', error: 'Plateform Exception IOS');
+      return null;
     } catch (e) {
       rethrow;
     }
