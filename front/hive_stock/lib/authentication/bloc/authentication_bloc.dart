@@ -6,6 +6,7 @@ import 'package:hive_stock/authentication/repository/authentication_repository.d
 import 'package:hive_stock/user/model/user.dart';
 import 'package:hive_stock/user/repository/user_repository.dart';
 import 'package:hive_stock/utils/methods/logger.dart';
+import 'package:hive_stock/utils/methods/token_access_utils.dart';
 import 'package:logger/logger.dart';
 
 part 'authentication_event.dart';
@@ -47,11 +48,14 @@ class AuthenticationBloc
       case AuthenticationStatus.authenticated:
         final user = await _tryGetUser();
 
-        return emit(
-          user != null
-              ? AuthenticationState.authenticated(user)
-              : const AuthenticationState.unauthenticated(),
-        );
+        if (user == null) {
+          logger.w("user not found -> log out...");
+          AccessTokenUtils.saveUserToken(null);
+          return emit(const AuthenticationState.unauthenticated());
+        } else {
+          return emit(AuthenticationState.authenticated(user));
+        }
+
       case AuthenticationStatus.unknown:
         return emit(const AuthenticationState.unknown());
     }

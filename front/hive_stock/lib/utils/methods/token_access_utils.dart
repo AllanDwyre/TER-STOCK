@@ -5,6 +5,7 @@ import 'package:hive_stock/utils/constants/boxes_hive.dart';
 import 'package:hive_stock/utils/constants/keys_constants.dart';
 
 class AccessTokenUtils {
+  
   static Future<void> saveUserToken(String? token) async {
     try {
       final secureKey = Hive.generateSecureKey();

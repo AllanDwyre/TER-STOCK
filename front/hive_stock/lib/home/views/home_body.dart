@@ -43,6 +43,7 @@ class _HomeBodyState extends State<HomeBody> {
     return SingleChildScrollView(
       child: SizedBox(
         //height: double.maxFinite,
+        // TODO : remove stack to put only modal pop up
         child: Stack(
           children: [
             Column(
@@ -51,6 +52,7 @@ class _HomeBodyState extends State<HomeBody> {
                   myLabelText: "Search product, supplier, order",
                   myOnChanged: onQueryChanged,
                 ),
+                // * Inventory overall stats
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -294,6 +296,7 @@ class _HomeBodyState extends State<HomeBody> {
                     ),
                   ),
                 ),
+                
                 Padding(
                   padding: const EdgeInsets.all(kDefaultPadding / 2),
                   child: Container(
