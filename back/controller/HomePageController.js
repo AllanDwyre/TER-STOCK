@@ -7,6 +7,11 @@ const models = initModels(sequelize);
 
 // Trouver tous les produits
 
+const sharedData= {
+    sal:'',
+    commF:[]
+}
+
 module.exports={
     // récupérer le nombre total de produits
     getTotalProductsCount: async (req, res) => {
@@ -19,25 +24,18 @@ module.exports={
           });
         }
       },
-      /// le total prix de notre stock
-      getTotalStockPrice: async (req, res) => {
+     // récupérer le nombre total de commande
+    getTotalOrders: async (req, res) => {
         try {
-          const totalStockPrice = await models.produit.sum(literal('PRIX_UNIT * QUANTITE'), {
-            where: {
-              QUANTITE: {
-                [Op.gt]: 0 
-              }
-            }
-          });
-    
-          res.status(200).json({ totalStockPrice });
+          const totalOrdersCount = await models.commande.count();
+          res.status(200).json({ totalOrdersCount });
         } catch (error) {
-          console.error("Erreur lors du calcul du prix total du stock:", error);
           res.status(500).json({
-            message: "Erreur lors du calcul du prix total du stock.",
+            message: "Erreur lors de la récupération du nombre total de commande: " + error.message,
           });
         }
       },
+    
       ///nombre de fournisseur
       getNumberSupplier: async (req, res) =>{
         try {
@@ -63,26 +61,94 @@ module.exports={
         }
     },
 
+    //le dessin 
+    getSalesAndPurchasesByMonth: async (req, res) => {
+        try {
+
+            // Calculer la date de début des 12 derniers mois
+            const startDate = new Date();
+            startDate.setMonth(startDate.getMonth() - 12);
+
+            const sales2 = await models.produit_vendu.findOne({
+                attributes: [
+                    //[sequelize.literal('MONTH(date_commande)'), 'Month'],
+                    [sequelize.fn('SUM', sequelize.col('QUANTITE')), 'sales2']
+                ],
+                include: [
+                    {
+                        model: models.vente,
+                        as: "VENTE",
+                        attributes: [],
+                        where: {
+                            DATE_VENTE: {
+                                [Op.between]: [startDate, new Date()]
+                            }
+                        }
+                    }
+                ]
+            });
+
+            console.log(sales2.get('sales2'))
+            /* Requête pour la somme de la quantité vendue par mois
+            const sales = await models.produit_vendu.sum('QUANTITE')
+                //group: [sequelize.literal('MONTH(date_vente)')]
+            console.log(sales);*/
+            
+            sharedData.sal = sales2;
+
+            // Requête pour la somme de la quantité achetée par mois
+            const purchaseOrders = await models.commande_fournisseur.findAll({
+                attributes: ['COMM_FOURN_ID'],
+                where: {
+                    TYPE_COMMANDE: 'commande'
+                }
+            
+            }).then(result => {
+                for(const com in result){
+                    //console.log(result[com])
+                    sharedData.commF.push(result[com].dataValues);
+                    //console.log(sharedData.commF)
+                }
+              
+                //console.log(sharedData.commF)
+                
+            });
+            //console.log(sharedData.commF)
+
+            const commandeIds = sharedData.commF.map(item => item.COMM_FOURN_ID);
+            
+            const purchases = await models.ligne_commande.findOne({
+                attributes: [
+                    //[sequelize.literal('MONTH(date_commande)'), 'Month'],
+                    [sequelize.fn('SUM', sequelize.col('QUANTITE')), 'Purchases']
+                ],
+                where: {
+                    commande_id: {
+                        [Op.in]: commandeIds
+                    }
+                },
+            });
+
+            console.log(purchases.get('Purchases'));
+
+            /* Fusionner les résultats de ventes et d'achats par mois
+            const result = sales.map(sale => {
+                const purchaseForMonth = purchases.find(purchase => purchase.Month === sale.Month);
+                return {
+                    Date: sale.Month, // Assurez-vous que le format du mois est correct
+                    Sales: sale.Sales || 0,
+                    Purchases: purchaseForMonth ? purchaseForMonth.Purchases : 0
+                };
+            });*/
+
+            //res.status(200).json(result);
+
+        } catch (error) {
+            console.error('Erreur lors de la récupération des ventes et des achats par mois :', error);
+            res.status(500).json({
+                message: 'Erreur lors de la récupération des ventes et des achats par mois.'
+            });
+        }
+    },
 }
 
-// Product.findAll()
-// .then(res => {
-//     console.log(res);
-// })
-// .catch(error => {
-//     console.log("Erreur" + error);
-// })
-// console.log(products.every(product => product instanceof Product)); // true
-// console.log('All products:', JSON.stringify(products, null, 2));
-
-// //Trouver tous les commandes 
-
-// Orders.findOne()
-// .then(res => {
-//     console.log(res);
-// })
-// .catch(error => {
-//     console.log("Error" + error);
-// })
-// console.log(orders.every(order => order instanceof Orders));
-// console.log('All orders:', JSON.stringify(orders, null, 2));

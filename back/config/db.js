@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 require("dotenv").config();
 const cron = require('node-cron');
 
-// Configuration de la connexion à la base de données  yes
+// Configuration de la connexion à la base de données local’
 const sequelizeLocal = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -114,7 +114,7 @@ async function synchronizeTablesInverse() {
   }
 }
 
-cron.schedule('0 0 1 * *', () => { // Exécuter le 1er de chaque mois à minuit (00:00)
+cron.schedule('0 0 1 * *', () => { 
   console.log('Début de la synchronisation mensuelle.');
   synchronizeTables();
 });

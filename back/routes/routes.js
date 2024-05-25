@@ -60,32 +60,16 @@ router.post("Order/newOrder", auth, controllers.addOrderController.newOrder);
 router.get("/Order/TotalOrdersCount",auth,controllers.ordersController.getTotalOrdersCount);
 router.get("/Order/TotalOrdersreceived",auth,controllers.ordersController.getTotalOrdersReceived);
 router.get("/Order/TotalOrdersreturned",auth,controllers.ordersController.getReturnOrdersCount);
+
+//Home Page 
+router.get("/homePage/totalProducts", auth, controllers.HomePageController.getTotalProductsCount);
+router.get("/homePage/totalOrders", auth, controllers.HomePageController.getTotalOrders);
+router.get("/homePage/totalfournisseur", auth, controllers.HomePageController.getNumberSupplier);
+router.get("/homePage/seuilProducts", auth, controllers.HomePageController.getReplenishmentLevel);
+router.get("/homePage/barre", auth, controllers.HomePageController.getSalesAndPurchasesByMonth);
 router.get("/Order/TotalOrdersInTransitClient",auth,controllers.ordersController.getOrdersInTransitClient);
 router.get("/Order/TotalOrdersInTransitFournisseur",auth,controllers.ordersController.getOrdersInTransitFournisseur);
 
-
-//Home Page
-router.get(
-  "/homePage/totalProducts",
-  auth,
-  controllers.HomePageController.getTotalProductsCount
-);
-// marche pas encore
-router.get(
-  "/homePage/totalStock",
-  auth,
-  controllers.HomePageController.getTotalStockPrice
-);
-router.get(
-  "/homePage/totalfournisseur",
-  auth,
-  controllers.HomePageController.getNumberSupplier
-);
-router.get(
-  "/homePage/seuilProducts",
-  auth,
-  controllers.HomePageController.getReplenishmentLevel
-);
 
 /*=============================CRUD===================================
 
