@@ -28,7 +28,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     MAGASIN_ENTREPOT: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.ENUM('magasin','entrepot'),
       allowNull: true
     },
     CODE_BARRE_PRODUIT: {
@@ -58,6 +58,27 @@ module.exports = function(sequelize, DataTypes) {
         model: 'FOURNISSEUR',
         key: 'FOURNISSEUR_ID'
       }
+    },
+    SEUIL: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 5
+    },
+    QUANTITE: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    PRODUIT_IMAGE: {
+      type: DataTypes.BLOB, //on met blobl pour stocker des données binaires , sinon STRING
+      allowNull: true
+    },
+    SKU: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    CLASSE: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     }
   }, {
     sequelize,

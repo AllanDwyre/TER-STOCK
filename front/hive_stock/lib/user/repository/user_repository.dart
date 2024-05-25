@@ -18,7 +18,6 @@ class UserRepository {
       logger.e("Get user request fail ! \n=> $response", error: "Fail Request");
       return null;
     }
-
     return User.fromJson(response.data);
   }
 }

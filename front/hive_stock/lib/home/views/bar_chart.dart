@@ -27,7 +27,7 @@ class BarChartWidgetState extends State<BarChartWidget> {
     final barGroup4 = makeGroupData(3, 20, 16);
     final barGroup5 = makeGroupData(4, 17, 6);
     final barGroup6 = makeGroupData(5, 19, 1.5);
-    final barGroup7 = makeGroupData(6, 10, 1.5);
+    final barGroup7 = makeGroupData(6, 15, 1.5);
 
     final items = [
       barGroup1,
@@ -150,7 +150,9 @@ class BarChartWidgetState extends State<BarChartWidget> {
                     color: widget.rightBarColor,
                     borderRadius: const BorderRadius.all(Radius.circular(25)),
                   ),
-                  child: const Center(child: Text('Sales', style:TextStyle(color:Colors.white, fontSize: 12))),
+                  child: const Center(
+                      child: Text('Sales',
+                          style: TextStyle(color: Colors.white, fontSize: 12))),
                 ),
                 const SizedBox(
                   width: 12,
@@ -162,7 +164,9 @@ class BarChartWidgetState extends State<BarChartWidget> {
                     color: widget.leftBarColor,
                     borderRadius: const BorderRadius.all(Radius.circular(25)),
                   ),
-                  child: const Center(child: Text('Purchases', style:TextStyle(color:Colors.white, fontSize: 12))),
+                  child: const Center(
+                      child: Text('Purchases',
+                          style: TextStyle(color: Colors.white, fontSize: 12))),
                 ),
               ],
             ),
