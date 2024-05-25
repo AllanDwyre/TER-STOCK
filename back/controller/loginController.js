@@ -142,35 +142,14 @@ module.exports = {
   },
 
   getUser: function (req, res) {
-    const userId = req.auth.userId;
-    
-    if (!userId) {
-      return res.status(401).json({ error: "Utilisateur non authentifié" });
-    }
-      try{
-
-        User.findOne({
-          where: {
-            USERNAME: userId,
-          },
-        }).then((result) => {
-          const userInfo = {
-            userid: result.dataValues.USER_ID,
-            username: result.dataValues.USERNAME,
-            firstname: result.dataValues.NAME_USER,
-            lastname: result.dataValues.FIRST_NAME,
-            usermail: result.dataValues.USER_MAIL,
-            usertel: result.dataValues.USER_TEL,
-            userdate: result.dataValues.USER_DATE_NAISS,
-            //userphoto : result.dataValues.USER_PHOTO
-          };
-          console.table(userInfo);
-          res.status(200).json(userInfo);
-        });
-      }catch (error) {
-        console.error(error);
-        res.status(401).json({ error: error.message });
-      }
-    
+    User.findOne({
+      where: {
+        USERNAME: req.auth.username,
+      },
+      attributes: { exclude: ["USER_PASS"] },
+    }).then((result) => {
+      console.table(result.dataValues);
+      res.status(200).json(result);
+    });
   },
 };

@@ -9,7 +9,6 @@ import "package:hive_stock/product/views/add_product_page.dart";
 import "package:hive_stock/product/views/inventory_body.dart";
 import "package:hive_stock/scanner/views/scanner_page.dart";
 import "package:hive_stock/utils/app/bridge_repository.dart";
-import "package:hive_stock/utils/constants/padding.dart";
 import "package:hive_stock/utils/widgets/bottom_nav_bar.dart";
 
 class InventoryPage extends StatefulWidget {
