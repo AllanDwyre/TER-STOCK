@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_stock/authentication/bloc/authentication_bloc.dart';
-import 'package:hive_stock/home/views/home_page.dart';
 import 'package:hive_stock/product/views/inventory_page.dart';
 import 'package:hive_stock/utils/constants/padding.dart';
-import 'package:hive_stock/utils/widgets/bar_chart.dart';
+import 'package:hive_stock/home/views/bar_chart.dart';
 import 'package:hive_stock/utils/widgets/search_bar.dart';
 
 class HomeBody extends StatefulWidget {
-  const HomeBody({required this.profilePageDisplayed, super.key});
-
-  final ProfilePage profilePageDisplayed;
+  const HomeBody({super.key});
 
   @override
   State<HomeBody> createState() => _HomeBodyState();
@@ -296,7 +291,7 @@ class _HomeBodyState extends State<HomeBody> {
                     ),
                   ),
                 ),
-                
+
                 Padding(
                   padding: const EdgeInsets.all(kDefaultPadding / 2),
                   child: Container(
@@ -330,46 +325,6 @@ class _HomeBodyState extends State<HomeBody> {
                 ),
               ],
             ),
-            if (widget.profilePageDisplayed == ProfilePage.on)
-              Container(
-                width: size.width,
-                height: size.height,
-                color: const Color.fromARGB(206, 205, 205, 205),
-                child: Padding(
-                  padding: EdgeInsets.only(top: size.height / 6),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        "UserID: ${context.select((AuthenticationBloc bloc) => bloc.state.user.id)}",
-                        style:
-                            textTheme.titleLarge?.copyWith(color: Colors.black),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        context.select((AuthenticationBloc bloc) =>
-                            bloc.state.user.fullname),
-                        style:
-                            textTheme.titleLarge?.copyWith(color: Colors.black),
-                      ),
-                      Text(
-                        context.select((AuthenticationBloc bloc) =>
-                            bloc.state.user.username),
-                        style:
-                            textTheme.bodyLarge?.copyWith(color: Colors.black),
-                      ),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        child: const Text('Logout'),
-                        onPressed: () {
-                          context
-                              .read<AuthenticationBloc>()
-                              .add(AuthenticationLogoutRequested());
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
           ],
         ),
       ),
