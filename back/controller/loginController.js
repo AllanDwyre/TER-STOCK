@@ -157,6 +157,7 @@ module.exports = {
           usermail: result.dataValues.USER_MAIL,
           usertel: result.dataValues.USER_TEL,
           userdate: result.dataValues.USER_DATE_NAISS,
+          //userphoto : result.dataValues.USER_PHOTO
         };
         console.table(userInfo);
         res.status(200).json(userInfo);
