@@ -122,4 +122,4 @@ cron.schedule('0 0 1 * *', () => { // Exécuter le 1er de chaque mois à minuit 
 
 
 // Exporter l'objet Sequelize configuré
-module.exports = sequelizeCloud;
+module.exports = sequelizeLocal;
