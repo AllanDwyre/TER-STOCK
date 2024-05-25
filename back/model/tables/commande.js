@@ -18,6 +18,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'EMPLOYE',
         key: 'EMPLOYE_ID'
       }
+    },
+    DATE_REEL_RECU: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
     sequelize,
