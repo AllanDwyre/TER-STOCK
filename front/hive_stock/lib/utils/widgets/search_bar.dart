@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 
-class MySearchBar extends StatelessWidget {
-  const MySearchBar({
+class CustomSearchBar extends StatelessWidget {
+  const CustomSearchBar({
     super.key,
-    required this.myLabelStyle,
     required this.myLabelText,
     required this.myOnChanged,
-    required this.myHeight
   });
 
-  final TextStyle? myLabelStyle;
   final String? myLabelText;
   final Function(String)? myOnChanged;
-  final double myHeight;
 
   @override
   Widget build(BuildContext context) {
+    TextTheme textTheme = Theme.of(context).textTheme;
+    // ColorScheme colorTheme = Theme.of(context).colorScheme;
     return Container(
-      height: myHeight,
-      padding: const EdgeInsets.all(30),
+      height: 40,
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextField(
         onChanged: myOnChanged,
+        textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
-          labelStyle: myLabelStyle,
+          isCollapsed: true,
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          labelStyle: textTheme.labelSmall,
           labelText: myLabelText,
           border: const OutlineInputBorder(),
           prefixIcon: const Icon(Icons.search),
