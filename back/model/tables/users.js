@@ -34,6 +34,10 @@ module.exports = function(sequelize, DataTypes) {
     USER_DATE_NAISS: {
       type: DataTypes.DATEONLY,
       allowNull: true
+    },
+    USER_PHOTO: {
+      type: DataTypes.BLOB,
+      allowNull: true
     }
   }, {
     sequelize,
