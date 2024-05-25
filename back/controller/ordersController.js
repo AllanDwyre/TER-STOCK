@@ -18,17 +18,7 @@ module.exports = {
         });
       }
     },
-     //////totale commande////
-    getTotalOrdersCount: async (req, res) => {
-        try {
-        const totalOrdersCount = await models.commande.count();
-        res.status(200).json({ totalOrdersCount });
-        } catch (error) {
-        res.status(500).json({
-            message: "Erreur lors de la récupération du nombre total de commande: " + error.message,
-        });
-        }
-    },
+
     ///total commande recu
     getTotalOrdersReceived: async (req, res) => {
       try {
@@ -62,24 +52,36 @@ module.exports = {
       }
     },
     //// total commande en route
-    getOrdersInTransit: async (req, res) => {
+    getOrdersInTransitFournisseur: async (req, res) => {
       try {
-          const ordersInTransit = await models.commande.findAll({
+          const ordersInTransitFournisseur = await models.commande_fournisseur.findAll({
               where: {
-                  Date_Reel_Recu: null 
+                  DATE_REEL_RECU: null,
+                  TYPE_COMMANDE : "commande"
               }
           });
-          res.status(200).json({ ordersInTransit });
+          res.status(200).json({ ordersInTransitFournisseur });
       } catch (error) {
           res.status(500).json({
-              message: "Erreur lors de la récupération des commandes en route : " + error.message
+              message: "Erreur lors de la récupération des commandes des fournisseurs en route : " + error.message
           });
       }
-  }
-  
-
-
-   
-  
+    },
+    
+    getOrdersInTransitClient: async (req,res) => {
+      try {
+        const ordersInTransitClient = await models.commande_client.findAll({
+          where: {
+            DATE_REEL_RECU: null,
+            TYPE_COMMANDE : "commande"
+          }
+        });
+        res.status(200).json({ ordersInTransitClient });
+      }catch (error) {
+        res.status(500).json({
+            message: "Erreur lors de la récupération des commandes des clients en route : " + error.message
+        });
+      }
+    }
 
 }

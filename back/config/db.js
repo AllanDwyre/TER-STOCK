@@ -96,6 +96,24 @@ async function synchronizeTables() {
   }
 }
 
+
+async function synchronizeTablesInverse() {
+  try {
+    for(const model in modelsLocale ){
+      const tableCloud = modelsCloud[model];
+      const tableLocale = modelsLocale[model];
+      const cloudModels = await tableCloud.findAll();
+      for (const cloud of cloudModels){
+        const cloudModel = cloud.dataValues;
+        await tableLocale.upsert(cloudModel);
+      }
+    }
+    console.log("Toutes les données ont été synchronisées avec succès.");
+  } catch (error) {
+    console.error('Erreur lors de la synchronisation des données :', error);
+  }
+}
+
 cron.schedule('0 0 1 * *', () => { // Exécuter le 1er de chaque mois à minuit (00:00)
   console.log('Début de la synchronisation mensuelle.');
   synchronizeTables();
@@ -104,4 +122,4 @@ cron.schedule('0 0 1 * *', () => { // Exécuter le 1er de chaque mois à minuit 
 
 
 // Exporter l'objet Sequelize configuré
-module.exports = sequelizeCloud;
+module.exports = sequelizeLocal;
