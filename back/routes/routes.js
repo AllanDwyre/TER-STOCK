@@ -26,6 +26,7 @@ router.get('/product', authController.afficheProd);*/
 //produit
 router.get("/Product", auth, controllers.productController.getProductById);
 router.get("/Product/add", auth, controllers.addProductController.addProduit);
+router.get("Product/Overview", auth, controllers.productController.overviewProduct);
 
 
 //inventory
@@ -42,7 +43,8 @@ router.get("Order/newOrder", auth, controllers.addOrderController.newOrder);
 router.get("/Order/TotalOrdersCount",auth,controllers.ordersController.getTotalOrdersCount);
 router.get("/Order/TotalOrdersreceived",auth,controllers.ordersController.getTotalOrdersReceived);
 router.get("/Order/TotalOrdersreturned",auth,controllers.ordersController.getReturnOrdersCount);
-router.get("/Order/TotalOrdersInTransit",auth,controllers.ordersController.getOrdersInTransit);
+router.get("/Order/TotalOrdersInTransitClient",auth,controllers.ordersController.getOrdersInTransitClient);
+router.get("/Order/TotalOrdersInTransitFournisseur",auth,controllers.ordersController.getOrdersInTransitFournisseur);
 
 
 //Home Page 
