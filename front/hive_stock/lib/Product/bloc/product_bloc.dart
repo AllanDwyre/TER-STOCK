@@ -21,7 +21,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   FutureOr<void> _onProductFectch(
       ProductFetched event, Emitter<ProductState> emit) async {
     final product = await _tryGetProduct(event.id);
-    logger.d('Product ${product.product.name}');
 
     emit(
       state.copyWith(productdetails: product),

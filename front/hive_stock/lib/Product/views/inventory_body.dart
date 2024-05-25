@@ -63,16 +63,15 @@ class _InventoryBodyState extends State<InventoryBody> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       controller: _scrollController,
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       slivers: [
         SliverToBoxAdapter(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              MySearchBar(
-                myLabelStyle: const TextStyle(fontSize: 12),
+              CustomSearchBar(
                 myLabelText: "Search product, supplier, order",
                 myOnChanged: onQueryChanged,
-                myHeight: 110.0,
               ),
               _OverallInventoryWidget(isVisible: searchQuery.isEmpty),
               const _ProductTitleWFilter(),
@@ -116,6 +115,9 @@ class _InventoryBodyState extends State<InventoryBody> {
             }
           },
         ),
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 100),
+        )
       ],
     );
   }
@@ -129,7 +131,7 @@ class _ProductTitleWFilter extends StatelessWidget {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorTheme = Theme.of(context).colorScheme;
     return Container(
-      padding: const EdgeInsets.all(kDefaultPadding),
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
       child: Column(
         children: <Widget>[
           Row(
@@ -180,33 +182,41 @@ class _OverallInventoryWidget extends StatelessWidget {
               style: textTheme.headlineSmall
                   ?.copyWith(color: colorTheme.onBackground),
             ),
-            const Row(
-              children: [
-                CardStat(
-                  title: 'Total Products',
-                  titleColor: Color.fromRGBO(225, 145, 51, 1),
-                  data: "2158", // TODO : fecth data from backend
-                ),
-                CardStat(
-                  title: 'Categories',
-                  titleColor: Color.fromRGBO(21, 112, 239, 1),
-                  data: "30", // TODO : fecth data from backend
-                ),
-              ],
-            ),
-            const Row(
-              children: [
-                CardStat(
-                  title: 'Top Selling',
-                  titleColor: Color.fromRGBO(132, 94, 188, 1),
-                  data: 'GodZilla',
-                ), // TODO : fecth data from backend
-                CardStat(
-                  title: 'Low Stocks',
-                  titleColor: Color.fromRGBO(243, 105, 96, 1),
-                  data: "5",
-                ), // TODO : fecth data from backend
-              ],
+            const SizedBox(height: 5),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      CardStat(
+                        title: 'Total Products',
+                        titleColor: Color.fromRGBO(225, 145, 51, 1),
+                        data: "2158", // TODO : fecth data from backend
+                      ),
+                      CardStat(
+                        title: 'Categories',
+                        titleColor: Color.fromRGBO(21, 112, 239, 1),
+                        data: "30", // TODO : fecth data from backend
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      CardStat(
+                        title: 'Top Selling',
+                        titleColor: Color.fromRGBO(132, 94, 188, 1),
+                        data: 'GodZilla',
+                      ), // TODO : fecth data from backend
+                      CardStat(
+                        title: 'Low Stocks',
+                        titleColor: Color.fromRGBO(243, 105, 96, 1),
+                        data: "5",
+                      ), // TODO : fecth data from backend
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),

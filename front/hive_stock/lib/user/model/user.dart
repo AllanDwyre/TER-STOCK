@@ -33,13 +33,13 @@ class User extends Equatable {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['userid'].toString(),
-      username: json['username'],
-      firstname: json['firstname'],
-      lastname: json['lastname'],
-      email: json['usermail'],
-      phoneNumber: json['usertel'],
-      birthday: DateTime.parse(json['userdate']),
+      id: json['USER_ID'].toString(),
+      username: json['USERNAME'],
+      firstname: json['FIRSTNAME'],
+      lastname: json['LASTNAME'],
+      email: json['USER_MAIL'],
+      phoneNumber: json['USER_TEL'],
+      birthday: DateTime.parse(json['USER_DATE_NAISS']),
     );
   }
 

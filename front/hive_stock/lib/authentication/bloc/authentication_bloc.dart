@@ -47,11 +47,12 @@ class AuthenticationBloc
       case AuthenticationStatus.authenticated:
         final user = await _tryGetUser();
 
-        return emit(
-          user != null
-              ? AuthenticationState.authenticated(user)
-              : const AuthenticationState.unauthenticated(),
-        );
+        if (user == null) {
+          return emit(const AuthenticationState.unauthenticated());
+        } else {
+          return emit(AuthenticationState.authenticated(user));
+        }
+
       case AuthenticationStatus.unknown:
         return emit(const AuthenticationState.unknown());
     }
@@ -65,9 +66,6 @@ class AuthenticationBloc
   }
 
   Future<User?> _tryGetUser() async {
-    // TODO : use caching in our advantage and cache the user into a session box with the token. Then retrive it instead of doing a HTTP call
-    // ? what caching strategie used ? (what if the info change elsewhere ?)
-
     try {
       final user = await _userRepository.getUser();
       logger.log(user == null ? Level.error : Level.trace,

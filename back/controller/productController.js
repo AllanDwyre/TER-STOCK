@@ -91,6 +91,34 @@ module.exports = {
       });
     }
   },
+
+  overviewProduct : async(req,res) => {
+    try{
+      const prodID = req.params.id;
+
+      const productInformation = await models.produit.findByPk(prodID);
+
+      console.table(productInformation.dataValues);
+
+      return res.json(productInformation);
+
+    }catch (error) {
+      res.status(500).json({
+        message: "Erreur lors de la récupération du produit: " + error.message,
+      });
+    }
+  },
+
+
+
+
+
+
+
+
+
+/************  CRUD PRODUIT ***************/
+
   // Creer un nouveau produit
   createProduct: async (req, res) => {
     try {

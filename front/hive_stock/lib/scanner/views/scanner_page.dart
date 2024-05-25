@@ -1,54 +1,21 @@
 import "package:flutter/material.dart";
+import "scanner_body.dart";
 
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-
-class ScannerScreen extends StatefulWidget {
+class ScannerScreen extends StatelessWidget {
   const ScannerScreen({super.key});
 
-  @override
-  State<ScannerScreen> createState() => _ScannerScreenState();
-}
-
-class _ScannerScreenState extends State<ScannerScreen> {
-  String _scanResult = '';
-
-  Future<void> _scanBarcode() async {
-    try {
-      String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#004297', 'Cancel', true, ScanMode.BARCODE);
-      setState(() {
-        _scanResult = barcodeScanRes;
-      });
-    } catch (e) {
-      setState(() {
-        _scanResult = 'Error: $e';
-      });
-    }
+  static Route<void> route() {
+    return MaterialPageRoute<void>(builder: (_) => const ScannerScreen());
   }
 
   @override
   Widget build(BuildContext context) {
-    _scanBarcode();
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Barcode Scanner'),
+        forceMaterialTransparency: true,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Résultat du scan:',
-              style: TextStyle(fontSize: 20.0),
-            ),
-            const SizedBox(height: 20.0),
-            Text(
-              _scanResult,
-              style: const TextStyle(fontSize: 16.0),
-            ),
-          ],
-        ),
-      ),
+      body: const ScannerBody(),
     );
   }
 }
