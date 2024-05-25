@@ -13,7 +13,7 @@ class BottomNavBar extends StatelessWidget {
     ColorScheme colorTheme = Theme.of(context).colorScheme;
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
           color: colorTheme.primary,
           borderRadius: const BorderRadius.only(
@@ -25,7 +25,7 @@ class BottomNavBar extends StatelessWidget {
         color: colorTheme.onPrimary,
         activeColor: colorTheme.onPrimary,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(15),
         gap: 8,
         tabs: const [
           GButton(

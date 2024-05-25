@@ -47,11 +47,9 @@ class _HomeBodyState extends State<HomeBody> {
           children: [
             Column(
               children: [
-                MySearchBar(
-                  myLabelStyle: const TextStyle(fontSize: 12),
+                CustomSearchBar(
                   myLabelText: "Search product, supplier, order",
                   myOnChanged: onQueryChanged,
-                  myHeight: 90,
                 ),
                 GestureDetector(
                   onTap: () {
