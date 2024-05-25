@@ -25,6 +25,7 @@ router.get('/product', authController.afficheProd);*/
 //produit
 router.get("/Products", auth, controllers.productController.getProductById);
 router.post("/Products", auth, controllers.addProductController.addProduit);
+router.get("Product/Overview", auth, controllers.productController.overviewProduct);
 
 //inventory
 router.get(
@@ -56,26 +57,12 @@ router.get(
 //order
 router.get("/Order", auth, controllers.orderController.showOrders);
 router.post("Order/newOrder", auth, controllers.addOrderController.newOrder);
-router.get(
-  "/Order/TotalOrdersCount",
-  auth,
-  controllers.ordersController.getTotalOrdersCount
-);
-router.get(
-  "/Order/TotalOrdersreceived",
-  auth,
-  controllers.ordersController.getTotalOrdersReceived
-);
-router.get(
-  "/Order/TotalOrdersreturned",
-  auth,
-  controllers.ordersController.getReturnOrdersCount
-);
-router.get(
-  "/Order/TotalOrdersInTransit",
-  auth,
-  controllers.ordersController.getOrdersInTransit
-);
+router.get("/Order/TotalOrdersCount",auth,controllers.ordersController.getTotalOrdersCount);
+router.get("/Order/TotalOrdersreceived",auth,controllers.ordersController.getTotalOrdersReceived);
+router.get("/Order/TotalOrdersreturned",auth,controllers.ordersController.getReturnOrdersCount);
+router.get("/Order/TotalOrdersInTransitClient",auth,controllers.ordersController.getOrdersInTransitClient);
+router.get("/Order/TotalOrdersInTransitFournisseur",auth,controllers.ordersController.getOrdersInTransitFournisseur);
+
 
 //Home Page
 router.get(

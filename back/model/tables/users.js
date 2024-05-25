@@ -37,6 +37,10 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.DATEONLY,
         allowNull: true,
       },
+      USER_PHOTO: {
+        type: DataTypes.BLOB,
+        allowNull: true
+      }
     },
     {
       sequelize,
