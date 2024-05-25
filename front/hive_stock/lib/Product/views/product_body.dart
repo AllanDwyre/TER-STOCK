@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_stock/product/bloc/product_bloc.dart';
 import 'package:hive_stock/product/models/product.dart';
@@ -140,6 +139,7 @@ class _Overview extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      //TODO : sync informations
       children: [
         InformationSection(title: 'Primary Details', context: context),
         _TableRowProduct(title: 'Name', value: checkValue(product?.name)),
@@ -153,6 +153,15 @@ class _Overview extends StatelessWidget {
         const _TableRowProduct(title: 'Product category', value: 'Pharmacy'),
         const _TableRowProduct(title: 'Storage date', value: '15/02/2023'),
         InformationSection(title: 'Quantity Details', context: context),
+        const _TableRowProduct(title: 'Quantity', value: '20'),
+        const _TableRowProduct(title: 'At preparation', value: '50'),
+        const _TableRowProduct(title: 'On the way', value: '150'),
+        const _TableRowProduct(title: 'Arrival Date', value: '15/06/2023'),
+        const _TableRowProduct(title: 'Threshold Value', value: 'auto'),
+        InformationSection(title: 'Supplier Details', context: context),
+        const _TableRowProduct(title: 'Supplier Name', value: 'Phara LDC'),
+        const _TableRowProduct(
+            title: 'Supplier Contact', value: '07 67 02 73 76'),
       ],
     );
   }
@@ -246,7 +255,6 @@ class _ProductAppBar extends StatelessWidget {
 
 class _TableRowProduct extends StatelessWidget {
   const _TableRowProduct({
-    super.key,
     required this.title,
     required this.value,
   });

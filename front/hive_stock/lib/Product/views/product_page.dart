@@ -35,7 +35,7 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    logger.t('access to produc n° ${widget.produitId}');
+    logger.t('Access to produc n°${widget.produitId}');
     return Scaffold(
       extendBodyBehindAppBar: true,
       //resizeToAvoidBottomInset: false,

@@ -65,6 +65,7 @@ class _InventoryPageState extends State<InventoryPage> {
         TextButton(
           onPressed: () => Navigator.push(
             context,
+            //TODO : ne respecte pas les normes
             MaterialPageRoute(
               builder: (context) => const AddProductScreen(),
             ),
@@ -84,13 +85,7 @@ class _InventoryPageState extends State<InventoryPage> {
         ),
         IconButton(
           icon: const Icon(Icons.qr_code_scanner),
-          onPressed: () => Navigator.push(
-            context,
-            // TODO : Ne respecte pas la convention de navigation
-            MaterialPageRoute(
-              builder: (context) => const ScannerScreen(),
-            ),
-          ),
+          onPressed: () => Navigator.push(context, ScannerScreen.route()),
         ),
         const SizedBox(width: kDefaultPadding / 2),
       ],
