@@ -7,9 +7,13 @@ const models = initModels(sequelize);
 
 // Trouver tous les produits
 
-const sharedData= {
-    sal:'',
-    commF:[]
+// Fonction pour obtenir le nom du mois
+function getMonthName(monthNumber) {
+    const monthNames = [
+        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+    ];
+    return monthNames[monthNumber - 1];
 }
 
 module.exports={
@@ -100,30 +104,19 @@ module.exports={
             console.log(sales2.map(record => record.get()));
             const salesData = sales2.map(record => record.get());
 
-            
-            sharedData.sal = sales2;
-
-            // Requête pour la somme de la quantité achetée par mois
+            // Requête pour récupérer les commandes aux fournisseurs 
             const purchaseOrders = await models.commande_fournisseur.findAll({
                 attributes: ['COMM_FOURN_ID'],
                 where: {
                     TYPE_COMMANDE: 'commande'
                 }
             
-            }).then(result => {
-                for(const com in result){
-                    //console.log(result[com])
-                    sharedData.commF.push(result[com].dataValues);
-                    //console.log(sharedData.commF)
-                }
-              
-                //console.log(sharedData.commF)
-                
             });
-            //console.log(sharedData.commF)
 
-            const commandeIds = sharedData.commF.map(item => item.COMM_FOURN_ID);
+            const commandeIds = purchaseOrders.map(order => order.COMM_FOURN_ID);
+
             
+            // Requête pour la somme de la quantité achetée par mois
             const purchases = await models.ligne_commande.findAll({
                 attributes: [
                     [sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'), 'Année'],
@@ -166,16 +159,18 @@ module.exports={
 
             salesData.forEach(sale => {
                 const key = `${sale['Année']}-${sale['Mois']}`;
+                const monthName = getMonthName(sale['Mois']);
                 if (!mergedData[key]) {
-                    mergedData[key] = { Mois: `${sale['Année']}-${sale['Mois']}`, Sales: 0, Purchases: 0 };
+                    mergedData[key] = { Mois:  `${monthName} ${sale['Année']}`, Sales: 0, Purchases: 0 };
                 }
                 mergedData[key].Sales = sale.sales2;
             });
 
             purchaseData.forEach(purchase => {
                 const key = `${purchase['Année']}-${purchase['Mois']}`;
+                const monthName = getMonthName(purchase['Mois']);
                 if (!mergedData[key]) {
-                    mergedData[key] = { Mois: `${purchase['Année']}-${purchase['Mois']}`, Sales: 0, Purchases: 0 };
+                    mergedData[key] = { Mois:  `${monthName} ${purchase['Année']}`, Sales: 0, Purchases: 0 };
                 }
                 mergedData[key].Purchases = purchase.Purchases;
             });
