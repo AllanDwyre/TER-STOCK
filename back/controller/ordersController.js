@@ -82,6 +82,82 @@ module.exports = {
             message: "Erreur lors de la récupération des commandes des clients en route : " + error.message
         });
       }
-    }
-
+    },
+    ////filtres
+    /// fitre de date :
+    getOrderByDate: async (req, res) => {
+      try {
+          const { date, type } = req.query;
+          if (!date) {
+              return res.status(400).json({
+                  message: "La date est requise"
+              });
+          }
+  
+          const specificDate = new Date(date);
+          
+          // Vérifier que la date est valide
+          if (isNaN(specificDate.getTime())) {
+              return res.status(400).json({
+                  message: "La date fournie est invalide"
+              });
+          }
+  
+          // Obtenir le début et la fin de la journée spécifique
+          const startOfDay = new Date(specificDate.setHours(0, 0, 0, 0));
+          const endOfDay = new Date(specificDate.setHours(23, 59, 59, 999));
+  
+          let result;
+          switch (type) {
+              case "all":
+                  result = await models.commande.findAll({
+                      where: {
+                          DATE_COMMANDE: {
+                              [Sequelize.Op.between]: [startOfDay, endOfDay]
+                          }
+                      },
+                      order: [["COMMANDE_ID", "ASC"]]
+                  });
+                  break;
+  
+              case "entry":
+                  result = await models.commande_fournisseur.findAll({
+                      where: {
+                          DATE_COMMANDE: {
+                              [Sequelize.Op.between]: [startOfDay, endOfDay]
+                          }
+                      },
+                      order: [["COMM_FOURN_ID", "ASC"]]
+                  });
+                  break;
+  
+              case "exit":
+                  result = await models.commande_client.findAll({
+                      where: {
+                          DATE_COMMANDE: {
+                              [Sequelize.Op.between]: [startOfDay, endOfDay]
+                          }
+                      },
+                      order: [["COMM_CLIENT_ID", "ASC"]]
+                  });
+                  break;
+  
+              default:
+                  return res.status(400).json({
+                      message: "Type invalide! Utilisez 'all', 'entry', ou 'exit'."
+                  });
+          }
+  
+          const formattedResult = result.map(commande => commande.dataValues);
+          console.table(formattedResult);
+          res.status(200).json(formattedResult);
+  
+      } catch (error) {
+          console.error("Erreur lors de la récupération des commandes:", error);
+          res.status(500).json({
+              message: "Erreur lors de la récupération des commandes: " + error.message
+          });
+      }
+  },
+  
 }
