@@ -1,4 +1,5 @@
 const { Op, literal } = require("sequelize");
+const { Sequelize } = require("sequelize");
 const sequelize = require("../config/db");
 const KEY = process.env.DEV_KEY;
 var jwt = require("jsonwebtoken");
@@ -182,5 +183,19 @@ module.exports={
             });
         }
     },
+    /// stock value = la somme des prix de tout les commandes 
+    getTotalOrdersPrice : async (req, res) => {
+        try {
+            const totalOrdersPrice = await models.commande.sum('PRIX_TOTAL');
+    
+            res.status(200).json({ totalOrdersPrice });
+        } catch (error) {
+            console.error("Erreur lors de la récupération de la somme des prix des commandes:", error);
+            res.status(500).json({
+                message: "Erreur lors de la récupération de la somme des prix des commandes: " + error.message
+            });
+        }
+    },
+    
 }
 
