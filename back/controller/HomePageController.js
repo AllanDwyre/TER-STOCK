@@ -17,15 +17,6 @@ function getMonthName(monthNumber) {
     return monthNames[monthNumber - 1];
 }
 
-// Fonction pour obtenir le numéro de la semaine d'une date
-function getWeekNumber(d) {
-    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-    var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-    return weekNo;
-}
-
 // Fonction pour obtenir la date du premier jour de la semaine à partir de l'année et du numéro de la semaine
 function getFirstDayOfWeek(year, week) {
     const simple = new Date(year, 0, 1 + (week - 1) * 7);
@@ -88,127 +79,7 @@ module.exports={
         }
     },
 
-    //le dessin 
-    getSalesAndPurchasesByMonth: async (req, res) => {
-        try {
-
-            // Calculer la date de début des 12 derniers mois
-            const startDate = new Date();
-            startDate.setMonth(startDate.getMonth() - 12);
-
-            const sales2 = await models.produit_vendu.findAll({
-                attributes: [
-                    [sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'), 'Année'],
-                    [sequelize.literal('MONTH(`VENTE`.`DATE_VENTE`)'), 'Mois'],
-                    //[sequelize.literal('MONTH(date_commande)'), 'Month'],
-                    [sequelize.fn('SUM', sequelize.col('QUANTITE')), 'sales2']
-                ],
-                include: [
-                    {
-                        model: models.vente,
-                        as: "VENTE",
-                        attributes: [],
-                        where: {
-                            DATE_VENTE: {
-                                [Op.between]: [startDate, new Date()]
-                            }
-                        }
-                    }
-                ],
-                group: [
-                    sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'),
-                    sequelize.literal('MONTH(`VENTE`.`DATE_VENTE`)')
-                ],
-                order: [
-                    [sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'), 'DESC'],
-                    [sequelize.literal('MONTH(`VENTE`.`DATE_VENTE`)'), 'DESC']
-                ]
-            });
-            console.log(sales2.map(record => record.get()));
-            const salesData = sales2.map(record => record.get());
-
-            // Requête pour récupérer les commandes aux fournisseurs 
-            const purchaseOrders = await models.commande_fournisseur.findAll({
-                attributes: ['COMM_FOURN_ID'],
-                where: {
-                    TYPE_COMMANDE: 'commande'
-                }
-            
-            });
-
-            const commandeIds = purchaseOrders.map(order => order.COMM_FOURN_ID);
-
-            
-            // Requête pour la somme de la quantité achetée par mois
-            const purchases = await models.ligne_commande.findAll({
-                attributes: [
-                    [sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'), 'Année'],
-                    [sequelize.literal('MONTH(`COMMANDE`.`DATE_COMMANDE`)'), 'Mois'],
-                    [sequelize.fn('SUM', sequelize.col('QUANTITE')), 'Purchases']
-                ],
-                where: {
-                    commande_id: {
-                        [Op.in]: commandeIds
-                    }
-                },
-                include: [
-                    {
-                        model: models.commande,
-                        as: "COMMANDE",
-                        attributes: [],
-                        where: {
-                            DATE_COMMANDE: {
-                                [Op.between]: [startDate, new Date()]
-                            }
-                        }
-                    }
-                ],
-                group: [
-                    sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'),
-                    sequelize.literal('MONTH(`COMMANDE`.`DATE_COMMANDE`)')
-                ],
-                order: [
-                    [sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'), 'DESC'],
-                    [sequelize.literal('MONTH(`COMMANDE`.`DATE_COMMANDE`)'), 'DESC']
-                ]
-            });
-
-            //console.log(purchases.get('Purchases'));
-            console.log(purchases.map(record => record.get()));
-            const purchaseData = purchases.map(record => record.get());
-
-            // Fusionner les résultats des ventes et des achats par mois
-            const mergedData = {};
-
-            salesData.forEach(sale => {
-                const key = `${sale['Année']}-${sale['Mois']}`;
-                const monthName = getMonthName(sale['Mois']);
-                if (!mergedData[key]) {
-                    mergedData[key] = { Mois:  `${monthName} ${sale['Année']}`, Sales: 0, Purchases: 0 };
-                }
-                mergedData[key].Sales = sale.sales2;
-            });
-
-            purchaseData.forEach(purchase => {
-                const key = `${purchase['Année']}-${purchase['Mois']}`;
-                const monthName = getMonthName(purchase['Mois']);
-                if (!mergedData[key]) {
-                    mergedData[key] = { Mois:  `${monthName} ${purchase['Année']}`, Sales: 0, Purchases: 0 };
-                }
-                mergedData[key].Purchases = purchase.Purchases;
-            });
-
-            const result = Object.values(mergedData);
-            console.log(result);
-            res.status(200).json(result);
-
-        } catch (error) {
-            console.error('Erreur lors de la récupération des ventes et des achats par mois :', error);
-            res.status(500).json({
-                message: 'Erreur lors de la récupération des ventes et des achats par mois.'
-            });
-        }
-    },
+    //Le graphe avec les stats générales de tous les produits 
 
     getSalesAndPurchasesByPeriod: async (req, res) => {
         try {
