@@ -7,6 +7,7 @@ const productController = require("./productController.js");
 const inventoryNINAController = require("./inventoryNINAController.js")
 const ordersController = require("./ordersController.js")
 const HomePageController =require("./HomePageController.js");
+const SearchBarController =require("./searchbarController.js");
 
 module.exports = {
   userController,
@@ -18,4 +19,5 @@ module.exports = {
   inventoryNINAController,
   ordersController,
   HomePageController,
+  SearchBarController,
 };

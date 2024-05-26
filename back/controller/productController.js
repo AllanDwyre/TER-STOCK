@@ -1,7 +1,4 @@
 const sequelize = require("../config/db");
-const KEY = process.env.DEV_KEY;
-var jwt = require("jsonwebtoken");
-const produit_vendu = require("../model/tables/produit_vendu");
 const initModels = require("../model/tables/init-models").initModels;
 const models = initModels(sequelize);
 
@@ -140,76 +137,40 @@ module.exports = {
 
   getTopSellingProduct: async (req, res) => {
     try {
-      models.produit
-      .findAll({
-        include: [
-          {
-            model: models.produit_vendu,
-            as: "produit_vendus",
-            required: true,
-          },
-        ],
-        attributes: ['NOM'],
-        order: [[sequelize.col("QUANTITE"), "DESC"]],
-        limit: 10,
-      })
-      .then((result) => {
-        const formattedResult = result.map((produit) => {
-          return produit.dataValues;
+      console.log(`Top Selling Product =>`);
+      await models.produit
+        .findAll({
+          include: [
+            {
+              model: models.produit_vendu,
+              as: "produit_vendus",
+              attributes: [],
+              required: true,
+            },
+          ],
+          attributes: ['NOM'],
+          order: [[sequelize.col('produit_vendus.QUANTITE'), "DESC"]],
+        })
+        .then((result) => {
+          if (result.length > 0) {
+            const topProduct = result[0].dataValues;
+            console.table([topProduct]); 
+            res.status(200).json(topProduct);
+          } else {
+            res.status(404).json({ message: "No products found" });
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching top selling product:", error);
+          res.status(500).json({
+            message: "Error fetching top selling product: " + error.message,
+          });
         });
-        console.table(formattedResult);
-        console.table(
-          formattedResult.map((produit) => {
-            return produit.dataValues;
-          })
-        );
-        res.status(200).json(result);
-      })
-      .catch((error) => {
-        console.error("Error fetching top selling product:", error);
+    } catch (error) {
+      res.status(500).json({
+        message:
+          "Erreur lors de la récupération du top selling product: " + error.message,
       });
-  } catch (error) {
-    res.status(500).json({
-      message:
-        "Erreur lors de la récupération du top selling product: " + error.message,
-    });
+    }
   }
-}
-//   getTopSellingProduct: async (req, res) => {
-//       try {
-//         models.produit_vendu
-//         .findAll({
-//           include: [
-//             {
-//               model: models.produit,
-//               as: "PRODUIT",
-//               required: true,
-//             },
-//           ],
-//           attributes: ['NOM'],
-//           order: [["QUANTITE", "DESC"]],
-//           limit: 1,
-//         })
-//         .then((result) => {
-//           const formattedResult = result.map((produit_vendu) => {
-//             return produit_vendu.dataValues;
-//           });
-//           console.table(formattedResult);
-//           console.table(
-//             formattedResult.map((produit_vendu) => {
-//               return produit_vendu.produit[0].dataValues;
-//             })
-//           );
-//           res.status(200).json(result);
-//         })
-//         .catch((error) => {
-//           console.error("Error fetching top selling product:", error);
-//         });
-//     } catch (error) {
-//       res.status(500).json({
-//         message:
-//           "Erreur lors de la récupération du top selling product: " + error.message,
-//       });
-//     }
-// }
 };

@@ -11,11 +11,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    NAME_USER: {
+    FIRSTNAME: {
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    FIRST_NAME: {
+    LASTNAME: {
       type: DataTypes.STRING(255),
       allowNull: false
     },

@@ -71,7 +71,7 @@ async function testConnectionCloud() {
 testConnectionCloud();
 
 const initModels = require("../model/tables/init-models").initModels;
-const modelsLocale = initModels(sequelizeLocal, DataTypes);
+// const modelsLocale = initModels(sequelizeLocal, DataTypes);
 const modelsCloud = initModels(sequelizeCloud, DataTypes);
 
 /*for(const model in modelsCloud ){

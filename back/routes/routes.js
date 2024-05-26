@@ -18,9 +18,8 @@ router.get('/homePage', controllers.authController.home);
 
 /*router.get('/inventory', authController.pagePrincipale);
 router.get('/product', authController.afficheProd);*/
-
-
-// router.get("/Inventrory/getTopSelling", inventoryController.getProduitPlusVendu);
+//Searchbar
+router.get("/Search", auth, controllers.SearchBarController.findAlikeObject);
 
 //=========================PAGE====================================
 //produit
@@ -39,6 +38,7 @@ router.get("/inventory/LowStockProductsCount",auth,controllers.inventoryNINACont
 //order
 router.get("/Order", auth, controllers.orderController.showOrders);
 router.get("/Order/newOrder", auth, controllers.addOrderController.newOrder);
+router.get("/Order/orderPagination",auth,controllers.orderController.getOrderPagination);
 router.get(
   "/Product/topSelling",
    auth, 
