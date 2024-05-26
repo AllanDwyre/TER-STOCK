@@ -22,6 +22,10 @@ module.exports = function(sequelize, DataTypes) {
     DATE_REEL_RECU: {
       type: DataTypes.DATE,
       allowNull: true
+    },
+    PRIX_TOTAL: {
+      type: DataTypes.DECIMAL(6,2),
+      allowNull: true
     }
   }, {
     sequelize,

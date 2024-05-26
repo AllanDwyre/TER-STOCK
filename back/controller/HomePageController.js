@@ -69,8 +69,10 @@ module.exports={
             const startDate = new Date();
             startDate.setMonth(startDate.getMonth() - 12);
 
-            const sales2 = await models.produit_vendu.findOne({
+            const sales2 = await models.produit_vendu.findAll({
                 attributes: [
+                    [sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'), 'Année'],
+                    [sequelize.literal('MONTH(`VENTE`.`DATE_VENTE`)'), 'Mois'],
                     //[sequelize.literal('MONTH(date_commande)'), 'Month'],
                     [sequelize.fn('SUM', sequelize.col('QUANTITE')), 'sales2']
                 ],
@@ -85,10 +87,18 @@ module.exports={
                             }
                         }
                     }
+                ],
+                group: [
+                    sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'),
+                    sequelize.literal('MONTH(`VENTE`.`DATE_VENTE`)')
+                ],
+                order: [
+                    [sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'), 'DESC'],
+                    [sequelize.literal('MONTH(`VENTE`.`DATE_VENTE`)'), 'DESC']
                 ]
             });
-
-            console.log(sales2.get('sales2'))
+            console.log(sales2.map(record => record.get()));
+            //console.log(sales2.get('sales2'))
             /* Requête pour la somme de la quantité vendue par mois
             const sales = await models.produit_vendu.sum('QUANTITE')
                 //group: [sequelize.literal('MONTH(date_vente)')]
@@ -117,9 +127,10 @@ module.exports={
 
             const commandeIds = sharedData.commF.map(item => item.COMM_FOURN_ID);
             
-            const purchases = await models.ligne_commande.findOne({
+            const purchases = await models.ligne_commande.findAll({
                 attributes: [
-                    //[sequelize.literal('MONTH(date_commande)'), 'Month'],
+                    [sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'), 'Année'],
+                    [sequelize.literal('MONTH(`COMMANDE`.`DATE_COMMANDE`)'), 'Mois'],
                     [sequelize.fn('SUM', sequelize.col('QUANTITE')), 'Purchases']
                 ],
                 where: {
@@ -127,9 +138,30 @@ module.exports={
                         [Op.in]: commandeIds
                     }
                 },
+                include: [
+                    {
+                        model: models.commande,
+                        as: "COMMANDE",
+                        attributes: [],
+                        where: {
+                            DATE_COMMANDE: {
+                                [Op.between]: [startDate, new Date()]
+                            }
+                        }
+                    }
+                ],
+                group: [
+                    sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'),
+                    sequelize.literal('MONTH(`COMMANDE`.`DATE_COMMANDE`)')
+                ],
+                order: [
+                    [sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'), 'DESC'],
+                    [sequelize.literal('MONTH(`COMMANDE`.`DATE_COMMANDE`)'), 'DESC']
+                ]
             });
 
-            console.log(purchases.get('Purchases'));
+            //console.log(purchases.get('Purchases'));
+            console.log(purchases.map(record => record.get()));
 
             /* Fusionner les résultats de ventes et d'achats par mois
             const result = sales.map(sale => {
