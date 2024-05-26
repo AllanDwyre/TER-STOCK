@@ -98,11 +98,8 @@ module.exports={
                 ]
             });
             console.log(sales2.map(record => record.get()));
-            //console.log(sales2.get('sales2'))
-            /* Requête pour la somme de la quantité vendue par mois
-            const sales = await models.produit_vendu.sum('QUANTITE')
-                //group: [sequelize.literal('MONTH(date_vente)')]
-            console.log(sales);*/
+            const salesData = sales2.map(record => record.get());
+
             
             sharedData.sal = sales2;
 
@@ -162,18 +159,30 @@ module.exports={
 
             //console.log(purchases.get('Purchases'));
             console.log(purchases.map(record => record.get()));
+            const purchaseData = purchases.map(record => record.get());
 
-            /* Fusionner les résultats de ventes et d'achats par mois
-            const result = sales.map(sale => {
-                const purchaseForMonth = purchases.find(purchase => purchase.Month === sale.Month);
-                return {
-                    Date: sale.Month, // Assurez-vous que le format du mois est correct
-                    Sales: sale.Sales || 0,
-                    Purchases: purchaseForMonth ? purchaseForMonth.Purchases : 0
-                };
-            });*/
+            // Fusionner les résultats des ventes et des achats par mois
+            const mergedData = {};
 
-            //res.status(200).json(result);
+            salesData.forEach(sale => {
+                const key = `${sale['Année']}-${sale['Mois']}`;
+                if (!mergedData[key]) {
+                    mergedData[key] = { Mois: `${sale['Année']}-${sale['Mois']}`, Sales: 0, Purchases: 0 };
+                }
+                mergedData[key].Sales = sale.sales2;
+            });
+
+            purchaseData.forEach(purchase => {
+                const key = `${purchase['Année']}-${purchase['Mois']}`;
+                if (!mergedData[key]) {
+                    mergedData[key] = { Mois: `${purchase['Année']}-${purchase['Mois']}`, Sales: 0, Purchases: 0 };
+                }
+                mergedData[key].Purchases = purchase.Purchases;
+            });
+
+            const result = Object.values(mergedData);
+            console.log(result);
+            res.status(200).json(result);
 
         } catch (error) {
             console.error('Erreur lors de la récupération des ventes et des achats par mois :', error);
