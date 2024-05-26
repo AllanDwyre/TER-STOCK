@@ -95,5 +95,33 @@ module.exports = {
           });
         }
       },
+      /////les filtres :
+      getProductPriceLessThan : async (req, res) => {
+        try {
+            const { totalPrice } = req.query;
+            if (!totalPrice || isNaN(parseFloat(totalPrice))) {
+                return res.status(400).json({
+                    message: "Le montant total est requis et doit être un nombre valide"
+                });
+            }
+    
+            const produits = await models.produit.findAll({
+                where: {
+                  PRIX_UNIT: {
+                        [Sequelize.Op.lt]: totalPrice
+                    }
+                }
+            });
+    
+            const formattedProduct = produits.map(produit => produit.dataValues);
+            console.table(formattedProduct);
+            res.status(200).json(formattedProduct);
+        } catch (error) {
+            console.error("Erreur lors de la récupération des commandes:", error);
+            res.status(500).json({
+                message: "Erreur lors de la récupération des commandes: " + error.message
+            });
+        }
+      },
 
 }
