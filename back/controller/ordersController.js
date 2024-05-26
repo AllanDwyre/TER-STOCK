@@ -159,5 +159,53 @@ module.exports = {
           });
       }
   },
+  // fitre par rapport au prix total de la commande 
+  getOrdersWithTotalPriceLessThan : async (req, res) => {
+    try {
+        const { totalPrice } = req.query;
+        if (!totalPrice || isNaN(parseFloat(totalPrice))) {
+            return res.status(400).json({
+                message: "Le montant total est requis et doit être un nombre valide"
+            });
+        }
+
+        const orders = await models.commande.findAll({
+            where: {
+              PRIX_TOTAL: {
+                    [Sequelize.Op.lt]: totalPrice
+                }
+            }
+        });
+
+        const formattedOrders = orders.map(order => order.dataValues);
+        console.table(formattedOrders);
+        res.status(200).json(formattedOrders);
+    } catch (error) {
+        console.error("Erreur lors de la récupération des commandes:", error);
+        res.status(500).json({
+            message: "Erreur lors de la récupération des commandes: " + error.message
+        });
+    }
+  },
+  /// out of delevery
+  getOrdersInDelivery : async (req, res) => {
+    try {
+        const ordersInDelivery = await models.commande.findAll({
+            where: {
+                DATE_REEL_RECU: null
+            }
+        });
+
+        const formattedOrders = ordersInDelivery.map(order => order.dataValues);
+        console.table(formattedOrders);
+        res.status(200).json(formattedOrders);
+    } catch (error) {
+        console.error("Erreur lors de la récupération des commandes en cours de livraison:", error);
+        res.status(500).json({
+            message: "Erreur lors de la récupération des commandes en cours de livraison: " + error.message
+        });
+    }
+},
+
   
 }
