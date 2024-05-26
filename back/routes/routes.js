@@ -50,7 +50,6 @@ router.get("/homePage/totalProducts", auth, controllers.HomePageController.getTo
 router.get("/homePage/totalOrders", auth, controllers.HomePageController.getTotalOrders);
 router.get("/homePage/totalfournisseur", auth, controllers.HomePageController.getNumberSupplier);
 router.get("/homePage/seuilProducts", auth, controllers.HomePageController.getReplenishmentLevel);
-router.get("/homePage/salesAndPurchases", auth, controllers.HomePageController.getSalesAndPurchasesByMonth);
 router.get("/homePage/salesAndPurchasesPeriod", auth, controllers.HomePageController.getSalesAndPurchasesByPeriod);
 
 //Order
