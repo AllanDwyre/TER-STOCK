@@ -42,11 +42,11 @@ module.exports = {
             //             model: models.ligne_commande,
             //             as: "ligne_commandes",
             //             required: true,
-            //             // where: {
-            //             //     COMMANDE_ID: {
-            //             //         [Sequelize.Op.eq]: Sequelize.col(models.commande_fournisseur.COMMANDE_ID)
-            //             //     }
-            //             // }
+                        // where: {
+                        //     COMMANDE_ID: {
+                        //         [Sequelize.Op.eq]: Sequelize.col(models.commande_fournisseur.COMMANDE_ID)
+                        //     }
+                        // }
             //         }
             //     ],
             //     where: {

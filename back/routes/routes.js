@@ -44,6 +44,11 @@ router.get(
    auth, 
    controllers.productController.getTopSellingProduct
   );
+router.get(
+"/Product/overview",
+  auth, 
+  controllers.productController.getProductsOverview
+);
 
 router.get("Order/newOrder", auth, controllers.addOrderController.newOrder);
 router.get("/Order/TotalOrdersCount",auth,controllers.ordersController.getTotalOrdersCount);

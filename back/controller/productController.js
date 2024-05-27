@@ -1,4 +1,8 @@
 const sequelize = require("../config/db");
+const categorie = require("../model/tables/categorie");
+const commande = require("../model/tables/commande");
+const commande_fournisseur = require("../model/tables/commande_fournisseur");
+const ligne_commande = require("../model/tables/ligne_commande");
 const initModels = require("../model/tables/init-models").initModels;
 const models = initModels(sequelize);
 
@@ -172,5 +176,83 @@ module.exports = {
           "Erreur lors de la récupération du top selling product: " + error.message,
       });
     }
-  }
+  },
+
+  // getProductsOverview: async (req,res) => {
+  //   try {
+  //     consolelog("Products Overview =>");
+  //     await models.produit.findAll({
+  //       attributes: [
+  //         'NOM',
+  //         'SKU',
+  //         'CLASSE',
+  //         'PRIX_UNIT',
+  //         [col('Categorie.NOM_CATEGORIE'), 'NOM_CATEGORIE'],
+  //         'QUANTITE',
+  //         [fn('COALESCE', literal('otw.OTW'), 0), 'OTW']
+  //       ],
+  //       include: [
+  //         {
+  //           model: categorie,
+  //           attributes: [],
+  //           required: true
+  //         },
+  //         {
+  //           model: ligne_commande,
+  //           attributes: [],
+  //           include: [
+  //             {
+  //               model: commande,
+  //               attributes: [],
+  //               where: {
+  //                 DATE_REEL_RECU: {
+  //                   [Op.is]: null
+  //                 }
+  //               },
+  //               include: [
+  //                 {
+  //                   model: commande_fournisseur,
+  //                   attributes: []
+  //                 }
+  //               ]
+  //             }
+  //           ],
+  //           required: false
+  //         }
+  //       ],
+  //       subQuery: false,
+  //       group: [
+  //         'Produit.PRODUIT_ID',
+  //         'Produit.NOM',
+  //         'Produit.SKU',
+  //         'Produit.CLASSE',
+  //         'Produit.PRIX_UNIT',
+  //         'Categorie.NOM_CATEGORIE',
+  //         'Produit.QUANTITE',
+  //         'otw.OTW'
+  //       ],
+  //       raw: true,
+  //       having: literal(`
+  //         EXISTS (
+  //           SELECT 
+  //             COUNT(*) as OTW
+  //           FROM 
+  //             COMMANDE c
+  //             JOIN LIGNE_COMMANDE l ON c.COMMANDE_ID = l.COMMANDE_ID
+  //             JOIN COMMANDE_FOURNISSEUR cf ON cf.COMM_FOURN_ID = l.COMMANDE_ID
+  //           WHERE 
+  //             DATE_REEL_RECU IS NULL
+  //             AND l.PRODUIT_ID = Produit.PRODUIT_ID
+  //           GROUP BY 
+  //             l.PRODUIT_ID
+  //         )
+  //       `)
+  //     });
+  //   } catch (error){
+  //       res.status(500).json({
+  //       message:
+  //         "Erreur lors de la récupération des produits overview: " + error.message,
+  //     });
+  //   }
+  // }
 };
