@@ -26,6 +26,10 @@ module.exports = function(sequelize, DataTypes) {
     PRIX_TOTAL: {
       type: DataTypes.DECIMAL(6,2),
       allowNull: true
+    },
+    LOCATION_TYPE:{
+      type: DataTypes.ENUM('entreport','magasin'),
+      allowNull: true
     }
   }, {
     sequelize,
