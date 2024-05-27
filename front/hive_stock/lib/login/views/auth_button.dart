@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hive_stock/utils/widgets/buttons.dart';
 
-class AuthButton extends StatelessWidget {
-  const AuthButton({super.key, this.onPressed, required this.isInProgress});
+class StatefullButton extends StatelessWidget {
+  const StatefullButton(
+      {super.key, this.onPressed, this.text, required this.isInProgress});
   final bool isInProgress;
   final VoidCallback? onPressed;
+  final String? text;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -12,7 +14,7 @@ class AuthButton extends StatelessWidget {
           ? const CircularProgressIndicator()
           : PrimaryButton(
               onPressed: onPressed,
-              text: 'Continue',
+              text: text ?? 'Continue',
             ),
     );
   }

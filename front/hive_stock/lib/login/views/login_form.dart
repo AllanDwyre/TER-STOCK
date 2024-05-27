@@ -9,6 +9,8 @@ import 'package:hive_stock/utils/widgets/custom_app_bar.dart';
 import 'package:hive_stock/login/bloc/login_bloc.dart';
 import 'package:hive_stock/utils/widgets/snackbars.dart';
 
+import '../../utils/widgets/form_text_field.dart';
+
 class LoginBody extends StatefulWidget {
   const LoginBody({super.key});
 
@@ -95,7 +97,7 @@ class _LoginBodyState extends State<LoginBody> {
                       ],
                     ),
                   ),
-                  AuthButton(
+                  StatefullButton(
                       isInProgress: state.status.isInProgress,
                       onPressed: _onPressed(context, state))
                 ],
@@ -120,65 +122,47 @@ class _Form extends StatelessWidget {
       builder: (BuildContext context, state) {
         return Column(
           children: [
-            TextField(
-              onChanged: (username) =>
-                  context.read<LoginBloc>().add(LoginUsernameChanged(username)),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                labelText: 'Username',
-                hintText: 'Your Username',
-              ),
+            FormTextField(
+              hintText: 'Your Username',
+              labelText: 'Username',
+              onChanged: (username) => context.read<LoginBloc>().add(
+                    LoginUsernameChanged(username),
+                  ),
             ),
             const SizedBox(height: 20),
-            TextField(
+            FormTextField(
+              labelText: 'Password',
+              hintText: 'Your Password',
+              onChanged: (psw) => context.read<LoginBloc>().add(
+                    LoginPasswordChanged(psw),
+                  ),
               obscureText: true,
-              onChanged: (psw) =>
-                  context.read<LoginBloc>().add(LoginPasswordChanged(psw)),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                labelText: 'Password',
-                hintText: 'Your Password',
-              ),
             ),
             Visibility(
               visible: !state.isAttemptingLogin,
               child: Column(
                 children: [
                   const SizedBox(height: 20),
-                  TextField(
+                  FormTextField(
                     onChanged: (email) =>
                         context.read<LoginBloc>().add(LoginEmailChanged(email)),
-                    decoration: const InputDecoration(
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
-                      hintText: 'Your Email',
-                    ),
+                    labelText: 'Email',
+                    hintText: 'Your Email',
                   ),
                   const SizedBox(height: 20),
-                  TextField(
+                  FormTextField(
                     onChanged: (birthday) => context
                         .read<LoginBloc>()
                         .add(LoginBirthdayChanged(birthday)),
-                    decoration: const InputDecoration(
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      border: OutlineInputBorder(),
-                      labelText: 'Birthday',
-                      hintText: 'Your Birthday',
-                    ),
+                    labelText: 'Birthday',
+                    hintText: 'Your Birthday',
                   ),
                   const SizedBox(height: 20),
-                  TextField(
+                  FormTextField(
                     onChanged: (phone) =>
                         context.read<LoginBloc>().add(LoginPhoneChanged(phone)),
-                    decoration: const InputDecoration(
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      border: OutlineInputBorder(),
-                      labelText: 'Phone',
-                      hintText: 'Your Phone',
-                    ),
+                    labelText: 'Phone',
+                    hintText: 'Your Phone',
                   ),
                 ],
               ),
