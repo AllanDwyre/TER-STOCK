@@ -67,6 +67,9 @@ router.get("/homePage/totalfournisseur", auth, controllers.HomePageController.ge
 router.get("/homePage/seuilProducts", auth, controllers.HomePageController.getReplenishmentLevel);
 router.get("/homePage/salesAndPurchasesPeriod", auth, controllers.HomePageController.getSalesAndPurchasesByPeriod);
 router.get("/homePage/totalPrice", auth, controllers.HomePageController.getTotalOrdersPrice);
+router.get("/homePage/lowStocksProducts", auth, controllers.HomePageController.getLowStockProducts);
+router.get("/homePage/stockAlert", auth, controllers.HomePageController.calculateStockAlert);
+
 //addorderpage
 
 router.post("/Order/newOrder",auth,controllers.addOrderController.addOrder);
