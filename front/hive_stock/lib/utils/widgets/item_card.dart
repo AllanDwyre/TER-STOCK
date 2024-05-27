@@ -18,14 +18,14 @@ class ProductCard extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(6))),
         tileColor: const Color.fromARGB(255, 234, 239, 241),
         leading: Hero(
-          tag: productInventory.product.name,
+          tag: productInventory.product.name ?? "-",
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8), // Image border
             child: Image.asset(CustomIcons.productImageTest),
           ),
         ),
         title: Text(
-          productInventory.product.name,
+          productInventory.product.name ?? "-",
           style: textTheme.titleMedium?.copyWith(color: colorTheme.secondary),
         ),
         subtitle: Row(
@@ -50,7 +50,7 @@ class ProductCard extends StatelessWidget {
           ],
         ),
         trailing: Text(
-          '${productInventory.product.unitPrice.ceil()}€/unit',
+          '${productInventory.product.unitPrice}€/unit',
           style: textTheme.bodyLarge?.copyWith(color: colorTheme.secondary),
         ),
         onTap: onTap,

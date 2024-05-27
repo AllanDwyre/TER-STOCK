@@ -7,7 +7,7 @@ class ProductRepository {
   ProductRepository({required BridgeRepository bridge}) : _bridge = bridge;
   final BridgeRepository _bridge;
 
-  Future<ProductInventory> addProduct(Product product) async {
+  Future<int> addProduct(Product product) async {
     final params = product.toJson();
 
     final response =
@@ -17,8 +17,7 @@ class ProductRepository {
       throw Exception(response);
     }
 
-    final body = response.data as Map<String, dynamic>;
-    return ProductInventory.fromJson(body);
+    return int.parse(response.data);
   }
 
   Future<ProductInventory> getProduct(int productId) async {
