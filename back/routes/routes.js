@@ -45,12 +45,12 @@ router.get("/inventory/TopSellingProduct",auth,controllers.inventoryNINAControll
 router.get("/inventory/LowStockProductsCount",auth,controllers.inventoryNINAController.getLowStockProductsCount);
 //order
 router.get("/Order", auth, controllers.orderController.showOrders);
-router.get("/Order/newOrder", auth, controllers.addOrderController.newOrder);
+//router.get("/Order/newOrder", auth, controllers.addOrderController.newOrder);
 router.get("/Order/orderPagination",auth,controllers.orderController.getOrderPagination);
 router.get(  "/Product/topSelling",   auth,    controllers.productController.getTopSellingProduct  );
 //router.get("/Product/overview",  auth,   controllers.productController.getProductsOverview);
 
-router.get("Order/newOrder", auth, controllers.addOrderController.newOrder);
+//router.get("Order/newOrder", auth, controllers.addOrderController.newOrder);
 router.get("/Order/TotalOrdersCount",auth,controllers.ordersController.getTotalOrdersCount);
 router.get("/Order/TotalOrdersreceived",auth,controllers.ordersController.getTotalOrdersReceived);
 router.get("/Order/TotalOrdersreturned",auth,controllers.ordersController.getReturnOrdersCount);
@@ -67,7 +67,9 @@ router.get("/homePage/totalfournisseur", auth, controllers.HomePageController.ge
 router.get("/homePage/seuilProducts", auth, controllers.HomePageController.getReplenishmentLevel);
 router.get("/homePage/salesAndPurchasesPeriod", auth, controllers.HomePageController.getSalesAndPurchasesByPeriod);
 router.get("/homePage/totalPrice", auth, controllers.HomePageController.getTotalOrdersPrice);
+//addorderpage
 
+router.post("/Order/newOrder",auth,controllers.addOrderController.addOrder);
 /*=============================CRUD===================================
 
 // CRUD utilisateur:

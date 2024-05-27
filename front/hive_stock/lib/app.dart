@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hive_stock/home/views/home_page.dart';
+import 'package:hive_stock/home/views/navigation_menu.dart';
 import 'package:hive_stock/onBording/views/onbording_page.dart';
 import 'package:hive_stock/splash/views/splash_page.dart';
 import 'package:hive_stock/authentication/repository/authentication_repository.dart';
@@ -86,18 +86,20 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     // début section test page produit
+    var themeData = ThemeData(
+      colorScheme: lightColorScheme,
+      textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme),
+    );
+    var themeData2 = ThemeData(
+      colorScheme: darkColorScheme,
+      textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme),
+    );
+
     return MaterialApp(
       title: 'HiveStock',
       debugShowCheckedModeBanner: ApiConfiguration.isDebugMode,
-      theme: ThemeData(
-        colorScheme: lightColorScheme,
-        textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme),
-      ).copyWith(extensions: [lightCustomColors]),
-      darkTheme: ThemeData(
-              colorScheme: darkColorScheme,
-              textTheme:
-                  GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme))
-          .copyWith(extensions: [darkCustomColors]),
+      theme: themeData.copyWith(extensions: [lightCustomColors]),
+      darkTheme: themeData2.copyWith(extensions: [darkCustomColors]),
       themeMode: ThemeMode.system,
       navigatorKey: _navigatorKey,
       onGenerateRoute: (_) => SplashPage.route(),
@@ -107,7 +109,7 @@ class _AppViewState extends State<AppView> {
             switch (state.status) {
               case AuthenticationStatus.authenticated:
                 _navigator.pushAndRemoveUntil<void>(
-                  HomePage.route(),
+                  NavigationMenu.route(),
                   (route) => false,
                 );
               case AuthenticationStatus.unauthenticated:

@@ -101,7 +101,7 @@ class _InventoryBodyState extends State<InventoryBody> {
                             onTap: () => Navigator.of(context).push(
                                 ProductPage.route(
                                     produitId: state
-                                        .products[index].product.productId)),
+                                        .products[index].product.productId!)),
                           );
                   },
                   itemCount: state.hasReachedMax

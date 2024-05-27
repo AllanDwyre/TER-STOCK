@@ -1,28 +1,28 @@
 class Product {
-  int productId;
-  String name;
-  String description;
-  double unitPrice;
-  double weight;
-  String dimensions;
-  String warehouse;
-  String barcode;
-  int categoryId;
-  int locationId;
-  int supplierId;
+  int? productId;
+  String? name;
+  String? description;
+  String? unitPrice;
+  String? weight;
+  String? dimensions;
+  String? warehouse;
+  String? barcode;
+  int? categoryId;
+  int? locationId;
+  int? supplierId;
 
   Product({
-    required this.productId,
-    required this.name,
-    required this.description,
-    required this.unitPrice,
-    required this.weight,
-    required this.dimensions,
-    required this.warehouse,
-    required this.barcode,
-    required this.categoryId,
-    required this.locationId,
-    required this.supplierId,
+    this.productId,
+    this.name,
+    this.description,
+    this.unitPrice,
+    this.weight,
+    this.dimensions,
+    this.warehouse,
+    this.barcode,
+    this.categoryId,
+    this.locationId,
+    this.supplierId,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -30,8 +30,8 @@ class Product {
       productId: json['PRODUIT_ID'],
       name: json['NOM'],
       description: json['DESCR'],
-      unitPrice: double.parse(json['PRIX_UNIT']),
-      weight: double.parse(json['POIDS'].replaceAll(RegExp(r'[^0-9.]'), '')),
+      unitPrice: json['PRIX_UNIT'],
+      weight: json['POIDS'],
       dimensions: json['DIMENSIONS'],
       warehouse: json['MAGASIN_ENTREPOT'],
       barcode: json['CODE_BARRE_PRODUIT'],
@@ -60,8 +60,8 @@ class Product {
     productId: -1,
     name: '-',
     description: '-',
-    unitPrice: -1,
-    weight: -1,
+    unitPrice: '-',
+    weight: '-',
     dimensions: '-',
     warehouse: '-',
     barcode: '-',

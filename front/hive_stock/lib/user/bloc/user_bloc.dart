@@ -10,7 +10,9 @@ part 'user_event.dart';
 part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
-  UserBloc(this._userRepository) : super(const UserState()) {
+  UserBloc({required UserRepository userRepository})
+      : _userRepository = userRepository,
+        super(const UserState()) {
     on<OnUserFetched>(onUserFetched);
   }
   final UserRepository _userRepository;
