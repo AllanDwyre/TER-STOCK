@@ -71,7 +71,7 @@ async function testConnectionCloud() {
 testConnectionCloud();
 
 const initModels = require("../model/tables/init-models").initModels;
-// const modelsLocale = initModels(sequelizeLocal, DataTypes);
+const modelsLocale = initModels(sequelizeLocal, DataTypes);
 const modelsCloud = initModels(sequelizeCloud, DataTypes);
 
 /*for(const model in modelsCloud ){
@@ -120,15 +120,7 @@ cron.schedule('0 0 1 * *', () => {
 });
 
 
-// const modelLocal = require("../model/tables/categorie")(
-//   sequelizeLocal,
-//   DataTypes
-// );
-const modelCloud = require("../model/tables/categorie")(
-  sequelizeCloud,
-  DataTypes
-);
-
+/*
 const currentDate = new Date();
 const year = currentDate.getFullYear(); // Année
 const month = currentDate.getMonth() + 1; // Mois (janvier est 0, donc on ajoute 1)
@@ -136,7 +128,7 @@ const day = currentDate.getDate(); // Jour du mois
 const formattedDate = `${year}-${month < 10 ? "0" : ""}${month}-${
   day < 10 ? "0" : ""
 }${day}`;
-console.log(formattedDate);
+console.log(formattedDate);*/
 
 /*const User = require('../model/tables/users.js')(sequelize, DataTypes);
 
@@ -160,4 +152,4 @@ User.create({
 });*/
 
 // Exporter l'objet Sequelize configuré
-module.exports = sequelizeCloud;
+module.exports = sequelizeLocal;

@@ -1,6 +1,29 @@
+const { Op, literal } = require("sequelize");
+const { Sequelize } = require("sequelize");
 const sequelize = require("../config/db");
 const initModels = require("../model/tables/init-models").initModels;
 const models = initModels(sequelize);
+
+// Fonction pour obtenir le nom du mois
+function getMonthName(monthNumber) {
+  const monthNames = [
+      "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+      "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+  ];
+  return monthNames[monthNumber - 1];
+}
+
+// Fonction pour obtenir la date du premier jour de la semaine à partir de l'année et du numéro de la semaine
+function getFirstDayOfWeek(year, week) {
+  const simple = new Date(year, 0, 1 + (week - 1) * 7);
+  const dow = simple.getDay();
+  const ISOweekStart = simple;
+  if (dow <= 4)
+      ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+  else
+      ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+  return ISOweekStart;
+}
 
 module.exports = {
   // recuperer tout les produits
@@ -124,6 +147,429 @@ module.exports = {
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
+  },
+
+  productMovement : async(req,res) => {
+    try {
+      const period = req.query.period || 'month'; // 'day', 'week', 'month'
+      const productId = req.query.productId;
+      
+      // Calculer la date de début en fonction de la période
+      const startDate = new Date();
+      if (period === 'day') {
+          startDate.setDate(startDate.getDate() - 12);
+      } else if (period === 'week') {
+          startDate.setDate(startDate.getDate() - 7 * 12);
+      } else { // 'month'
+          startDate.setMonth(startDate.getMonth() - 12);
+      }
+
+      let dateColumn, groupByColumns, groupByColumnsComm;
+
+      if (period === 'day') {
+          dateColumn = 'DATE_VENTE';
+          groupByColumns = [
+              sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'),
+              sequelize.literal('MONTH(`VENTE`.`DATE_VENTE`)'),
+              sequelize.literal('DAY(`VENTE`.`DATE_VENTE`)')
+          ];
+          groupByColumnsComm = [
+              sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'),
+              sequelize.literal('MONTH(`COMMANDE`.`DATE_COMMANDE`)'),
+              sequelize.literal('DAY(`COMMANDE`.`DATE_COMMANDE`)')
+          ];
+      } else if (period === 'week') {
+          dateColumn = 'DATE_VENTE';
+          groupByColumns = [
+              sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'),
+              sequelize.literal('WEEK(`VENTE`.`DATE_VENTE`, 3)') // MySQL specific syntax for ISO week number
+          ];
+          groupByColumnsComm = [
+              sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'),
+              sequelize.literal('WEEK(`COMMANDE`.`DATE_COMMANDE`, 3)')
+          ];
+      } else { // 'month'
+          dateColumn = 'DATE_VENTE';
+          groupByColumns = [
+              sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'),
+              sequelize.literal('MONTH(`VENTE`.`DATE_VENTE`)')
+          ];
+          groupByColumnsComm = [
+              sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'),
+              sequelize.literal('MONTH(`COMMANDE`.`DATE_COMMANDE`)')
+          ];
+      }
+
+      // Requête pour les ventes
+      const sales2 = await models.produit_vendu.findAll({
+          attributes: [
+              [sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'), 'Année'],
+              [sequelize.literal(`MONTH(\`VENTE\`.\`${dateColumn}\`)`), 'Mois'],
+              ...(period === 'day' ? [[sequelize.literal('DAY(`VENTE`.`DATE_VENTE`)'), 'Jour']] : []),
+              ...(period === 'week' ? [[sequelize.literal('WEEK(`VENTE`.`DATE_VENTE`, 3)'), 'Semaine']] : []),
+              [sequelize.fn('SUM', sequelize.col('QUANTITE')), 'sales2']
+          ],
+          include: [
+              {
+                  model: models.vente,
+                  as: "VENTE",
+                  attributes: [],
+                  where: {
+                      [dateColumn]: {
+                          [Op.between]: [startDate, new Date()]
+                      }
+                  }
+              }
+          ],
+          where: {
+            produit_id: productId // Filtrer par produit
+          },
+          group: groupByColumns,
+          order: [
+              [sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'), 'DESC'],
+              ...groupByColumns.slice(1).map(col => [col, 'DESC'])
+          ]
+      });
+      const salesData = sales2.map(record => record.get());
+
+      // Requête pour récupérer les commandes aux fournisseurs 
+      const purchaseOrders = await models.commande_fournisseur.findAll({
+          attributes: ['COMM_FOURN_ID'],
+          where: {
+              TYPE_COMMANDE: 'commande'
+          }
+      });
+
+      const commandeIds = purchaseOrders.map(order => order.COMM_FOURN_ID);
+
+      // Requête pour la somme de la quantité achetée par mois
+      const purchases = await models.ligne_commande.findAll({
+          attributes: [
+              [sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'), 'Année'],
+              [sequelize.literal('MONTH(`COMMANDE`.`DATE_COMMANDE`)'), 'Mois'],
+              ...(period === 'day' ? [[sequelize.literal('DAY(`COMMANDE`.`DATE_COMMANDE`)'), 'Jour']] : []),
+              ...(period === 'week' ? [[sequelize.literal('WEEK(`COMMANDE`.`DATE_COMMANDE`, 3)'), 'Semaine']] : []),
+              [sequelize.fn('SUM', sequelize.col('QUANTITE')), 'Purchases']
+          ],
+          where: {
+              commande_id: {
+                  [Op.in]: commandeIds
+              },
+              produit_id: productId 
+          },
+          include: [
+              {
+                  model: models.commande,
+                  as: "COMMANDE",
+                  attributes: [],
+                  where: {
+                      DATE_COMMANDE: {
+                          [Op.between]: [startDate, new Date()]
+                      }
+                  }
+              }
+          ],
+          group: groupByColumnsComm,
+          order: [
+              [sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'), 'DESC'],
+              ...groupByColumnsComm.slice(1).map(col => [col, 'DESC'])
+          ]
+      });
+
+      const purchaseData = purchases.map(record => record.get());
+
+      // Fusionner les résultats des ventes et des achats par période
+      const mergedData = {};
+
+      salesData.forEach(sale => {
+          let key, displayName;
+          if (period === 'day') {
+              key = `${sale['Année']}-${sale['Mois']}-${sale['Jour']}`;
+              displayName = `${sale['Jour']} ${getMonthName(sale['Mois'])} ${sale['Année']}`;
+          } else if (period === 'week') {
+              key = `${sale['Année']}-W${sale['Semaine']}`;
+              const firstDayOfWeek = getFirstDayOfWeek(sale['Année'], sale['Semaine']);
+              displayName = `Semaine du ${firstDayOfWeek.toLocaleDateString()} - Semaine ${sale['Semaine']} de l'année ${sale['Année']}`;
+              //displayName = `Semaine ${sale['Semaine']} ${sale['Année']}`;
+          } else {
+              key = `${sale['Année']}-${sale['Mois']}`;
+              displayName = `${getMonthName(sale['Mois'])} ${sale['Année']}`;
+          }
+
+          if (!mergedData[key]) {
+              mergedData[key] = { Période: displayName, Sales: 0, Purchases: 0 };
+          }
+          mergedData[key].Sales = sale.sales2;
+      });
+
+      purchaseData.forEach(purchase => {
+          let key, displayName;
+          if (period === 'day') {
+              key = `${purchase['Année']}-${purchase['Mois']}-${purchase['Jour']}`;
+              displayName = `${purchase['Jour']} ${getMonthName(purchase['Mois'])} ${purchase['Année']}`;
+          } else if (period === 'week') {
+              key = `${purchase['Année']}-W${purchase['Semaine']}`;
+              const firstDayOfWeek = getFirstDayOfWeek(purchase['Année'], purchase['Semaine']);
+              displayName = `Semaine du ${firstDayOfWeek.toLocaleDateString()} - Semaine ${purchase['Semaine']} de l'année ${purchase['Année']}`;
+              //displayName = `Semaine ${purchase['Semaine']} ${purchase['Année']}`;
+          } else {
+              key = `${purchase['Année']}-${purchase['Mois']}`;
+              displayName = `${getMonthName(purchase['Mois'])} ${purchase['Année']}`;
+          }
+
+          if (!mergedData[key]) {
+              mergedData[key] = { Période: displayName, Sales: 0, Purchases: 0 };
+          }
+          mergedData[key].Purchases = purchase.Purchases;
+      });
+
+      const result = Object.values(mergedData);
+      console.log(result);
+      res.status(200).json(result);
+
+  } catch (error) {
+      console.error('Erreur lors de la récupération des ventes et des achats par période :', error);
+      res.status(500).json({
+          message: 'Erreur lors de la récupération des ventes et des achats par période.'
+      });
+  }
+  },
+
+  // Requete graphe pour recup le total de revenus que ce produit a généré par mois/semaine/jour
+  productFinance : async (req,res) => {
+
+    try {
+      const period = req.query.period || 'month'; // 'day', 'week', 'month'
+      const productId = req.query.productId;
+      
+      // Calculer la date de début en fonction de la période
+      const startDate = new Date();
+      if (period === 'day') {
+          startDate.setDate(startDate.getDate() - 12);
+      } else if (period === 'week') {
+          startDate.setDate(startDate.getDate() - 7 * 12);
+      } else { // 'month'
+          startDate.setMonth(startDate.getMonth() - 12);
+      }
+
+      let dateColumn, groupByColumns, groupByColumnsComm, selectColumns, selectColumns2;
+
+      if (period === 'day') {
+          dateColumn = 'DATE_VENTE';
+          groupByColumns = [
+              sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'),
+              sequelize.literal('MONTH(`VENTE`.`DATE_VENTE`)'),
+              sequelize.literal('DAY(`VENTE`.`DATE_VENTE`)')
+          ];
+          groupByColumnsComm = [
+              sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'),
+              sequelize.literal('MONTH(`COMMANDE`.`DATE_COMMANDE`)'),
+              sequelize.literal('DAY(`COMMANDE`.`DATE_COMMANDE`)')
+          ];
+          selectColumns = [
+            [sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'), 'Année'],
+            [sequelize.literal('MONTH(`VENTE`.`DATE_VENTE`)'), 'Mois'],
+            [sequelize.literal('DAY(`VENTE`.`DATE_VENTE`)'), 'Jour'],
+          ];
+          selectColumns2 = [
+            [sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'), 'Année'],
+            [sequelize.literal('MONTH(`COMMANDE`.`DATE_COMMANDE`)'), 'Mois'],
+            [sequelize.literal('DAY(`COMMANDE`.`DATE_COMMANDE`)'), 'Jour'],
+          ];
+      } else if (period === 'week') {
+          dateColumn = 'DATE_VENTE';
+          groupByColumns = [
+              sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'),
+              sequelize.literal('WEEK(`VENTE`.`DATE_VENTE`, 3)') // MySQL specific syntax for ISO week number
+          ];
+          groupByColumnsComm = [
+              sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'),
+              sequelize.literal('WEEK(`COMMANDE`.`DATE_COMMANDE`, 3)')
+          ];
+          selectColumns = [
+            [sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'), 'Année'],
+            [sequelize.literal('WEEK(`VENTE`.`DATE_VENTE`, 3)'), 'Semaine'],
+          ];
+          selectColumns2 = [
+            [sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'), 'Année'],
+            [sequelize.literal('WEEK(`COMMANDE`.`DATE_COMMANDE`, 3)'), 'Semaine'],
+          ];
+      } else { // 'month'
+          dateColumn = 'DATE_VENTE';
+          groupByColumns = [
+              sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'),
+              sequelize.literal('MONTH(`VENTE`.`DATE_VENTE`)')
+          ];
+          groupByColumnsComm = [
+              sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'),
+              sequelize.literal('MONTH(`COMMANDE`.`DATE_COMMANDE`)')
+          ];
+          selectColumns = [
+            [sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'), 'Année'],
+            [sequelize.literal('MONTH(`VENTE`.`DATE_VENTE`)'), 'Mois'],
+          ];
+          selectColumns2 = [
+            [sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'), 'Année'],
+            [sequelize.literal('MONTH(`COMMANDE`.`DATE_COMMANDE`)'), 'Mois'],
+          ];
+        
+      }
+
+      // Requête pour les ventes
+      const revenus = await models.produit_vendu.findAll({
+          attributes: [
+            ...selectColumns,
+            [sequelize.fn('SUM', sequelize.col('QUANTITE')), 'totalSales']
+          ],
+          include: [
+              {
+                  model: models.vente,
+                  as: "VENTE",
+                  attributes: [],
+                  where: {
+                      [dateColumn]: {
+                          [Op.between]: [startDate, new Date()]
+                      }
+                  },/*
+                  model: models.produit,
+                  as: "PRODUIT",
+                  attributes: [],
+                  where: {
+                    produit_id: productId
+                  }*/
+              }
+          ],
+          where: {
+            produit_id: productId // Filtrer par produit
+          },
+          group: groupByColumns, selectColumns,
+          order: [
+              [sequelize.literal('YEAR(`VENTE`.`DATE_VENTE`)'), 'DESC'],
+              ...groupByColumns.slice(1).map(col => [col, 'DESC'])
+          ]
+      });
+      const revenusData = revenus.map(record => record.get());
+
+      // Requête pour récupérer les commandes aux fournisseurs 
+      const purchaseOrders = await models.commande_client.findAll({
+          attributes: ['COMM_CLIENT_ID'],
+          where: {
+              TYPE_COMMANDE: 'commande'
+          }
+      });
+
+      const commandeIds = purchaseOrders.map(order => order.COMM_CLIENT_ID);
+
+      // Requête pour la somme de la quantité achetée par mois
+      const purchases = await models.ligne_commande.findAll({
+          attributes: [
+            ...selectColumns2,
+              [sequelize.fn('SUM', sequelize.col('QUANTITE')), 'Purchases']
+          ],
+          where: {
+              commande_id: {
+                  [Op.in]: commandeIds
+              },
+              produit_id: productId 
+          },
+          include: [
+              {
+                  model: models.commande,
+                  as: "COMMANDE",
+                  attributes: [],
+                  where: {
+                      DATE_COMMANDE: {
+                          [Op.between]: [startDate, new Date()]
+                      }
+                  }
+              }
+          ],
+          group: groupByColumnsComm, selectColumns2,
+          order: [
+              [sequelize.literal('YEAR(`COMMANDE`.`DATE_COMMANDE`)'), 'DESC'],
+              ...groupByColumnsComm.slice(1).map(col => [col, 'DESC'])
+          ]
+      });
+
+      const purchaseData = purchases.map(record => record.get());
+
+
+      // Récupérer le prix unitaire du produit
+      const product = await models.produit.findOne({
+        where: { PRODUIT_ID: productId },
+        attributes: ['PRIX_UNIT']
+      });
+
+      if (!product) {
+          return res.status(404).json({ message: 'Product not found' });
+      }
+
+      const prixUnit = product.PRIX_UNIT;
+
+
+      // Fusionner les résultats des ventes et des achats par période
+      const mergedData = {};
+
+      revenusData.forEach(sale => {
+          let key, displayName;
+          if (period === 'day') {
+              key = `${sale['Année']}-${sale['Mois']}-${sale['Jour']}`;
+              displayName = `${sale['Jour']} ${getMonthName(sale['Mois'])} ${sale['Année']}`;
+          } else if (period === 'week') {
+              key = `${sale['Année']}-W${sale['Semaine']}`;
+              const firstDayOfWeek = getFirstDayOfWeek(sale['Année'], sale['Semaine']);
+              displayName = `Semaine du ${firstDayOfWeek.toLocaleDateString()} - Semaine ${sale['Semaine']} de l'année ${sale['Année']}`;
+              //displayName = `Semaine ${sale['Semaine']} ${sale['Année']}`;
+          } else {
+              key = `${sale['Année']}-${sale['Mois']}`;
+              displayName = `${getMonthName(sale['Mois'])} ${sale['Année']}`;
+          }
+
+          if (!mergedData[key]) {
+            mergedData[key] = { Période: displayName, VentesMagasin: 0 };
+        }
+        mergedData[key].VentesMagasin += sale.totalSales * prixUnit;
+      });
+
+      purchaseData.forEach(purchase => {
+          let key, displayName;
+          if (period === 'day') {
+              key = `${purchase['Année']}-${purchase['Mois']}-${purchase['Jour']}`;
+              displayName = `${purchase['Jour']} ${getMonthName(purchase['Mois'])} ${purchase['Année']}`;
+          } else if (period === 'week') {
+              key = `${purchase['Année']}-W${purchase['Semaine']}`;
+              const firstDayOfWeek = getFirstDayOfWeek(purchase['Année'], purchase['Semaine']);
+              displayName = `Semaine du ${firstDayOfWeek.toLocaleDateString()} - Semaine ${purchase['Semaine']} de l'année ${purchase['Année']}`;          } else {
+              key = `${purchase['Année']}-${purchase['Mois']}`;
+              displayName = `${getMonthName(purchase['Mois'])} ${purchase['Année']}`;
+          }
+
+          if (!mergedData[key]) {
+              mergedData[key] = { Période: displayName, CommandesClient: 0 };
+          }
+          mergedData[key].CommandesClient = purchase.Purchases *prixUnit;
+      });
+
+      for(const obj in mergedData){
+        if(mergedData[obj].CommandesClient && mergedData[obj].VentesMagasin)
+        mergedData[obj].TotalRevenus = mergedData[obj].CommandesClient + mergedData[obj].VentesMagasin;
+      }
+
+      const result = Object.values(mergedData);
+      console.log(result);
+      res.status(200).json(result);
+
+    } catch (error) {
+        console.error('Erreur lors de la récupération des ventes et des achats par période :', error);
+        res.status(500).json({
+            message: 'Erreur lors de la récupération des ventes et des achats par période.'
+        });
+    }
+
+  },
+
+  productQuantityHistory : async (req,res) => {
+
   },
 
 
