@@ -1,18 +1,9 @@
 const DataTypes = require('sequelize');
 const sequelize = require('../config/db');
 //const router = express.Router();
-const Produit = require('../model/tables/produit')(sequelize, DataTypes);
 const CommFourn = require('../model/tables/commande_fournisseur')(sequelize, DataTypes);
-const Fournisseur = require('../model/tables/fournisseur')(sequelize, DataTypes);
-const Prod = require("../model/prodModel");
-/*countTable(nomTable)*/
-const KEY = process.env.DEV_KEY;
-var jwt = require("jsonwebtoken");
 const initModels = require("../model/tables/init-models").initModels;
 const models = initModels(sequelize);
-const sharedData = {
-    produit_id: ''
-  };
 
 module.exports = {
 
@@ -38,16 +29,6 @@ module.exports = {
           }
     },
     getOrderPagination: async (req, res) => {
-        // On vérifie d'abord si l'en-tête Authorization est présente dans la requête
-        const authHeader = req.headers["authorization"];
-        if (!authHeader) {
-          return res.status(401).send("Token d'authentification manquant");
-        }
-        jwt.verify(authHeader, KEY, { algorithm: "HS256" }, (err, decoded) => {
-        if (err) {
-            return res.status(401).send("Token d'authentification invalide");
-        }
-        // Maintenant que le token est vérifié, on peut envoyer les informations
         try {
             const start = parseInt(req.query.start);
             const limit = parseInt(req.query.limit);
@@ -57,6 +38,13 @@ module.exports = {
                 throw new Error(
                 "start and limit must be enter as a positive number !"
                 );
+            }
+
+            const allowedTypes = ['all', 'exit', 'entry'];
+
+            // Check if the parameter matches one of the allowed values
+            if (!allowedTypes.includes(type)) {
+                return res.status(400).json({ message: 'Invalid type parameter. Valid types : all - exit - entry' });
             }
             console.log(`Order pagination => start : ${start}, limit : ${limit}`);
             switch(type){
@@ -138,8 +126,5 @@ module.exports = {
             "Erreur lors de la récupération des commandes: " + error.message,
             });
         }
-        });
       }
-
-
-}
+    }

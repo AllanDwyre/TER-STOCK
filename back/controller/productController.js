@@ -1,6 +1,4 @@
 const sequelize = require("../config/db");
-const KEY = process.env.DEV_KEY;
-var jwt = require("jsonwebtoken");
 const initModels = require("../model/tables/init-models").initModels;
 const models = initModels(sequelize);
 
@@ -94,9 +92,13 @@ module.exports = {
 
   overviewProduct : async(req,res) => {
     try{
-      const prodID = req.params.id;
+      const prodNom = req.query.nom;
 
-      const productInformation = await models.produit.findByPk(prodID);
+      const productInformation = await models.produit.findOne({
+        where: {
+          NOM : prodNom
+        } 
+      });
 
       console.table(productInformation.dataValues);
 
@@ -106,6 +108,21 @@ module.exports = {
       res.status(500).json({
         message: "Erreur lors de la récupération du produit: " + error.message,
       });
+    }
+  },
+
+  getImage : async (req, res) => {
+    try {
+      const produit = await models.produit.findByPk(req.params.id);
+  
+      if (!produit || !produit.imageProduit) {
+        return res.status(404).json({ error: 'Produit ou image non trouvée' });
+      }
+  
+      res.set('Content-Type', 'image/jpeg'); // Ou le type MIME approprié
+      res.send(produit.imageProduit);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
   },
 
@@ -164,4 +181,121 @@ module.exports = {
       });
     }
   },
+
+  getTopSellingProduct: async (req, res) => {
+    try {
+      console.log(`Top Selling Product =>`);
+      await models.produit
+        .findAll({
+          include: [
+            {
+              model: models.produit_vendu,
+              as: "produit_vendus",
+              attributes: [],
+              required: true,
+            },
+          ],
+          attributes: ['NOM'],
+          order: [[sequelize.col('produit_vendus.QUANTITE'), "DESC"]],
+        })
+        .then((result) => {
+          if (result.length > 0) {
+            const topProduct = result[0].dataValues;
+            console.table([topProduct]); 
+            res.status(200).json(topProduct);
+          } else {
+            res.status(404).json({ message: "No products found" });
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching top selling product:", error);
+          res.status(500).json({
+            message: "Error fetching top selling product: " + error.message,
+          });
+        });
+    } catch (error) {
+      res.status(500).json({
+        message:
+          "Erreur lors de la récupération du top selling product: " + error.message,
+      });
+    }
+  },
+
+  // getProductsOverview: async (req,res) => {
+  //   try {
+  //     consolelog("Products Overview =>");
+  //     await models.produit.findAll({
+  //       attributes: [
+  //         'NOM',
+  //         'SKU',
+  //         'CLASSE',
+  //         'PRIX_UNIT',
+  //         [col('Categorie.NOM_CATEGORIE'), 'NOM_CATEGORIE'],
+  //         'QUANTITE',
+  //         [fn('COALESCE', literal('otw.OTW'), 0), 'OTW']
+  //       ],
+  //       include: [
+  //         {
+  //           model: categorie,
+  //           attributes: [],
+  //           required: true
+  //         },
+  //         {
+  //           model: ligne_commande,
+  //           attributes: [],
+  //           include: [
+  //             {
+  //               model: commande,
+  //               attributes: [],
+  //               where: {
+  //                 DATE_REEL_RECU: {
+  //                   [Op.is]: null
+  //                 }
+  //               },
+  //               include: [
+  //                 {
+  //                   model: commande_fournisseur,
+  //                   attributes: []
+  //                 }
+  //               ]
+  //             }
+  //           ],
+  //           required: false
+  //         }
+  //       ],
+  //       subQuery: false,
+  //       group: [
+  //         'Produit.PRODUIT_ID',
+  //         'Produit.NOM',
+  //         'Produit.SKU',
+  //         'Produit.CLASSE',
+  //         'Produit.PRIX_UNIT',
+  //         'Categorie.NOM_CATEGORIE',
+  //         'Produit.QUANTITE',
+  //         'otw.OTW'
+  //       ],
+  //       raw: true,
+  //       having: literal(`
+  //         EXISTS (
+  //           SELECT 
+  //             COUNT(*) as OTW
+  //           FROM 
+  //             COMMANDE c
+  //             JOIN LIGNE_COMMANDE l ON c.COMMANDE_ID = l.COMMANDE_ID
+  //             JOIN COMMANDE_FOURNISSEUR cf ON cf.COMM_FOURN_ID = l.COMMANDE_ID
+  //           WHERE 
+  //             DATE_REEL_RECU IS NULL
+  //             AND l.PRODUIT_ID = Produit.PRODUIT_ID
+  //           GROUP BY 
+  //             l.PRODUIT_ID
+  //         )
+  //       `)
+  //     });
+  //   } catch (error){
+  //       res.status(500).json({
+  //       message:
+  //         "Erreur lors de la récupération des produits overview: " + error.message,
+  //     });
+  //   }
+  // }
 };
