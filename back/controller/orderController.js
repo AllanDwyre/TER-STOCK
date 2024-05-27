@@ -38,16 +38,6 @@ module.exports = {
           }
     },
     getOrderPagination: async (req, res) => {
-        // On vérifie d'abord si l'en-tête Authorization est présente dans la requête
-        const authHeader = req.headers["authorization"];
-        if (!authHeader) {
-          return res.status(401).send("Token d'authentification manquant");
-        }
-        jwt.verify(authHeader, KEY, { algorithm: "HS256" }, (err, decoded) => {
-        if (err) {
-            return res.status(401).send("Token d'authentification invalide");
-        }
-        // Maintenant que le token est vérifié, on peut envoyer les informations
         try {
             const start = parseInt(req.query.start);
             const limit = parseInt(req.query.limit);
@@ -57,6 +47,13 @@ module.exports = {
                 throw new Error(
                 "start and limit must be enter as a positive number !"
                 );
+            }
+
+            const allowedTypes = ['all', 'exit', 'entry'];
+
+            // Check if the parameter matches one of the allowed values
+            if (!allowedTypes.includes(type)) {
+                return res.status(400).json({ message: 'Invalid type parameter. Valid types : all - exit - entry' });
             }
             console.log(`Order pagination => start : ${start}, limit : ${limit}`);
             switch(type){
@@ -138,8 +135,5 @@ module.exports = {
             "Erreur lors de la récupération des commandes: " + error.message,
             });
         }
-        });
       }
-
-
-}
+    }

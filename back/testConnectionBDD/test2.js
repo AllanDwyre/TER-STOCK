@@ -3,10 +3,10 @@ const mysql = require('mysql2');
 
 // Configuration de la connexion à la base de données
 const connection = mysql.createConnection({
-  host: 'b6jnkuawrcmeoh29csix-mysql.services.clever-cloud.com', 
-  user: 'uefrf8nq9wkradre', 
-  password: '4aRbuicMDPUv4TLyZjkj', 
-  database: 'b6jnkuawrcmeoh29csix'
+  host: 'b6jnkuawrcmeoh29csix-mysql.services.clever-cloud.com', // L'hôte de la base de données (par exemple, 'localhost' si la base de données est en local)
+  user: 'uefrf8nq9wkradre', // Le nom d'utilisateur de la base de données
+  password: '4aRbuicMDPUv4TLyZjkj', // Le mot de passe de la base de données
+  database: 'b6jnkuawrcmeoh29csix' // Le nom de la base de données à laquelle se connecter
 });
 
 // Établir la connexion à la base de données
@@ -20,7 +20,7 @@ connection.connect((err) => {
 });
 
 // Exécuter une requête SQL
-connection.query('DESCRIBE PRODUIT', (err, rows) => {
+connection.query('DESCRIBE EMPLACEMENT', (err, rows) => {
   if (err) throw err;
 
   console.log('Données récupérées de la base de données :', rows);
