@@ -17,6 +17,7 @@ var _lot_vendu = require("./lot_vendu");
 var _produit = require("./produit");
 var _produit_livre = require("./produit_livre");
 var _produit_vendu = require("./produit_vendu");
+var _stock = require("./stock");
 var _users = require("./users");
 var _vente = require("./vente");
 var _ventes_realises = require("./ventes_realises");
@@ -40,6 +41,7 @@ function initModels(sequelize) {
   var produit = _produit(sequelize, DataTypes);
   var produit_livre = _produit_livre(sequelize, DataTypes);
   var produit_vendu = _produit_vendu(sequelize, DataTypes);
+  var stock = _stock(sequelize, DataTypes);
   var users = _users(sequelize, DataTypes);
   var vente = _vente(sequelize, DataTypes);
   var ventes_realises = _ventes_realises(sequelize, DataTypes);
@@ -154,6 +156,11 @@ function initModels(sequelize) {
     as: "produits",
     foreignKey: "EMPLACEMENT_ID",
   });
+  stock.belongsTo(produit, { as: "PRODUIT", foreignKey: "PRODUIT_ID" });
+  produit.hasMany(stock, {
+    as: "stocks",
+    foreignKey: "PRODUIT_ID",
+  });
   commande.belongsTo(employe, { as: "EMPLOYE", foreignKey: "EMPLOYE_ID" });
   employe.hasMany(commande, { as: "commandes", foreignKey: "EMPLOYE_ID" });
   inventaire_produit.belongsTo(employe, {
@@ -258,6 +265,7 @@ function initModels(sequelize) {
     produit,
     produit_livre,
     produit_vendu,
+    stock,
     users,
     vente,
     ventes_realises,
