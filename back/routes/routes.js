@@ -1,7 +1,11 @@
 const express = require("express");
+const multer = require('multer');
 const router = express.Router();
 const controllers = require("../controller/Controllers");
 const auth = require("../utils/middleware").auth;
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 router.post("/login", controllers.loginController.login);
 router.post("/register", controllers.loginController.signup);
@@ -26,6 +30,9 @@ router.get("/Search", auth, controllers.SearchBarController.findAlikeObject);
 router.get("/Products", auth, controllers.productController.getProductById);
 router.post("/Products", auth, controllers.addProductController.addProduit);
 router.get("/Product/Overview", auth, controllers.productController.overviewProduct);
+router.get("Product/Overview/imageProduit", auth, controllers.productController.getImage);
+
+router.get("Product/add", auth, controllers.addProductController.addProduit);
 
 //inventory
 router.get("/Inventory/fetchPagination",auth,controllers.productController.getProductPagination);

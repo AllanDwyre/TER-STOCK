@@ -111,6 +111,21 @@ module.exports = {
     }
   },
 
+  getImage : async (req, res) => {
+    try {
+      const produit = await models.produit.findByPk(req.params.id);
+  
+      if (!produit || !produit.imageProduit) {
+        return res.status(404).json({ error: 'Produit ou image non trouvée' });
+      }
+  
+      res.set('Content-Type', 'image/jpeg'); // Ou le type MIME approprié
+      res.send(produit.imageProduit);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
 
 
 
