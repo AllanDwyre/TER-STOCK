@@ -2,17 +2,17 @@ const { Sequelize, DataTypes } = require("sequelize");
 require("dotenv").config();
 const cron = require('node-cron');
 
-// // Configuration de la connexion à la base de données  yes
-// const sequelizeLocal = new Sequelize(
-//   process.env.DB_NAME,
-//   process.env.DB_USER,
-//   process.env.DB_PASS,
-//   {
-//     host: process.env.DB_HOST,
-//     dialect: "mysql",
-//     logging: false,
-//   }
-// );
+// Configuration de la connexion à la base de données local’
+const sequelizeLocal = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASS,
+  {
+    host: process.env.DB_HOST,
+    dialect: "mysql",
+    logging: false,
+  }
+);
 
 // // Ici on teste la connexion à la base de données locale
 // async function testConnectionLocale() {
@@ -96,7 +96,25 @@ async function synchronizeTables() {
   }
 }
 
-cron.schedule('0 0 1 * *', () => { // Exécuter le 1er de chaque mois à minuit (00:00)
+
+async function synchronizeTablesInverse() {
+  try {
+    for(const model in modelsLocale ){
+      const tableCloud = modelsCloud[model];
+      const tableLocale = modelsLocale[model];
+      const cloudModels = await tableCloud.findAll();
+      for (const cloud of cloudModels){
+        const cloudModel = cloud.dataValues;
+        await tableLocale.upsert(cloudModel);
+      }
+    }
+    console.log("Toutes les données ont été synchronisées avec succès.");
+  } catch (error) {
+    console.error('Erreur lors de la synchronisation des données :', error);
+  }
+}
+
+cron.schedule('0 0 1 * *', () => { 
   console.log('Début de la synchronisation mensuelle.');
   synchronizeTables();
 });

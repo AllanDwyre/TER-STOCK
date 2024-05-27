@@ -1,11 +1,15 @@
 import 'dart:io' show Platform;
 
+import 'package:flutter/foundation.dart';
+
 enum ConfigurationModeEnum { debug, production }
 
 class ApiConfiguration {
 // * ========================  change here to switch btw debug and prod.  ======================== *
 
-  static ConfigurationModeEnum configurationMode = ConfigurationModeEnum.debug;
+  static ConfigurationModeEnum configurationMode = kDebugMode
+      ? ConfigurationModeEnum.debug
+      : ConfigurationModeEnum.production;
 
 //! ==================================================================================================
 //! ========================================= Do Not Touch ! =========================================

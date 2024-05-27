@@ -2,13 +2,13 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 import "package:flutter_svg/svg.dart";
+import "package:hive_stock/home/home.dart";
 import "package:hive_stock/product/bloc/inventory_bloc.dart";
 import "package:hive_stock/product/repository/product_repository.dart";
-import "package:hive_stock/product/views/inventory_body.dart";
 import "package:hive_stock/product/views/add_product_page.dart";
+import "package:hive_stock/product/views/inventory_body.dart";
 import "package:hive_stock/scanner/views/scanner_page.dart";
 import "package:hive_stock/utils/app/bridge_repository.dart";
-import "package:hive_stock/utils/constants/padding.dart";
 import "package:hive_stock/utils/widgets/bottom_nav_bar.dart";
 
 class InventoryPage extends StatefulWidget {
@@ -35,9 +35,16 @@ class _InventoryPageState extends State<InventoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    TextTheme textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: buildAppBar(context),
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text("Add a product", style: textTheme.bodySmall),
+        icon: const Icon(Icons.add),
+        onPressed: () => Navigator.push(context, AddProductPage.route()),
+      ),
       body: RepositoryProvider.value(
         value: _productRepository,
         child: BlocProvider(
@@ -52,47 +59,21 @@ class _InventoryPageState extends State<InventoryPage> {
   }
 
   AppBar buildAppBar(BuildContext context) {
-    ColorScheme colorTheme = Theme.of(context).colorScheme;
+    TextTheme textTheme = Theme.of(context).textTheme;
+
     return AppBar(
-      backgroundColor: colorTheme.onPrimary,
-      elevation: 0,
+      titleSpacing: 0,
       leading: IconButton(
         icon: SvgPicture.asset("assets/icons/hivestock_logo.svg"),
-        onPressed: () {},
+        onPressed: () => Navigator.pushAndRemoveUntil(
+            context, HomePage.route(), (route) => false),
       ),
-      title: const Text("Hivestock"),
+      title: Text("Hivestock", style: textTheme.titleMedium),
       actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const AddProductScreen(),
-            ),
-          ),
-          child: Container(
-            height: 25,
-            width: 100,
-            decoration: BoxDecoration(
-              color: colorTheme.primary,
-              borderRadius: const BorderRadius.all(Radius.circular(25)),
-            ),
-            child: Center(
-                child: Text('+ Add Product',
-                    style:
-                        TextStyle(color: colorTheme.onPrimary, fontSize: 12))),
-          ),
-        ),
         IconButton(
           icon: const Icon(Icons.qr_code_scanner),
-          onPressed: () => Navigator.push(
-            context,
-            // TODO : Ne respecte pas la convention de navigation
-            MaterialPageRoute(
-              builder: (context) => const ScannerScreen(),
-            ),
-          ),
+          onPressed: () => Navigator.push(context, ScannerScreen.route()),
         ),
-        const SizedBox(width: kDefaultPadding / 2),
       ],
     );
   }

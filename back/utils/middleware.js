@@ -13,9 +13,9 @@ function TokenChecking(req, res, next) {
       algorithm: "HS256",
     }); // ? : dev key
 
-    const userId = decodedToken.userId;
+    const username = decodedToken.username;
     req.auth = {
-      userId: userId,
+      username: username,
     };
 
     next();

@@ -138,7 +138,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(state.copyWith(
         isAttemptingLogin: !state.isAttemptingLogin,
         isValid: !state.isAttemptingLogin
-            ? Formz.validate([state.username, state.email])
+            ? Formz.validate([state.username, state.password])
             : Formz.validate([
                 state.username,
                 state.password,
