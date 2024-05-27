@@ -1,8 +1,4 @@
 const sequelize = require("../config/db");
-const categorie = require("../model/tables/categorie");
-const commande = require("../model/tables/commande");
-const commande_fournisseur = require("../model/tables/commande_fournisseur");
-const ligne_commande = require("../model/tables/ligne_commande");
 const initModels = require("../model/tables/init-models").initModels;
 const models = initModels(sequelize);
 
@@ -96,9 +92,13 @@ module.exports = {
 
   overviewProduct : async(req,res) => {
     try{
-      const prodID = req.params.id;
+      const prodNom = req.query.nom;
 
-      const productInformation = await models.produit.findByPk(prodID);
+      const productInformation = await models.produit.findOne({
+        where: {
+          NOM : prodNom
+        } 
+      });
 
       console.table(productInformation.dataValues);
 
