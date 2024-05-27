@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-AppBar customAppBar(BuildContext context, {actions}) {
+AppBar customAppBar(BuildContext context, {List<Widget>? actions}) {
   ColorScheme colorTheme = Theme.of(context).colorScheme;
-  List<Widget>? actions;
 
   return AppBar(
     backgroundColor: colorTheme.onPrimary,
