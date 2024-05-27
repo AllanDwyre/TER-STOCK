@@ -32,8 +32,8 @@ router.post("/Products", auth, controllers.addProductController.addProduit);
 router.get("/Product/Overview", auth, controllers.productController.overviewProduct);
 router.get("/Product/Overview/imageProduit", auth, controllers.productController.getImage);
 router.get("/Product/Movement", auth, controllers.productController.productMovement);
-router.get("/Product/Finance", auth, controllers.productController.productFinance);
-router.get("/Product/QuantityHistory", auth, controllers.productController.productQuantityHistory);
+router.get("/Product/Finance",  auth, controllers.productController.productFinance);
+router.get("/Product/QuantityHistory",auth, controllers.productController.productQuantityHistory);
 
 router.get("Product/add", auth, controllers.addProductController.addProduit);
 

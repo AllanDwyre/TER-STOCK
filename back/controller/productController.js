@@ -569,7 +569,122 @@ module.exports = {
   },
 
   productQuantityHistory : async (req,res) => {
-    
+    try {
+      const period = req.query.period;// || 'month'; // 'day', 'week', 'month'
+      const productId = req.query.productId;
+      
+      // Calculer la date de début en fonction de la période
+      const startDate = new Date();
+      if (period === 'day') {
+          startDate.setDate(startDate.getDate() - 12);
+      } else if (period === 'week') {
+          startDate.setDate(startDate.getDate() - 7 * 12);
+      } else { // 'month'
+          startDate.setMonth(startDate.getMonth() - 12);
+      }
+
+      let groupByColumns, selectColumns;
+
+      if (period === 'day') {
+          groupByColumns = [
+              sequelize.literal('YEAR(`STOCK`.`DATE_STOCK`)'),
+              sequelize.literal('MONTH(`STOCK`.`DATE_STOCK`)'),
+              sequelize.literal('DAY(`STOCK`.`DATE_STOCK`)')
+          ];
+          selectColumns = [
+            [sequelize.literal('YEAR(`STOCK`.`DATE_STOCK`)'), 'Année'],
+            [sequelize.literal('MONTH(`STOCK`.`DATE_STOCK`)'), 'Mois'],
+            [sequelize.literal('DAY(`STOCK`.`DATE_STOCK`)'), 'Jour'],
+          ];
+      } else if (period === 'week') {
+          groupByColumns = [
+              sequelize.literal('YEAR(`STOCK`.`DATE_STOCK`)'),
+              sequelize.literal('WEEK(`STOCK`.`DATE_STOCK`, 3)') // MySQL specific syntax for ISO week number
+          ];
+          selectColumns = [
+            [sequelize.literal('YEAR(`STOCK`.`DATE_STOCK`)'), 'Année'],
+            [sequelize.literal('WEEK(`STOCK`.`DATE_STOCK`, 3)'), 'Semaine'],
+          ];
+      } else { // 'month'
+          groupByColumns = [
+              sequelize.literal('YEAR(`STOCK`.`DATE_STOCK`)'),
+              sequelize.literal('MONTH(`STOCK`.`DATE_STOCK`)')
+          ];
+          selectColumns = [
+            [sequelize.literal('YEAR(`STOCK`.`DATE_STOCK`)'), 'Année'],
+            [sequelize.literal('MONTH(`STOCK`.`DATE_STOCK`)'), 'Mois'],
+          ];
+        
+      }
+
+      // Requête pour la quantité moyenne
+      const revenus = await models.stock.findAll({
+          attributes: [
+            ...selectColumns,
+            [sequelize.fn('ROUND', sequelize.fn('AVG', sequelize.col('QUANTITE_STOCK'))), 'averageQuantity']
+          ],          
+          where: {
+            produit_id: productId, 
+            ['DATE_STOCK']: {
+              [Op.between]: [startDate, new Date()]
+          }
+          },
+          group: groupByColumns,
+          order: [
+              [sequelize.literal('YEAR(`STOCK`.`DATE_STOCK`)'), 'DESC'],
+              ...groupByColumns.slice(1).map(col => [col, 'DESC'])
+          ]
+      });
+      const revenusData = revenus.map(record => record.get());
+
+      // Récupérer le prix unitaire du produit
+      const product = await models.produit.findOne({
+        where: { PRODUIT_ID: productId },
+        attributes: ['PRIX_UNIT']
+      });
+
+      if (!product) {
+          return res.status(404).json({ message: 'Product not found' });
+      }
+
+      const prixUnit = product.PRIX_UNIT;
+
+
+      // Fusionner les résultats des ventes et des achats par période
+      const mergedData = {};
+
+      revenusData.forEach(sale => {
+          let key, displayName;
+          if (period === 'day') {
+              key = `${sale['Année']}-${sale['Mois']}-${sale['Jour']}`;
+              displayName = `${sale['Jour']} ${getMonthName(sale['Mois'])} ${sale['Année']}`;
+          } else if (period === 'week') {
+              key = `${sale['Année']}-W${sale['Semaine']}`;
+              const firstDayOfWeek = getFirstDayOfWeek(sale['Année'], sale['Semaine']);
+              displayName = `Semaine du ${firstDayOfWeek.toLocaleDateString()} - Semaine ${sale['Semaine']} de l'année ${sale['Année']}`;
+              //displayName = `Semaine ${sale['Semaine']} ${sale['Année']}`;
+          } else {
+              key = `${sale['Année']}-${sale['Mois']}`;
+              displayName = `${getMonthName(sale['Mois'])} ${sale['Année']}`;
+          }
+
+          if (!mergedData[key]) {
+            mergedData[key] = { Période: displayName, AverageQuantity: 0 , Income: 0};
+        }
+        mergedData[key].AverageQuantity = sale.averageQuantity;
+        mergedData[key].Income += sale.averageQuantity *prixUnit;
+      });
+
+      const result = Object.values(mergedData);
+      console.log(result);
+      res.status(200).json(result);
+
+    } catch (error) {
+        console.error('Erreur lors de la récupération des quantités et de revenus par période :', error);
+        res.status(500).json({
+            message: 'Erreur lors de la récupération des quantités et des revenus par période.'
+        });
+    }
   },
 
 
