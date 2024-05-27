@@ -14,16 +14,16 @@ const sequelizeLocal = new Sequelize(
   }
 );
 
-// // Ici on teste la connexion à la base de données locale
-// async function testConnectionLocale() {
-//   try {
-//     await sequelizeLocal.authenticate();
-//     console.log("Connexion à la base de données Locale établie avec succès.");
-//   } catch (error) {
-//     console.error("Impossible de se connecter à la base de données:", error);
-//   }
-// }
-// testConnectionLocale();
+ // Ici on teste la connexion à la base de données locale
+ async function testConnectionLocale() {
+   try {
+     await sequelizeLocal.authenticate();
+     console.log("Connexion à la base de données Locale établie avec succès.");
+   } catch (error) {
+     console.error("Impossible de se connecter à la base de données:", error);
+   }
+ }
+ testConnectionLocale();
 
 const sequelizeHeroku = new Sequelize(
   process.env.DB_NAMEH,

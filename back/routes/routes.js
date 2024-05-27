@@ -37,16 +37,8 @@ router.get("/inventory/LowStockProductsCount",auth,controllers.inventoryNINACont
 router.get("/Order", auth, controllers.orderController.showOrders);
 router.get("/Order/newOrder", auth, controllers.addOrderController.newOrder);
 router.get("/Order/orderPagination",auth,controllers.orderController.getOrderPagination);
-router.get(
-  "/Product/topSelling",
-   auth, 
-   controllers.productController.getTopSellingProduct
-  );
-router.get(
-"/Product/overview",
-  auth, 
-  controllers.productController.getProductsOverview
-);
+router.get(  "/Product/topSelling",   auth,    controllers.productController.getTopSellingProduct  );
+//router.get("/Product/overview",  auth,   controllers.productController.getProductsOverview);
 
 router.get("Order/newOrder", auth, controllers.addOrderController.newOrder);
 router.get("/Order/TotalOrdersCount",auth,controllers.ordersController.getTotalOrdersCount);
@@ -64,8 +56,6 @@ router.get("/homePage/totalOrders", auth, controllers.HomePageController.getTota
 router.get("/homePage/totalfournisseur", auth, controllers.HomePageController.getNumberSupplier);
 router.get("/homePage/seuilProducts", auth, controllers.HomePageController.getReplenishmentLevel);
 router.get("/homePage/salesAndPurchasesPeriod", auth, controllers.HomePageController.getSalesAndPurchasesByPeriod);
-
-//Order
 router.get("/homePage/totalPrice", auth, controllers.HomePageController.getTotalOrdersPrice);
 
 /*=============================CRUD===================================

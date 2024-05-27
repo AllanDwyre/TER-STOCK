@@ -1,8 +1,4 @@
 const sequelize = require("../config/db");
-const categorie = require("../model/tables/categorie");
-const commande = require("../model/tables/commande");
-const commande_fournisseur = require("../model/tables/commande_fournisseur");
-const ligne_commande = require("../model/tables/ligne_commande");
 const initModels = require("../model/tables/init-models").initModels;
 const models = initModels(sequelize);
 

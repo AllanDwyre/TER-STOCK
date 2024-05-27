@@ -1,18 +1,9 @@
 const DataTypes = require('sequelize');
 const sequelize = require('../config/db');
 //const router = express.Router();
-const Produit = require('../model/tables/produit')(sequelize, DataTypes);
 const CommFourn = require('../model/tables/commande_fournisseur')(sequelize, DataTypes);
-const Fournisseur = require('../model/tables/fournisseur')(sequelize, DataTypes);
-const Prod = require("../model/prodModel");
-/*countTable(nomTable)*/
-const KEY = process.env.DEV_KEY;
-var jwt = require("jsonwebtoken");
 const initModels = require("../model/tables/init-models").initModels;
 const models = initModels(sequelize);
-const sharedData = {
-    produit_id: ''
-  };
 
 module.exports = {
 
