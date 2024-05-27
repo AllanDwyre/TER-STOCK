@@ -18,6 +18,7 @@ module.exports = {
         const productCategorie = req.body.productCategorie;
         const productDimensions = req.body.productDimensions;
         const productPrix = req.body.productPrix; 
+        const imageProduit = req.file.buffer;
 
         await Categorie.findOne({
           where: {
@@ -48,8 +49,6 @@ module.exports = {
         .catch(error => {
           console.error('Une erreur est survenue :', error);
         });      
-
-
   
         /* Créez le produit dans la base de données */
         const nouveauProduit = await Produit.create({
@@ -59,6 +58,7 @@ module.exports = {
           PRODUCT_CATEGORIE: req.session.categorie_id,
           DIMENSIONS: productDimensions,
           PRIX_UNIT: productPrix,
+          PRODUIT_IMAGE : imageProduit
           // Affectez d'autres champs de produit ici selon les données reçues
         }).then(res => {
           console.log(res)
@@ -71,6 +71,20 @@ module.exports = {
         console.error('Erreur lors de l\'ajout du produit :', error);
         res.status(500).json({ success: false, message: "Une erreur s'est produite lors de l'ajout du produit." });
       }
-    }
+    },
+
+    /* Contrôleur pour télécharger une image
+    uploadImage : async (req, res) => {
+      try {
+        const { nomProduit } = req.body;
+        const imageProduit = req.file.buffer;
+
+        const produit = await Produit.create({ nomProduit, imageProduit });
+
+        res.status(201).json(produit);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    }*/
     
   };
