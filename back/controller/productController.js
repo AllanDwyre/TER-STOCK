@@ -92,9 +92,13 @@ module.exports = {
 
   overviewProduct : async(req,res) => {
     try{
-      const prodID = req.params.id;
+      const prodNom = req.query.nom;
 
-      const productInformation = await models.produit.findByPk(prodID);
+      const productInformation = await models.produit.findOne({
+        where: {
+          NOM : prodNom
+        } 
+      });
 
       console.table(productInformation.dataValues);
 

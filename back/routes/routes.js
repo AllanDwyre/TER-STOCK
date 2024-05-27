@@ -25,7 +25,7 @@ router.get("/Search", auth, controllers.SearchBarController.findAlikeObject);
 //produit
 router.get("/Products", auth, controllers.productController.getProductById);
 router.post("/Products", auth, controllers.addProductController.addProduit);
-router.get("Product/Overview", auth, controllers.productController.overviewProduct);
+router.get("/Product/Overview", auth, controllers.productController.overviewProduct);
 
 //inventory
 router.get("/Inventory/fetchPagination",auth,controllers.productController.getProductPagination);
