@@ -569,7 +569,7 @@ module.exports = {
   },
 
   productQuantityHistory : async (req,res) => {
-
+    
   },
 
 
