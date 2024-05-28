@@ -167,7 +167,7 @@ module.exports = {
 
   getQuantityDetails : async (req,res) => {
     try {
-      const prodId = req.query.id;
+      const prodId = req.query.productId;
       const quantiteProd = await models.produit.findOne({
         attributes : [
           'QUANTITE', 'SEUIL'
@@ -427,28 +427,6 @@ module.exports = {
           message: 'Erreur lors de la récupération des ventes et des achats par période.'
       });
   }
-  },
-
-  requeteMovementEtQuantityDetails : async(req,res) => {
-    try {
-      const [quantityDetails, productMovementData] = await Promise.all([
-        getQuantityDetails(req, res),
-        productMovement(req, res)
-      ]);
-  
-      const mergedResult = {
-        quantityDetails,
-        productMovementData
-      };
-  
-      res.status(200).json(mergedResult);
-    } catch (error) {
-      res.status(500).json({
-        message: 'Erreur lors de la fusion des données',
-        error: error.message
-      });
-    }
-
   },
 
 

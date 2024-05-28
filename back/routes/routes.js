@@ -36,7 +36,7 @@ router.get("/Product/Overview/getSupplier", controllers.productController.getSup
 router.get("/Product/Overview/getEmplacement", controllers.productController.getEmplacement);
 router.get("/Product/Overview/getQuantityDetails",  controllers.productController.getQuantityDetails);
 
-router.get("/Product/Movement", auth, controllers.productController.productMovement);
+router.get("/Product/Movement", controllers.productController.productMovement);
 router.get("/Product/Finance",  auth, controllers.productController.productFinance);
 router.get("/Product/QuantityHistory", auth, controllers.productController.productQuantityHistory);
 
