@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_stock/home/views/navigation_menu.dart';
+import 'package:hive_stock/order/bloc/orders_bloc.dart';
+import 'package:hive_stock/order/repository/order_repository.dart';
 import 'package:hive_stock/scanner/views/scanner_page.dart';
+
+import 'orders_body.dart';
 
 class OrdersPage extends StatelessWidget implements Menu {
   const OrdersPage({super.key});
@@ -20,7 +25,7 @@ class OrdersPage extends StatelessWidget implements Menu {
     TextTheme textTheme = Theme.of(context).textTheme;
 
     return FloatingActionButton.extended(
-      label: Text("Add order", style: textTheme.bodySmall),
+      label: Text("Add Order", style: textTheme.bodySmall),
       icon: const Icon(Icons.add),
       onPressed: null, //() => Navigator.push(context, AddProductPage.route()),
     );
@@ -28,6 +33,14 @@ class OrdersPage extends StatelessWidget implements Menu {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return RepositoryProvider(
+      create: (context) => OrderRepository(),
+      child: BlocProvider(
+        create: (context) => OrdersBloc(
+            orderRepository: RepositoryProvider.of<OrderRepository>(context))
+          ..add(OrdersFetched()),
+        child: const OrdersBody(),
+      ),
+    );
   }
 }
