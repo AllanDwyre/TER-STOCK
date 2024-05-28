@@ -31,6 +31,7 @@ router.get("/Products", auth, controllers.productController.getProductById);
 router.post("/Product/add", /*upload.single('image'),*/ controllers.addProductController.addProduit);
 
 router.get("/Product/Overview", auth, controllers.productController.overviewProduct);
+
 router.get("/Product/Overview/imageProduit", auth, controllers.productController.getImage);
 router.get("/Product/Overview/getSupplier", controllers.productController.getSupplier);
 router.get("/Product/Overview/getEmplacement", controllers.productController.getEmplacement);
@@ -63,6 +64,7 @@ router.get("/Order/TotalOrdersInTransitFournisseur",auth,controllers.ordersContr
 router.get("/Order/OrderByDate", auth, controllers.ordersController.getOrderByDate);
 router.get("/Order/OrderByPrice", auth, controllers.ordersController.getOrdersWithTotalPriceLessThan);
 router.get("/Order/OrderInDelevery", auth, controllers.ordersController.getOrdersInDelivery);
+
 
 //Home Page 
 router.get("/homePage/totalProducts", auth, controllers.HomePageController.getTotalProductsCount);

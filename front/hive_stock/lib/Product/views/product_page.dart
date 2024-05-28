@@ -7,8 +7,10 @@ import 'package:hive_stock/utils/methods/logger.dart';
 import 'product_body.dart';
 
 class ProductPage extends StatefulWidget {
-  const ProductPage({super.key, required this.produitId});
+  const ProductPage(
+      {super.key, required this.produitId, this.isFullHeader = true});
   final int produitId;
+  final bool isFullHeader;
 
   static Route<void> route({required int produitId}) {
     return MaterialPageRoute<void>(
@@ -42,7 +44,9 @@ class _ProductPageState extends State<ProductPage> {
       body: BlocProvider(
         create: (context) => ProductBloc(productRepository: _productRepository)
           ..add(ProductFetched(id: widget.produitId)),
-        child: const ProductBody(),
+        child: ProductBody(
+          isFullHeader: widget.isFullHeader,
+        ),
       ),
     );
   }

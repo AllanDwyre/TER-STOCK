@@ -39,11 +39,6 @@ class _InventoryPageState extends State<InventoryPage> {
   // static List<Product> productList = products;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
       create: (context) => ProductRepository(),
