@@ -114,53 +114,7 @@ async function synchronizeTablesInverse() {
   }
 }
 
-//synchronizeTablesInverse();
-/*
-async function synchronizeAdresse() {
-  try {
-      // Synchronisation de la table categorie
-      //await modelLocal.sync();
-      const cloudAdresses = await modelsCloud.users.findAll();
 
-    // Pour chaque donnée locale, vérifiez si elle existe déjà dans le cloud
-    for (const cloud of cloudAdresses) {
-      const userId = cloud.dataValues.USER_ID;
-      const cloudData = cloud.dataValues;
-
-      // Vérifiez si la catégorie locale existe déjà dans le cloud
-      const localAdresse = await modelsLocale.users.findOne({
-          where: {
-              USER_ID: userId
-          }
-      });
-      for (const key in cloudData) {
-
-      // Si la catégorie n'existe pas dans le cloud, insérez-la
-      if (!localAdresse) {
-        await modelsLocale.users.create(cloudData);
-        console.log(`Adresse synchronisée : ${userId}, ${cloudData}`);
-      }else if (cloudData[key] !== localAdresse[key]) {
-        //cloudAdresse.dataValues !== localData
-        await localAdresse.update(cloudData);
-        console.log(`Adresse mise à jour : ${userId}, ${cloudData}`);
-        //console.log("non");
-    }
-      else{
-        console.log("Aucune insertion ou mise à jour nécessaire ");
-      }
-    }
-  }
-
-    console.log("Toutes les données ont été synchronisées avec succès.");
-
-    // Ajoutez d'autres modèles et synchronisations si nécessaire pour d'autres tables
-  } catch (error) {
-    console.error('Erreur lors de la synchronisation des données :', error);
-  }
-}
-
-synchronizeAdresse();
-*/
 
 cron.schedule('0 0 1 * *', () => { 
   console.log('Début de la synchronisation mensuelle.');

@@ -62,7 +62,7 @@ module.exports = function(sequelize, DataTypes) {
     SEUIL: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      defaultValue: 5
+      defaultValue: 7
     },
     QUANTITE: {
       type: DataTypes.INTEGER,

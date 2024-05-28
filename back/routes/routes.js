@@ -28,7 +28,7 @@ router.get("/Search", auth, controllers.SearchBarController.findAlikeObject);
 //=========================PAGE====================================
 //produit
 router.get("/Products", auth, controllers.productController.getProductById);
-router.post("Product/add", auth, controllers.addProductController.addProduit);
+router.post("/Product/add", /*upload.single('image'),*/ controllers.addProductController.addProduit);
 
 router.get("/Product/Overview", auth, controllers.productController.overviewProduct);
 router.get("/Product/Overview/imageProduit", auth, controllers.productController.getImage);
@@ -38,7 +38,7 @@ router.get("/Product/Overview/getQuantityDetails",  controllers.productControlle
 
 router.get("/Product/Movement", auth, controllers.productController.productMovement);
 router.get("/Product/Finance",  auth, controllers.productController.productFinance);
-router.get("/Product/QuantityHistory",auth, controllers.productController.productQuantityHistory);
+router.get("/Product/QuantityHistory", auth, controllers.productController.productQuantityHistory);
 
 
 //inventory
