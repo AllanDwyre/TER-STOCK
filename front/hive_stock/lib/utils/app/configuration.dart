@@ -29,5 +29,5 @@ class ApiConfiguration {
       'http://10.0.2.2:3000'; // alias localhost
 
   static const String _debugBaseUrlIOS =
-      'http://192.168.1.102:3000'; // alias localhost
+      'http://127.0.0.1:3000'; // alias localhost
 }
