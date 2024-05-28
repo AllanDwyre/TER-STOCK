@@ -11,79 +11,20 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> {
-  List<Object>? orders;
-  List<Object>? searchResults;
-  String searchQuery = '';
-
-  // ! TODO : error here
-  void onQueryChanged(String query) {
-    searchQuery = query;
-    setState(() {
-      searchResults = orders!
-          .where((item) => item.hashCode
-              .toString()
-              .toLowerCase()
-              .contains(query.toLowerCase()))
-          .toList();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return const SingleChildScrollView(
       child: Column(
         children: [
           CustomSearchBar(
             myLabelText: "Search product, supplier, order",
-            myOnChanged: onQueryChanged,
+            myOnChanged: null,
           ),
           // * Inventory overall stats
-          const InventorySummary(),
-          const ProductSummary(),
-          const SalesAndPurchases(),
+          InventorySummary(),
+          ProductSummary(),
+          SalesAndPurchases(),
         ],
-      ),
-    );
-  }
-}
-
-class SalesAndPurchases extends StatelessWidget {
-  const SalesAndPurchases({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    TextTheme textTheme = Theme.of(context).textTheme;
-    ColorScheme colorTheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.all(kDefaultPadding / 2),
-      child: Container(
-        width: size.width - 2 * kDefaultPadding,
-        decoration: BoxDecoration(
-          color: colorTheme.outlineVariant,
-          borderRadius: const BorderRadius.all(Radius.circular(6.0)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(kDefaultPadding / 2),
-          child: Column(
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.fromLTRB(0, 0, 0, kDefaultPadding / 2),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Sales & Purchases",
-                    style: textTheme.titleMedium?.copyWith(color: Colors.black),
-                  ),
-                ),
-              ),
-              const BarChartWidget(), // https://fluttergems.dev/packages/fl_chart/
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -310,6 +251,48 @@ class InventorySummary extends StatelessWidget {
                   ],
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SalesAndPurchases extends StatelessWidget {
+  const SalesAndPurchases({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    TextTheme textTheme = Theme.of(context).textTheme;
+    ColorScheme colorTheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.all(kDefaultPadding / 2),
+      child: Container(
+        width: size.width - 2 * kDefaultPadding,
+        decoration: BoxDecoration(
+          color: colorTheme.outlineVariant,
+          borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(kDefaultPadding / 2),
+          child: Column(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.fromLTRB(0, 0, 0, kDefaultPadding / 2),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Sales & Purchases",
+                    style: textTheme.titleMedium?.copyWith(color: Colors.black),
+                  ),
+                ),
+              ),
+              const BarChartWidget(), // https://fluttergems.dev/packages/fl_chart/
             ],
           ),
         ),

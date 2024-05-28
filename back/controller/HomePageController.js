@@ -284,7 +284,10 @@ module.exports={
                     TYPE_COMMANDE:'commande'
                 }
             });
+
+           
             const commandeIds = commandeclient.map(order =>order.COMM_CLIENT_ID);
+            
 
             // Récupérer toutes les lignes de commande avec le type de commande 'commande'
             const orderLines = await models.ligne_commande.findAll({
@@ -298,6 +301,8 @@ module.exports={
                     },
                 }]
             });
+
+            
     
             // Initialiser un objet pour stocker la somme des quantités commandées pour chaque produit
             const quantitiesByProduct = {};
@@ -308,15 +313,26 @@ module.exports={
                 const quantity = orderLine.QUANTITE;
                 quantitiesByProduct[productId] = (quantitiesByProduct[productId] || 0) + quantity;
             });
+
+            const productIds = Object.keys(quantitiesByProduct);
     
             // Récupérer les informations sur les produits depuis la table produit
-            const products = await models.produit.findAll();
+            const products = await models.produit.findAll({
+                attributes: ['PRODUIT_ID','NOM', 'QUANTITE'], // Ne pas oublier d'ajouter PRODUIT_IMAGE
+                where: {
+                    PRODUIT_ID : {
+                        [Sequelize.Op.in] : productIds
+                    }
+                }
+            });
+
+            console.log(products);
     
             // Vérifier les produits en stock alert
             const stockAlertProducts = [];
             products.forEach(product => {
                 const productId = product.PRODUIT_ID;
-                const availableQuantity = product.QUANTITE_STOCK || 0;
+                const availableQuantity = product.QUANTITE || 0;
                 const orderedQuantity = quantitiesByProduct[productId] || 0;
     
                 if (orderedQuantity >= availableQuantity) {
