@@ -27,6 +27,7 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   void initState() {
+    _productRepository = ProductRepository();
     super.initState();
   }
 

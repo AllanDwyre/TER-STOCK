@@ -208,7 +208,6 @@ class _ProductHeader extends StatelessWidget {
                         ?.copyWith(color: colorTheme.onBackground),
                   ),
                   const SizedBox(height: 10),
-                  // TODO : Make it recursive
                   // ? : Sliver List ?
                   CustomSnackbar(
                     type: SnackbarType.warning,

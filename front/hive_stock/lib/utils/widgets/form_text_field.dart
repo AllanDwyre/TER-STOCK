@@ -26,7 +26,7 @@ class FormTextField extends StatelessWidget {
         floatingLabelBehavior: FloatingLabelBehavior.always,
         labelText: labelText,
         hintText: hintText,
-        errorText: errorText,
+        errorText : errorText,
       ),
     );
   }
