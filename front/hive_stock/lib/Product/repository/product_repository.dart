@@ -25,7 +25,7 @@ class ProductRepository {
     final params = {"id": productId};
 
     final response =
-        await BridgeController.request.get("/Product", queryParameters: params);
+        await BridgeController.request.get("/Products", queryParameters: params);
 
     if (response.statusCode != 200) {
       throw Exception(response);

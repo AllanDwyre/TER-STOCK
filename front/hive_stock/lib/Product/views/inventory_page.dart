@@ -37,7 +37,6 @@ class InventoryPage extends StatefulWidget implements Menu {
 
 class _InventoryPageState extends State<InventoryPage> {
   // static List<Product> productList = products;
-  late final ProductRepository _productRepository;
 
   @override
   void initState() {
@@ -46,10 +45,13 @@ class _InventoryPageState extends State<InventoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => InventoryBloc(productRepository: _productRepository)
-        ..add(InventoryFetched()), // we do the initial fetch
-      child: const InventoryBody(),
+    return RepositoryProvider(
+      create: (context) => ProductRepository(),
+      child: BlocProvider(
+        create: (context) => InventoryBloc(productRepository: RepositoryProvider.of<ProductRepository>(context))
+          ..add(InventoryFetched()), // we do the initial fetch
+        child: const InventoryBody(),
+      ),
     );
   }
 }
