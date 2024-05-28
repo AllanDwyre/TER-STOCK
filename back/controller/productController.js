@@ -165,22 +165,88 @@ module.exports = {
 
   getProductOverview : async (req,res) => {
     try{
-      
+
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
 
-  getSupplier : async (req,res) => {
-
-  },
-
-  getEmplacement : async (req,res) => {
-
-  },
-
   getQuantityDetails : async (req,res) => {
+    try {
+      const prodId = req.query.productId;
+      const quantiteProd = await models.produit.findOne({
+        attributes : [
+          'QUANTITE', 'SEUIL'
+        ],
+        where: {
+          PRODUIT_ID: prodId
+        }
+      });
 
+      const commandeClient = await models.commande_client.findAll({
+        attributes: ['COMM_CLIENT_ID'],
+        where : {
+          TYPE_COMMANDE : 'commande'
+        }
+      });
+
+      const commandeIds = commandeClient.map(order => order.COMM_CLIENT_ID);
+      
+      const atPreparation = await models.ligne_commande.count({
+        include: [
+          {
+              model: models.commande,
+              as: "COMMANDE",
+              attributes: [],
+              where: {
+                  DATE_DEPART : null,
+                  COMMANDE_ID : {
+                    [Op.in] : commandeIds
+                  }
+              }
+          }
+        ],
+
+        where: {
+          PRODUIT_ID : prodId,
+        }
+      });
+
+      const onTheWay = await models.ligne_commande.count({
+        include: [
+          {
+              model: models.commande,
+              as: "COMMANDE",
+              attributes: [],
+              where: {
+                DATE_DEPART : {
+                  [Op.not] : null
+                },
+                COMMANDE_ID : {
+                  [Op.in] : commandeIds
+                }
+                 
+              }
+          }
+        ],
+
+        where: {
+          PRODUIT_ID : prodId,
+        }
+      });
+
+      // Constructing response object
+    const response = {
+      Quantity: quantiteProd.QUANTITE,
+      atPreparation: atPreparation,
+      onTheWay: onTheWay,
+      TressHoldValue: quantiteProd.SEUIL
+    };
+
+    res.status(200).json(response);
+    }catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   },
 
   productMovement : async(req,res) => {
@@ -368,6 +434,7 @@ module.exports = {
       });
   }
   },
+
 
   // Requete graphe pour recup le total de revenus que ce produit a généré par mois/semaine/jour
   productFinance : async (req,res) => {
