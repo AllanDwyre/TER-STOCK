@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hive_stock/home/views/navigation_menu.dart';
 import 'package:hive_stock/scanner/views/scanner_page.dart';
 
+import 'orders_body.dart';
+
 class OrdersPage extends StatelessWidget implements Menu {
   const OrdersPage({super.key});
 
@@ -28,6 +30,6 @@ class OrdersPage extends StatelessWidget implements Menu {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return OrdersBody();
   }
 }

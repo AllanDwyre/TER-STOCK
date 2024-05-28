@@ -1,7 +1,5 @@
 const { Sequelize } = require("sequelize");
 const sequelize = require("../config/db");
-const KEY = process.env.DEV_KEY;
-var jwt = require("jsonwebtoken");
 const initModels = require("../model/tables/init-models").initModels;
 const models = initModels(sequelize);
 
