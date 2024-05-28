@@ -115,11 +115,11 @@ module.exports = {
 
   overviewProduct : async(req,res) => {
     try{
-      const prodNom = req.query.nom;
+      const prodId = req.query.id;
 
       const productInformation = await models.produit.findOne({
         where: {
-          NOM : prodNom
+          PRODUIT_ID : prodId
         } 
       });
 
@@ -147,6 +147,18 @@ module.exports = {
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
+  },
+
+  getSupplier : async (req,res) => {
+
+  },
+
+  getEmplacement : async (req,res) => {
+
+  },
+
+  getQuantityDetails : async (req,res) => {
+
   },
 
   productMovement : async(req,res) => {
