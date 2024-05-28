@@ -43,9 +43,9 @@ router.get(
    controllers.productController.getTopSellingProduct
   );
 router.get(
-"/Product/overview",
+"/Product/topSellingStock",
   auth, 
-  controllers.productController.getProductsOverview
+  controllers.productController.getTopStockPagination
 );
 
 router.get("Order/newOrder", auth, controllers.addOrderController.newOrder);

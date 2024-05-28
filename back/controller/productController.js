@@ -206,6 +206,58 @@ module.exports = {
     }
   },
 
+  getTopStockPagination: async (req,res) => {
+    try {
+      const start = parseInt(req.query.start);
+      const limit = parseInt(req.query.limit);
+
+      if (isNaN(start) || isNaN(limit)) {
+        throw new Error("start and limit must be enter as a positive number !");
+      }
+      console.log(`Top Selling Stock Pagination => start : ${start}, limit : ${limit}`);
+      models.produit.findAll({
+        include: [
+          {
+            model: models.produit_vendu,
+            as: "produit_vendus",
+            attributes: ['QUANTITE'],
+            required: true,
+          },
+          {
+            model: models.inventaire_produit,
+            as: "inventaire_produits",
+            attributes:['QUANTITE_OBSERVEE'],
+            requuired:true
+          }
+        ],
+        attributes:['NOM','PRIX_UNIT'],
+        order: [[sequelize.col('produit_vendus.QUANTITE'), "DESC"]],
+        // offset: start
+        // limit: limit
+      }).then((result) => {
+        const formattedResult = result.map((produit) => {
+          return produit.dataValues;
+        });
+        console.table(formattedResult);
+        console.table(
+          formattedResult.map((produit) => {
+            return produit.inventaire_produits[0].dataValues;
+          })
+        );
+        res.status(200).json(result);
+      })
+      .catch((error) => {
+        console.error("Error fetching top selling stock:", error);
+      });
+  } catch (error) {
+    res.status(500).json({
+      message:
+        "Erreur lors de la récupération des produits: " + error.message,
+    });
+  }
+  }
+  
+
   // getProductsOverview: async (req,res) => {
   //   try {
   //     consolelog("Products Overview =>");
