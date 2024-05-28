@@ -30,7 +30,10 @@ router.get("/Search", auth, controllers.SearchBarController.findAlikeObject);
 router.get("/Products", auth, controllers.productController.getProductById);
 router.post("/Products", auth, controllers.addProductController.addProduit);
 router.get("/Product/Overview", auth, controllers.productController.overviewProduct);
-router.get("Product/Overview/imageProduit", auth, controllers.productController.getImage);
+router.get("/Product/Overview/imageProduit", auth, controllers.productController.getImage);
+router.get("/Product/Movement", auth, controllers.productController.productMovement);
+router.get("/Product/Finance",  auth, controllers.productController.productFinance);
+router.get("/Product/QuantityHistory",auth, controllers.productController.productQuantityHistory);
 
 router.get("Product/add", auth, controllers.addProductController.addProduit);
 
@@ -64,6 +67,9 @@ router.get("/homePage/totalfournisseur", auth, controllers.HomePageController.ge
 router.get("/homePage/seuilProducts", auth, controllers.HomePageController.getReplenishmentLevel);
 router.get("/homePage/salesAndPurchasesPeriod", auth, controllers.HomePageController.getSalesAndPurchasesByPeriod);
 router.get("/homePage/totalPrice", auth, controllers.HomePageController.getTotalOrdersPrice);
+router.get("/homePage/lowStocksProducts", auth, controllers.HomePageController.getLowStockProducts);
+router.get("/homePage/stockAlert", auth, controllers.HomePageController.calculateStockAlert);
+
 //addorderpage
 
 router.post("/Order/newOrder",auth,controllers.addOrderController.addOrder);

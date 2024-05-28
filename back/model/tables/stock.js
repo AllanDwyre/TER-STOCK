@@ -1,39 +1,31 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('COMMANDE', {
-    COMMANDE_ID: {
+  return sequelize.define('STOCK', {
+    STOCK_ID: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    DATE_COMMANDE: {
+    QUANTITE_STOCK: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    DATE_STOCK: {
       type: DataTypes.DATE,
       allowNull: true
     },
-    EMPLOYE_ID: {
+    PRODUIT_ID: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'EMPLOYE',
-        key: 'EMPLOYE_ID'
+        model: 'PRODUIT',
+        key: 'PRODUIT_ID'
       }
-    },
-    DATE_REEL_RECU: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    PRIX_TOTAL: {
-      type: DataTypes.DECIMAL(6,2),
-      allowNull: true
-    },
-    LOCATION_TYPE: {
-      type : DataTypes.ENUM('entrepot','magasin'),
-      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'COMMANDE',
+    tableName: 'STOCK',
     timestamps: false,
     indexes: [
       {
@@ -41,14 +33,14 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "COMMANDE_ID" },
+          { name: "STOCK_ID" },
         ]
       },
       {
-        name: "FK_CF_EMPLOYE",
+        name: "FK_STOCK",
         using: "BTREE",
         fields: [
-          { name: "EMPLOYE_ID" },
+          { name: "PRODUIT_ID" },
         ]
       },
     ]
