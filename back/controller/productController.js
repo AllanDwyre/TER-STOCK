@@ -149,6 +149,14 @@ module.exports = {
     }
   },
 
+  getProductOverview : async (req,res) => {
+    try{
+      
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
   getSupplier : async (req,res) => {
 
   },
