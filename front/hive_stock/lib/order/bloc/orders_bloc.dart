@@ -53,8 +53,8 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
             ));
     } on Exception catch (e) {
       emit(state.copyWith(status: OrdersStatus.failure));
-      logger.e('Erreur de récupération de list produits\n=> $e',
-          error: 'Product Bloc');
+      logger.e('Erreur de récupération de list orders\n=> $e',
+          error: 'Order Bloc');
     }
   }
 
@@ -65,6 +65,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       state.copyWith(
         type: event.type,
         hasReachedMax: false,
+        orders: List.empty(),
         // orders: state.orders.
       ),
     );
@@ -74,10 +75,9 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     try {
       final List<Order> orders = await _orderRepository.fetchOrders(
           start: startIndex, limit: _orderLimit, type: state.type);
-
       return orders;
     } catch (e) {
-      logger.e("error fetching posts: $e", error: 'Orders Bloc');
+      logger.w("error fetching posts: $e", error: 'Orders Bloc');
       return List<Order>.empty();
     }
   }
