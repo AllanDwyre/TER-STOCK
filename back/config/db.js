@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 require("dotenv").config();
-const cron = require('node-cron');
+const cron = require("node-cron");
 
 // Configuration de la connexion à la base de données local’
 const sequelizeLocal = new Sequelize(
@@ -14,16 +14,16 @@ const sequelizeLocal = new Sequelize(
   }
 );
 
- // Ici on teste la connexion à la base de données locale
- async function testConnectionLocale() {
-   try {
-     await sequelizeLocal.authenticate();
-     console.log("Connexion à la base de données Locale établie avec succès.");
-   } catch (error) {
-     console.error("Impossible de se connecter à la base de données:", error);
-   }
- }
- testConnectionLocale();
+// Ici on teste la connexion à la base de données locale
+async function testConnectionLocale() {
+  try {
+    await sequelizeLocal.authenticate();
+    console.log("Connexion à la base de données Locale établie avec succès.");
+  } catch (error) {
+    console.error("Impossible de se connecter à la base de données:", error);
+  }
+}
+testConnectionLocale();
 
 const sequelizeHeroku = new Sequelize(
   process.env.DB_NAMEH,
@@ -41,11 +41,13 @@ async function testConnectionHeroku() {
     await sequelizeHeroku.authenticate();
     console.log("Connexion à la base de données Heroku établie avec succès.");
   } catch (error) {
-    console.error("Impossible de se connecter à la base de données Heroku:", error);
+    console.error(
+      "Impossible de se connecter à la base de données Heroku:",
+      error
+    );
   }
 }
 testConnectionHeroku();
-
 
 // Connexion à la base de données cloud
 const sequelizeCloud = new Sequelize(
@@ -65,7 +67,10 @@ async function testConnectionCloud() {
     await sequelizeCloud.authenticate();
     console.log("Connexion à la base de données Cloud établie avec succès.");
   } catch (error) {
-    console.error("Impossible de se connecter à la base de données Cloud:", error);
+    console.error(
+      "Impossible de se connecter à la base de données Cloud:",
+      error
+    );
   }
 }
 testConnectionCloud();
@@ -81,92 +86,44 @@ const modelsCloud = initModels(sequelizeCloud, DataTypes);
 // Fonction de synchronisation des données pour chaque modèle
 async function synchronizeTables() {
   try {
-    for(const model in modelsCloud ){
+    for (const model in modelsCloud) {
       const tableLocale = modelsLocale[model];
       const tableCloud = modelsCloud[model];
       const localModels = await tableLocale.findAll();
-      for (const local of localModels){
+      for (const local of localModels) {
         const localModel = local.dataValues;
         await tableCloud.upsert(localModel);
       }
     }
     console.log("Toutes les données ont été synchronisées avec succès.");
   } catch (error) {
-    console.error('Erreur lors de la synchronisation des données :', error);
+    console.error("Erreur lors de la synchronisation des données :", error);
   }
 }
 
-
 async function synchronizeTablesInverse() {
   try {
-    for(const model in modelsLocale ){
+    for (const model in modelsLocale) {
       const tableCloud = modelsCloud[model];
       const tableLocale = modelsLocale[model];
       const cloudModels = await tableCloud.findAll();
-      for (const cloud of cloudModels){
+      for (const cloud of cloudModels) {
         const cloudModel = cloud.dataValues;
         await tableLocale.upsert(cloudModel);
       }
     }
     console.log("Toutes les données ont été synchronisées avec succès.");
   } catch (error) {
-    console.error('Erreur lors de la synchronisation des données :', error);
+    console.error("Erreur lors de la synchronisation des données :", error);
   }
 }
 
-//synchronizeTablesInverse();
-/*
-async function synchronizeAdresse() {
-  try {
-      // Synchronisation de la table categorie
-      //await modelLocal.sync();
-      const cloudAdresses = await modelsCloud.users.findAll();
+synchronizeTablesInverse();
 
-    // Pour chaque donnée locale, vérifiez si elle existe déjà dans le cloud
-    for (const cloud of cloudAdresses) {
-      const userId = cloud.dataValues.USER_ID;
-      const cloudData = cloud.dataValues;
-
-      // Vérifiez si la catégorie locale existe déjà dans le cloud
-      const localAdresse = await modelsLocale.users.findOne({
-          where: {
-              USER_ID: userId
-          }
-      });
-      for (const key in cloudData) {
-
-      // Si la catégorie n'existe pas dans le cloud, insérez-la
-      if (!localAdresse) {
-        await modelsLocale.users.create(cloudData);
-        console.log(`Adresse synchronisée : ${userId}, ${cloudData}`);
-      }else if (cloudData[key] !== localAdresse[key]) {
-        //cloudAdresse.dataValues !== localData
-        await localAdresse.update(cloudData);
-        console.log(`Adresse mise à jour : ${userId}, ${cloudData}`);
-        //console.log("non");
-    }
-      else{
-        console.log("Aucune insertion ou mise à jour nécessaire ");
-      }
-    }
-  }
-
-    console.log("Toutes les données ont été synchronisées avec succès.");
-
-    // Ajoutez d'autres modèles et synchronisations si nécessaire pour d'autres tables
-  } catch (error) {
-    console.error('Erreur lors de la synchronisation des données :', error);
-  }
-}
-
-synchronizeAdresse();
-*/
-
-cron.schedule('0 0 1 * *', () => { 
-  console.log('Début de la synchronisation mensuelle.');
+cron.schedule("0 0 1 * *", () => {
+  console.log("Début de la synchronisation mensuelle.");
   synchronizeTables();
 });
-
 
 /*
 const currentDate = new Date();

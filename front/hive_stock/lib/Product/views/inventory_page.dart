@@ -28,7 +28,7 @@ class InventoryPage extends StatefulWidget implements Menu {
     TextTheme textTheme = Theme.of(context).textTheme;
 
     return FloatingActionButton.extended(
-      label: Text("Add a product", style: textTheme.bodySmall),
+      label: Text("Add product", style: textTheme.bodySmall),
       icon: const Icon(Icons.add),
       onPressed: () => Navigator.push(context, AddProductPage.route()),
     );
