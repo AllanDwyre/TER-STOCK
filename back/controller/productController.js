@@ -115,9 +115,15 @@ module.exports = {
 
   overviewProduct : async(req,res) => {
     try{
-      const prodId = req.query.id;
+      const prodId = req.query.id;// 
 
       const productInformation = await models.produit.findOne({
+        attributes: ['NOM', 'SKU', 'CLASSE', 'PRIX_UNIT'],
+        include: [{
+          model: models.categorie,
+          attributes: ['NOM_CATEGORIE'],
+          as: 'CATEGORIE'
+        }],
         where: {
           PRODUIT_ID : prodId
         } 
@@ -125,7 +131,15 @@ module.exports = {
 
       console.table(productInformation.dataValues);
 
-      return res.json(productInformation);
+      const resultat = {
+        NOM: productInformation.NOM,
+        SKU: productInformation.SKU,
+        CLASSE: productInformation.CLASSE,
+        PRIX_UNIT:productInformation.PRIX_UNIT,
+        CATEGORIE: productInformation.CATEGORIE ? productInformation.CATEGORIE.NOM_CATEGORIE : null,
+      }
+
+      return res.json(resultat);
 
     }catch (error) {
       res.status(500).json({
