@@ -23,27 +23,27 @@ var _vente = require("./vente");
 var _ventes_realises = require("./ventes_realises");
 
 function initModels(sequelize) {
-  var adresse = _adresse(sequelize, DataTypes);
+  var users = _users(sequelize, DataTypes);
   var categorie = _categorie(sequelize, DataTypes);
-  var client = _client(sequelize, DataTypes);
-  var commande = _commande(sequelize, DataTypes);
-  var commande_client = _commande_client(sequelize, DataTypes);
-  var commande_fournisseur = _commande_fournisseur(sequelize, DataTypes);
   var emplacement = _emplacement(sequelize, DataTypes);
+  var adresse = _adresse(sequelize, DataTypes);
   var employe = _employe(sequelize, DataTypes);
+  var client = _client(sequelize, DataTypes);
   var facture = _facture(sequelize, DataTypes);
   var fournisseur = _fournisseur(sequelize, DataTypes);
+  var produit = _produit(sequelize, DataTypes);
+  var stock = _stock(sequelize, DataTypes);
+  var lot_produits = _lot_produits(sequelize, DataTypes);
+  var commande = _commande(sequelize, DataTypes);
+  var commande_fournisseur = _commande_fournisseur(sequelize, DataTypes);
+  var commande_client = _commande_client(sequelize, DataTypes);
+  var vente = _vente(sequelize, DataTypes);
+  var livraison = _livraison(sequelize, DataTypes);
   var inventaire_produit = _inventaire_produit(sequelize, DataTypes);
   var ligne_commande = _ligne_commande(sequelize, DataTypes);
-  var livraison = _livraison(sequelize, DataTypes);
-  var lot_produits = _lot_produits(sequelize, DataTypes);
-  var lot_vendu = _lot_vendu(sequelize, DataTypes);
-  var produit = _produit(sequelize, DataTypes);
-  var produit_livre = _produit_livre(sequelize, DataTypes);
   var produit_vendu = _produit_vendu(sequelize, DataTypes);
-  var stock = _stock(sequelize, DataTypes);
-  var users = _users(sequelize, DataTypes);
-  var vente = _vente(sequelize, DataTypes);
+  var lot_vendu = _lot_vendu(sequelize, DataTypes);
+  var produit_livre = _produit_livre(sequelize, DataTypes);
   var ventes_realises = _ventes_realises(sequelize, DataTypes);
 
   commande.belongsToMany(produit, {
@@ -247,27 +247,27 @@ function initModels(sequelize) {
   });
 
   return {
-    adresse,
+    users,
     categorie,
-    client,
-    commande,
-    commande_client,
-    commande_fournisseur,
     emplacement,
+    adresse,
     employe,
+    client,
     facture,
     fournisseur,
+    produit,
+    stock,
+    lot_produits,
+    commande,
+    commande_fournisseur,
+    commande_client,
+    vente,
+    livraison,
     inventaire_produit,
     ligne_commande,
-    livraison,
-    lot_produits,
-    lot_vendu,
-    produit,
-    produit_livre,
     produit_vendu,
-    stock,
-    users,
-    vente,
+    lot_vendu,
+    produit_livre, 
     ventes_realises,
   };
 }
