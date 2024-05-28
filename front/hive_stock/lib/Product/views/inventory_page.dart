@@ -41,7 +41,6 @@ class _InventoryPageState extends State<InventoryPage> {
 
   @override
   void initState() {
-    _productRepository = ProductRepository();
     super.initState();
   }
 

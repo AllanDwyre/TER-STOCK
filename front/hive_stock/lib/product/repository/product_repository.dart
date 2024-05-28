@@ -38,7 +38,7 @@ class ProductRepository {
       {int start = 0, required int limit}) async {
     final params = {"start": start, "limit": limit};
 
-    final response = await BridgeController.request
+    final response = await _bridge.request
         .get("/Inventory/fetchPagination", queryParameters: params);
 
     if (response.statusCode != 200) {
