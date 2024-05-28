@@ -9,8 +9,8 @@ class BridgeController {
 
     request.options
       ..baseUrl = ApiConfiguration.baseUrl
-      ..connectTimeout = const Duration(seconds: 25)
-      ..receiveTimeout = const Duration(seconds: 25)
+      ..connectTimeout = const Duration(seconds: 60)
+      ..receiveTimeout = const Duration(seconds: 60)
       ..validateStatus = (int? status) {
         return status != null && status > 0;
       };
