@@ -32,6 +32,8 @@ router.post("/Product/add", /*upload.single('image'),*/ controllers.addProductCo
 
 router.get("/Product/Overview", auth, controllers.productController.overviewProduct);
 
+router.get("/Product/supplierdetails", auth, controllers.productController.getSupplierDetails);
+
 router.get("/Product/Overview/imageProduit", auth, controllers.productController.getImage);
 router.get("/Product/Overview/getSupplier", controllers.productController.getSupplier);
 router.get("/Product/Overview/getEmplacement", controllers.productController.getEmplacement);
