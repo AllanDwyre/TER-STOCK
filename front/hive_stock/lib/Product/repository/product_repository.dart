@@ -1,17 +1,18 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:hive_stock/product/models/product.dart';
 import 'package:hive_stock/product/models/product_inventory.dart';
 import 'package:hive_stock/utils/app/bridge_repository.dart';
 
 class ProductRepository {
-  ProductRepository({required BridgeRepository bridge}) : _bridge = bridge;
-  final BridgeRepository _bridge;
+  ProductRepository();
 
   Future<int> addProduct(Product product) async {
-    final params = product.toJson();
+    // TODO ADD FORMDATA
+    final params = FormData();
 
-    final response =
-        await _bridge.request.post("/Product", queryParameters: params);
+    final response = await BridgeController.request
+        .post("/Products", data: params);
 
     if (response.statusCode != 200) {
       throw Exception(response);
@@ -24,7 +25,7 @@ class ProductRepository {
     final params = {"id": productId};
 
     final response =
-        await _bridge.request.get("/Product", queryParameters: params);
+        await BridgeController.request.get("/Product", queryParameters: params);
 
     if (response.statusCode != 200) {
       throw Exception(response);
@@ -38,7 +39,7 @@ class ProductRepository {
       {int start = 0, required int limit}) async {
     final params = {"start": start, "limit": limit};
 
-    final response = await _bridge.request
+    final response = await BridgeController.request
         .get("/Inventory/fetchPagination", queryParameters: params);
 
     if (response.statusCode != 200) {

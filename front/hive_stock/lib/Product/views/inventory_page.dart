@@ -6,7 +6,6 @@ import "package:hive_stock/product/repository/product_repository.dart";
 import "package:hive_stock/product/views/add_product_page.dart";
 import "package:hive_stock/product/views/inventory_body.dart";
 import "package:hive_stock/scanner/views/scanner_page.dart";
-import "package:hive_stock/utils/app/bridge_repository.dart";
 
 class InventoryPage extends StatefulWidget implements Menu {
   const InventoryPage({super.key});
@@ -42,8 +41,6 @@ class _InventoryPageState extends State<InventoryPage> {
 
   @override
   void initState() {
-    _productRepository = ProductRepository(
-        bridge: RepositoryProvider.of<BridgeRepository>(context));
     super.initState();
   }
 
