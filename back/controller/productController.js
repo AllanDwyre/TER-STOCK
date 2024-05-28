@@ -113,9 +113,11 @@ module.exports = {
     }
   },
 
+  ///// requetes de overview details
+
   overviewProduct : async(req,res) => {
     try{
-      const prodId = req.query.id;// 
+      const prodId = req.query.id;
 
       const productInformation = await models.produit.findOne({
         attributes: ['NOM', 'SKU', 'CLASSE', 'PRIX_UNIT'],
@@ -146,6 +148,46 @@ module.exports = {
         message: "Erreur lors de la récupération du produit: " + error.message,
       });
     }
+  },
+  //// requetes des supplier details
+
+  getSupplierDetails : async (req, res) => {
+    try{
+      const prodId = req.query.id;
+
+      const supplierInformation = await models.produit.findOne({
+        where: {
+          PRODUIT_ID: prodId
+        }
+      });
+
+      const fournis = await models.fournisseur.findOne({
+        attributes: ['NOM_FOURNISSEUR', 'TELEPHONE'],
+        where: {
+          FOURNISSEUR_ID : supplierInformation.FOURNISSEUR_ID
+        }
+      })
+      /*if (!supplierInformation || !supplierInformation.FOURNISSEUR) {
+        return res.status(404).json({
+          message: "Fournisseur non trouvé pour ce produit"
+        });
+      }*/
+  
+      console.table(fournis.dataValues);
+  
+      const resultat = {
+        NOM_FOURNISSEUR: fournis.NOM_FOURNISSEUR,
+        NUM_TELEPHONE: fournis.TELEPHONE
+      };
+  
+      return res.json(resultat);
+  
+    } catch (error) {
+      res.status(500).json({
+        message: "Erreur lors de la récupération du fournisseur: " + error.message,
+      });
+    }
+
   },
 
   getImage : async (req, res) => {
