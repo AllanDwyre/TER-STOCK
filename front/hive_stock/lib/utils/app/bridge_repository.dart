@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:hive_stock/utils/app/configuration.dart';
 
-class BridgeRepository {
-  late Dio request;
+class BridgeController {
+  static late Dio request;
 
-  BridgeRepository() {
+  static bridgeInitialization() {
     request = Dio();
+
     request.options
       ..baseUrl = ApiConfiguration.baseUrl
       ..connectTimeout = const Duration(seconds: 25)
@@ -15,8 +16,9 @@ class BridgeRepository {
       };
   }
 
-  void getAuthentified(String token) =>
+  static void getAuthentified(String token) =>
       request.options.headers["authorization"] = token;
 
-  void getUnauthentified() => request.options.headers["authorization"] = "";
+  static void getUnauthentified() =>
+      request.options.headers["authorization"] = "";
 }

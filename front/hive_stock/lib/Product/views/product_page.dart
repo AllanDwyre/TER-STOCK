@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_stock/product/bloc/product_bloc.dart';
 import 'package:hive_stock/product/repository/product_repository.dart';
-import 'package:hive_stock/utils/app/bridge_repository.dart';
 import 'package:hive_stock/utils/methods/logger.dart';
 
 import 'product_body.dart';
@@ -28,8 +27,7 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   void initState() {
-    _productRepository = ProductRepository(
-        bridge: RepositoryProvider.of<BridgeRepository>(context));
+    _productRepository = ProductRepository();
     super.initState();
   }
 
