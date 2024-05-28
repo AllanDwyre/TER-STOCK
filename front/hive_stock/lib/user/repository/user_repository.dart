@@ -4,15 +4,13 @@ import 'package:hive_stock/utils/app/bridge_repository.dart';
 import 'package:hive_stock/utils/methods/logger.dart';
 
 class UserRepository {
-  UserRepository({required this.bridge});
-  final BridgeRepository bridge;
-
+  UserRepository();
   User? _user;
 
   Future<User?> getUser() async {
     if (_user != null) return _user;
 
-    final response = await bridge.request.get("/homePage/getUser");
+    final response = await BridgeController.request.get("/homePage/getUser");
 
     if (response.statusCode != 200) {
       logger.e("Get user request fail ! \n=> $response", error: "Fail Request");

@@ -100,7 +100,7 @@ class _OtpInputState extends State<OtpInput> {
               ],
             ),
             const Spacer(),
-            AuthButton(
+            StatefullButton(
               isInProgress: state.status.isInProgress,
               onPressed: _onPressed(context, state),
             )

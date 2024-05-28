@@ -274,6 +274,106 @@ module.exports={
             });
         }
     },
+    ///stock alert
+
+    calculateStockAlert: async (req, res) => {
+        try {
+            const commandeclient = await models.commande_client.findAll({
+                attributes: ['COMM_CLIENT_ID'],
+                where:{
+                    TYPE_COMMANDE:'commande'
+                }
+            });
+
+           
+            const commandeIds = commandeclient.map(order =>order.COMM_CLIENT_ID);
+            
+
+            // Récupérer toutes les lignes de commande avec le type de commande 'commande'
+            const orderLines = await models.ligne_commande.findAll({
+                include: [{
+                    model: models.commande ,
+                    as: "COMMANDE",
+                    where:{
+                        commande_id: {
+                            [Sequelize.Op.in]: commandeIds
+                        }
+                    },
+                }]
+            });
+
+            
+    
+            // Initialiser un objet pour stocker la somme des quantités commandées pour chaque produit
+            const quantitiesByProduct = {};
+    
+            // Calculer la somme des quantités commandées pour chaque produit
+            orderLines.forEach(orderLine => {
+                const productId = orderLine.PRODUIT_ID;
+                const quantity = orderLine.QUANTITE;
+                quantitiesByProduct[productId] = (quantitiesByProduct[productId] || 0) + quantity;
+            });
+
+            const productIds = Object.keys(quantitiesByProduct);
+    
+            // Récupérer les informations sur les produits depuis la table produit
+            const products = await models.produit.findAll({
+                attributes: ['PRODUIT_ID','NOM', 'QUANTITE'], // Ne pas oublier d'ajouter PRODUIT_IMAGE
+                where: {
+                    PRODUIT_ID : {
+                        [Sequelize.Op.in] : productIds
+                    }
+                }
+            });
+
+            console.log(products);
+    
+            // Vérifier les produits en stock alert
+            const stockAlertProducts = [];
+            products.forEach(product => {
+                const productId = product.PRODUIT_ID;
+                const availableQuantity = product.QUANTITE || 0;
+                const orderedQuantity = quantitiesByProduct[productId] || 0;
+    
+                if (orderedQuantity >= availableQuantity) {
+                    stockAlertProducts.push({
+                        productName: product.NOM,
+                        status: "Critical"
+                    });
+                } else {
+                    stockAlertProducts.push({
+                        productName: product.NOM,
+                        status: "OK"
+                    });
+                }
+            });
+    
+            res.status(200).json({ success: true, stockAlertProducts });
+        } catch (error) {
+            console.error('Erreur lors du calcul des produits en stock alert :', error);
+            res.status(500).json({ success: false, message: "Une erreur s'est produite lors du calcul des produits en stock alert." });
+        }
+    },
+    
+    
+    
+    
+    
+    ///low quantity stock
+    getLowStockProducts: async (req, res) => {
+        try {
+            const lowStockProducts = await models.produit.findAll({
+                where: {
+                    QUANTITE: { [Sequelize.Op.lt]: Sequelize.col('SEUIL')  } // ou tout autre seuil de faible stock que vous souhaitez utiliser
+                }
+            });
+    
+            res.status(200).json({ success: true, lowStockProducts });
+        } catch (error) {
+            res.status(500).json({ success: false, message: "Erreur lors de la récupération des produits en faible stock: " + error.message });
+        }
+    },
+    
     
 }
 

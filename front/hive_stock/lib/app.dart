@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hive_stock/home/views/home_page.dart';
+import 'package:hive_stock/home/views/navigation_menu.dart';
 import 'package:hive_stock/onBording/views/onbording_page.dart';
 import 'package:hive_stock/splash/views/splash_page.dart';
 import 'package:hive_stock/authentication/repository/authentication_repository.dart';
 import 'package:hive_stock/user/repository/user_repository.dart';
-import 'package:hive_stock/utils/app/bridge_repository.dart';
 import 'package:hive_stock/utils/app/configuration.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,14 +23,12 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   late final AuthenticationRepository _authenticationRepository;
   late final UserRepository _userRepository;
-  late final BridgeRepository _bridgeRepository;
   @override
   void initState() {
     super.initState();
-    _bridgeRepository = BridgeRepository();
-    _authenticationRepository =
-        AuthenticationRepository(bridge: _bridgeRepository);
-    _userRepository = UserRepository(bridge: _bridgeRepository);
+
+    _authenticationRepository = AuthenticationRepository();
+    _userRepository = UserRepository();
   }
 
   @override
@@ -48,9 +45,6 @@ class _AppState extends State<App> {
       providers: [
         RepositoryProvider.value(
           value: _authenticationRepository,
-        ),
-        RepositoryProvider.value(
-          value: _bridgeRepository,
         ),
       ],
       child: BlocProvider(
@@ -86,18 +80,20 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     // début section test page produit
+    var themeData = ThemeData(
+      colorScheme: lightColorScheme,
+      textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme),
+    );
+    var themeData2 = ThemeData(
+      colorScheme: darkColorScheme,
+      textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme),
+    );
+
     return MaterialApp(
       title: 'HiveStock',
       debugShowCheckedModeBanner: ApiConfiguration.isDebugMode,
-      theme: ThemeData(
-        colorScheme: lightColorScheme,
-        textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme),
-      ).copyWith(extensions: [lightCustomColors]),
-      darkTheme: ThemeData(
-              colorScheme: darkColorScheme,
-              textTheme:
-                  GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme))
-          .copyWith(extensions: [darkCustomColors]),
+      theme: themeData.copyWith(extensions: [lightCustomColors]),
+      darkTheme: themeData2.copyWith(extensions: [darkCustomColors]),
       themeMode: ThemeMode.system,
       navigatorKey: _navigatorKey,
       onGenerateRoute: (_) => SplashPage.route(),
@@ -107,7 +103,7 @@ class _AppViewState extends State<AppView> {
             switch (state.status) {
               case AuthenticationStatus.authenticated:
                 _navigator.pushAndRemoveUntil<void>(
-                  HomePage.route(),
+                  NavigationMenu.route(),
                   (route) => false,
                 );
               case AuthenticationStatus.unauthenticated:

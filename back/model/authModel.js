@@ -51,13 +51,13 @@ module.exports={
         })
     },
 
-    selectSignUpData: function(User, username, email, telephone){
+    selectSignUpData: function(User, username, email){
         return User.findOne({
             where: { 
                 [Op.or]: [
                 { USERNAME: username },
-                { USER_MAIL: email },
-                { USER_TEL: telephone}
+                { USER_MAIL: email }
+                //{ USER_TEL: telephone}
             ]
         }})
         .catch(error => {
@@ -66,16 +66,16 @@ module.exports={
         });
     },
     
-    insert: function(User, username, nameuser, firstname, usermail, userpass, usertel, userdate){
+    insert: function(User, username, nameuser, firstname, usermail, userpass){
         var cryptPassword = crypto.createHash('sha256').update(userpass).digest('hex');
         return User.create({
             USERNAME : username,
-            NAME_USER : nameuser,
-            FIRST_NAME : firstname,
+            FIRSTNAME : nameuser,
+            LASTNAME : firstname,
             USER_MAIL : usermail,
             USER_PASS : cryptPassword,
-            USER_TEL : usertel,
-            USER_DATE_NAISS : userdate
+            //USER_TEL : usertel,
+            //USER_DATE_NAISS : userdate
         })
         .catch(error => {
             console.error('Erreur lors de l\'insertion de l\'utilisateur :', error);
