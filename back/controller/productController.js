@@ -171,14 +171,6 @@ module.exports = {
     }
   },
 
-  getSupplier : async (req,res) => {
-
-  },
-
-  getEmplacement : async (req,res) => {
-
-  },
-
   getQuantityDetails : async (req,res) => {
     try {
       const prodId = req.query.productId;
