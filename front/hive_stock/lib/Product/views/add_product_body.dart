@@ -41,8 +41,7 @@ class _AddProductBodyState extends State<AddProductBody> {
                 FormTextField(
                   labelText: 'Product Name',
                   hintText: 'Enter product name',
-                  errorText:
-                      state.name.error != null ? "Doit etre remplie" : null,
+                  errorText: "",
                   onChanged: (name) => context
                       .read<AddOrEditProductBloc>()
                       .add(OnInformationChangeProduct(name: name)),
@@ -50,8 +49,7 @@ class _AddProductBodyState extends State<AddProductBody> {
                 FormTextField(
                   labelText: 'Category',
                   hintText: 'Enter product category',
-                  errorText:
-                      state.category.error != null ? "Doit etre remplie" : null,
+                  errorText: "",
                   onChanged: (category) => context
                       .read<AddOrEditProductBloc>()
                       .add(OnInformationChangeProduct(category: category)),
@@ -59,9 +57,7 @@ class _AddProductBodyState extends State<AddProductBody> {
                 FormTextField(
                   labelText: 'Dimension',
                   hintText: 'Enter product dimension',
-                  errorText: state.dimension.error != null
-                      ? "Doit etre remplie"
-                      : null,
+                  errorText: "",
                   onChanged: (dimension) => context
                       .read<AddOrEditProductBloc>()
                       .add(OnInformationChangeProduct(dimension: dimension)),
@@ -69,8 +65,7 @@ class _AddProductBodyState extends State<AddProductBody> {
                 FormTextField(
                   labelText: 'Weight',
                   hintText: 'Enter product weight',
-                  errorText:
-                      state.weight.error != null ? "Doit etre remplie" : null,
+                  errorText: "",
                   onChanged: (weight) => context
                       .read<AddOrEditProductBloc>()
                       .add(OnInformationChangeProduct(weight: weight)),
@@ -78,8 +73,7 @@ class _AddProductBodyState extends State<AddProductBody> {
                 FormTextField(
                   labelText: 'Buying Price',
                   hintText: 'Enter product buying price',
-                  errorText:
-                      state.price.error != null ? "Doit etre remplie" : null,
+                  errorText: "",
                   onChanged: (price) => context
                       .read<AddOrEditProductBloc>()
                       .add(OnInformationChangeProduct(price: price)),

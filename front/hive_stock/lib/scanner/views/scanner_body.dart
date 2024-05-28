@@ -49,7 +49,7 @@ class _ScannerBodyState extends State<ScannerBody> {
 
     setState(() {
       // _scannerController.stop();
-      _scannerController.start();
+      //_scannerController.start();
     });
   }
 

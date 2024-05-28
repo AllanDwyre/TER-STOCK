@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive_stock/utils/app/configuration.dart';
 
 class BridgeController {
@@ -9,8 +10,8 @@ class BridgeController {
 
     request.options
       ..baseUrl = ApiConfiguration.baseUrl
-      ..connectTimeout = const Duration(seconds: 60)
-      ..receiveTimeout = const Duration(seconds: 60)
+      ..connectTimeout = const Duration(seconds: kReleaseMode ? 60 : 5)
+      ..receiveTimeout = const Duration(seconds: kReleaseMode ? 60 : 5)
       ..validateStatus = (int? status) {
         return status != null && status > 0;
       };
