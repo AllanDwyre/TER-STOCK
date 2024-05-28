@@ -62,7 +62,7 @@ module.exports = {
       User,
       req.body.username,
       req.body.email,
-      req.body.user_tel
+      //req.body.user_tel
     )
       .then((user) => {
         if (user) {
@@ -79,9 +79,9 @@ module.exports = {
             req.body.firstname,
             req.body.lastname,
             req.body.email,
-            req.body.password,
-            req.body.user_tel,
-            req.body.user_date
+            req.body.password
+            //req.body.user_tel,
+            //req.body.user_date
           )
             .then((resultat) => {
               console.log(resultat);

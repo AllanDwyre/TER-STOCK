@@ -118,10 +118,9 @@ async function synchronizeTablesInverse() {
   }
 }
 
-synchronizeTablesInverse();
 
-cron.schedule("0 0 1 * *", () => {
-  console.log("Début de la synchronisation mensuelle.");
+cron.schedule('0 0 1 * *', () => { 
+  console.log('Début de la synchronisation mensuelle.');
   synchronizeTables();
 });
 

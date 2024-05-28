@@ -28,25 +28,29 @@ router.get("/Search", auth, controllers.SearchBarController.findAlikeObject);
 //=========================PAGE====================================
 //produit
 router.get("/Products", auth, controllers.productController.getProductById);
-router.post("/Products", auth, controllers.addProductController.addProduit);
+router.post("/Product/add", /*upload.single('image'),*/ controllers.addProductController.addProduit);
+
 router.get("/Product/Overview", auth, controllers.productController.overviewProduct);
 router.get("/Product/Overview/imageProduit", auth, controllers.productController.getImage);
+router.get("/Product/Overview/getSupplier", controllers.productController.getSupplier);
+router.get("/Product/Overview/getEmplacement", controllers.productController.getEmplacement);
+router.get("/Product/Overview/getQuantityDetails",  controllers.productController.getQuantityDetails);
+
 router.get("/Product/Movement", auth, controllers.productController.productMovement);
 router.get("/Product/Finance",  auth, controllers.productController.productFinance);
-router.get("/Product/QuantityHistory",auth, controllers.productController.productQuantityHistory);
+router.get("/Product/QuantityHistory", auth, controllers.productController.productQuantityHistory);
 
-router.get("Product/add", auth, controllers.addProductController.addProduit);
 
 //inventory
 router.get("/Inventory/fetchPagination",auth,controllers.productController.getProductPagination);
-router.get("/Inventory/TotalProductsCount",auth,controllers.inventoryNINAController.getTotalProductsCount);
-router.get("/inventory/TotalCategories",auth,controllers.inventoryNINAController.getTotalCategories);
-router.get("/inventory/TopSellingProduct",auth,controllers.inventoryNINAController.getTopSellingProduct);
-router.get("/inventory/LowStockProductsCount",auth,controllers.inventoryNINAController.getLowStockProductsCount);
+router.get("/Inventory/TotalProductsCount",auth,controllers.InventoryController.getTotalProductsCount);
+router.get("/inventory/TotalCategories",auth,controllers.InventoryController.getTotalCategories);
+router.get("/inventory/TopSellingProduct",auth,controllers.InventoryController.getTopSellingProduct);
+router.get("/inventory/LowStockProductsCount",auth,controllers.InventoryController.getLowStockProductsCount);
 //order
-router.get("/Order", auth, controllers.orderController.showOrders);
+router.get("/Order", auth, controllers.ordersController.showOrders);
 //router.get("/Order/newOrder", auth, controllers.addOrderController.newOrder);
-router.get("/Order/orderPagination",auth,controllers.orderController.getOrderPagination);
+router.get("/Order/orderPagination",auth,controllers.ordersController.getOrderPagination);
 router.get(  "/Product/topSelling",   auth,    controllers.productController.getTopSellingProduct  );
 //router.get("/Product/overview",  auth,   controllers.productController.getProductsOverview);
 
