@@ -70,8 +70,8 @@ module.exports={
         var cryptPassword = crypto.createHash('sha256').update(userpass).digest('hex');
         return User.create({
             USERNAME : username,
-            NAME_USER : nameuser,
-            FIRST_NAME : firstname,
+            FIRSTNAME : nameuser,
+            LASTNAME : firstname,
             USER_MAIL : usermail,
             USER_PASS : cryptPassword,
             USER_TEL : usertel,
