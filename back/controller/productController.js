@@ -113,9 +113,11 @@ module.exports = {
     }
   },
 
+  ///// requetes de overview details
+
   overviewProduct : async(req,res) => {
     try{
-      const prodId = req.query.id;// 
+      const prodId = req.query.id;
 
       const productInformation = await models.produit.findOne({
         attributes: ['NOM', 'SKU', 'CLASSE', 'PRIX_UNIT'],
@@ -147,6 +149,46 @@ module.exports = {
       });
     }
   },
+  //// requetes des supplier details
+
+  getSupplierDetails : async (req, res) => {
+    try{
+      const prodId = req.query.id;
+
+      const supplierInformation = await models.produit.findOne({
+        where: {
+          PRODUIT_ID: prodId
+        }
+      });
+
+      const fournis = await models.fournisseur.findOne({
+        attributes: ['NOM_FOURNISSEUR', 'TELEPHONE'],
+        where: {
+          FOURNISSEUR_ID : supplierInformation.FOURNISSEUR_ID
+        }
+      })
+      /*if (!supplierInformation || !supplierInformation.FOURNISSEUR) {
+        return res.status(404).json({
+          message: "Fournisseur non trouvé pour ce produit"
+        });
+      }*/
+  
+      console.table(fournis.dataValues);
+  
+      const resultat = {
+        NOM_FOURNISSEUR: fournis.NOM_FOURNISSEUR,
+        NUM_TELEPHONE: fournis.TELEPHONE
+      };
+  
+      return res.json(resultat);
+  
+    } catch (error) {
+      res.status(500).json({
+        message: "Erreur lors de la récupération du fournisseur: " + error.message,
+      });
+    }
+
+  },
 
   getImage : async (req, res) => {
     try {
@@ -165,22 +207,88 @@ module.exports = {
 
   getProductOverview : async (req,res) => {
     try{
-      
+
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
 
-  getSupplier : async (req,res) => {
-
-  },
-
-  getEmplacement : async (req,res) => {
-
-  },
-
   getQuantityDetails : async (req,res) => {
+    try {
+      const prodId = req.query.productId;
+      const quantiteProd = await models.produit.findOne({
+        attributes : [
+          'QUANTITE', 'SEUIL'
+        ],
+        where: {
+          PRODUIT_ID: prodId
+        }
+      });
 
+      const commandeClient = await models.commande_client.findAll({
+        attributes: ['COMM_CLIENT_ID'],
+        where : {
+          TYPE_COMMANDE : 'commande'
+        }
+      });
+
+      const commandeIds = commandeClient.map(order => order.COMM_CLIENT_ID);
+      
+      const atPreparation = await models.ligne_commande.count({
+        include: [
+          {
+              model: models.commande,
+              as: "COMMANDE",
+              attributes: [],
+              where: {
+                  DATE_DEPART : null,
+                  COMMANDE_ID : {
+                    [Op.in] : commandeIds
+                  }
+              }
+          }
+        ],
+
+        where: {
+          PRODUIT_ID : prodId,
+        }
+      });
+
+      const onTheWay = await models.ligne_commande.count({
+        include: [
+          {
+              model: models.commande,
+              as: "COMMANDE",
+              attributes: [],
+              where: {
+                DATE_DEPART : {
+                  [Op.not] : null
+                },
+                COMMANDE_ID : {
+                  [Op.in] : commandeIds
+                }
+                 
+              }
+          }
+        ],
+
+        where: {
+          PRODUIT_ID : prodId,
+        }
+      });
+
+      // Constructing response object
+    const response = {
+      Quantity: quantiteProd.QUANTITE,
+      atPreparation: atPreparation,
+      onTheWay: onTheWay,
+      TressHoldValue: quantiteProd.SEUIL
+    };
+
+    res.status(200).json(response);
+    }catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   },
 
   productMovement : async(req,res) => {
@@ -368,6 +476,7 @@ module.exports = {
       });
   }
   },
+
 
   // Requete graphe pour recup le total de revenus que ce produit a généré par mois/semaine/jour
   productFinance : async (req,res) => {

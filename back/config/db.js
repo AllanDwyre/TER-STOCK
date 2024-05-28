@@ -156,4 +156,4 @@ User.create({
 });*/
 
 // Exporter l'objet Sequelize configuré
-module.exports = sequelizeCloud;
+module.exports = sequelizeLocal;
