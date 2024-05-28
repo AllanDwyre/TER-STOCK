@@ -43,14 +43,14 @@ router.get("/Product/QuantityHistory", auth, controllers.productController.produ
 
 //inventory
 router.get("/Inventory/fetchPagination",auth,controllers.productController.getProductPagination);
-router.get("/Inventory/TotalProductsCount",auth,controllers.inventoryNINAController.getTotalProductsCount);
-router.get("/inventory/TotalCategories",auth,controllers.inventoryNINAController.getTotalCategories);
-router.get("/inventory/TopSellingProduct",auth,controllers.inventoryNINAController.getTopSellingProduct);
-router.get("/inventory/LowStockProductsCount",auth,controllers.inventoryNINAController.getLowStockProductsCount);
+router.get("/Inventory/TotalProductsCount",auth,controllers.InventoryController.getTotalProductsCount);
+router.get("/inventory/TotalCategories",auth,controllers.InventoryController.getTotalCategories);
+router.get("/inventory/TopSellingProduct",auth,controllers.InventoryController.getTopSellingProduct);
+router.get("/inventory/LowStockProductsCount",auth,controllers.InventoryController.getLowStockProductsCount);
 //order
-router.get("/Order", auth, controllers.orderController.showOrders);
+router.get("/Order", auth, controllers.ordersController.showOrders);
 //router.get("/Order/newOrder", auth, controllers.addOrderController.newOrder);
-router.get("/Order/orderPagination",auth,controllers.orderController.getOrderPagination);
+router.get("/Order/orderPagination",auth,controllers.ordersController.getOrderPagination);
 router.get(  "/Product/topSelling",   auth,    controllers.productController.getTopSellingProduct  );
 //router.get("/Product/overview",  auth,   controllers.productController.getProductsOverview);
 
