@@ -4,7 +4,6 @@ import 'package:hive_stock/onBording/views/onbording_page.dart';
 import 'package:hive_stock/splash/views/splash_page.dart';
 import 'package:hive_stock/authentication/repository/authentication_repository.dart';
 import 'package:hive_stock/user/repository/user_repository.dart';
-import 'package:hive_stock/utils/app/bridge_repository.dart';
 import 'package:hive_stock/utils/app/configuration.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,14 +23,12 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   late final AuthenticationRepository _authenticationRepository;
   late final UserRepository _userRepository;
-  late final BridgeRepository _bridgeRepository;
   @override
   void initState() {
     super.initState();
-    _bridgeRepository = BridgeRepository();
-    _authenticationRepository =
-        AuthenticationRepository(bridge: _bridgeRepository);
-    _userRepository = UserRepository(bridge: _bridgeRepository);
+
+    _authenticationRepository = AuthenticationRepository();
+    _userRepository = UserRepository();
   }
 
   @override
@@ -48,9 +45,6 @@ class _AppState extends State<App> {
       providers: [
         RepositoryProvider.value(
           value: _authenticationRepository,
-        ),
-        RepositoryProvider.value(
-          value: _bridgeRepository,
         ),
       ],
       child: BlocProvider(

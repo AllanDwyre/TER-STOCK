@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_stock/authentication/bloc/authentication_bloc.dart';
 import 'package:hive_stock/user/bloc/user_bloc.dart';
 import 'package:hive_stock/user/repository/user_repository.dart';
-import 'package:hive_stock/utils/app/bridge_repository.dart';
 import 'package:hive_stock/utils/constants/constants.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -23,8 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(),
       body: RepositoryProvider(
-        create: (context) => UserRepository(
-            bridge: RepositoryProvider.of<BridgeRepository>(context)),
+        create: (context) => UserRepository(),
         child: BlocProvider(
           create: (context) => UserBloc(
             userRepository: RepositoryProvider.of<UserRepository>(context),

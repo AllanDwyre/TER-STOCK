@@ -7,9 +7,8 @@ import 'package:hive_stock/utils/methods/token_access_utils.dart';
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
 class AuthenticationRepository {
-  AuthenticationRepository({required this.bridge});
+  AuthenticationRepository();
 
-  final BridgeRepository bridge;
   final _controller = StreamController<AuthenticationStatus>();
 
   Stream<AuthenticationStatus> get status async* {
@@ -21,7 +20,7 @@ class AuthenticationRepository {
         : AuthenticationStatus.authenticated;
 
     if (token != null) {
-      bridge.getAuthentified(token);
+      BridgeController.getAuthentified(token);
     }
 
     logger.t("Initial user state : $initialStatus");
@@ -39,7 +38,7 @@ class AuthenticationRepository {
       "username": username,
       "password": password,
     };
-    final response = await bridge.request.post('/login', data: data);
+    final response = await BridgeController.request.post('/login', data: data);
 
     if (response.statusCode == 200) {
       _getAuthentified(response.data);
@@ -60,10 +59,11 @@ class AuthenticationRepository {
       "username": username,
       "password": password,
       "email": email,
-      "birthday": birthday,
-      "phone": phone,
+      "user_date": birthday,
+      "user_tel": phone
     };
-    final response = await bridge.request.post('/register', data: data);
+    final response =
+        await BridgeController.request.post('/register', data: data);
 
     if (response.statusCode == 200) {
       _getAuthentified(response.data);
@@ -75,14 +75,14 @@ class AuthenticationRepository {
   void logOut() {
     _controller.add(AuthenticationStatus.unauthenticated);
     AccessTokenUtils.saveUserToken(null);
-    bridge.getUnauthentified();
+    BridgeController.getUnauthentified();
   }
 
   void dispose() => _controller.close();
 
   void _getAuthentified(String token) {
     AccessTokenUtils.saveUserToken(token);
-    bridge.getAuthentified(token);
+    BridgeController.getAuthentified(token);
     _controller.add(AuthenticationStatus.authenticated);
   }
 }
