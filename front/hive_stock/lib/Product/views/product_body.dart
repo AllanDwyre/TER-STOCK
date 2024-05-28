@@ -5,6 +5,8 @@ import 'package:hive_stock/product/models/product.dart';
 import 'package:hive_stock/utils/constants/constants.dart';
 import 'package:hive_stock/utils/widgets/snackbars.dart';
 
+import '../../utils/widgets/custom_tab_bar.dart';
+
 class ProductBody extends StatefulWidget {
   const ProductBody({super.key, required this.isFullHeader});
   final bool isFullHeader;
@@ -31,7 +33,6 @@ class _ProductBodyState extends State<ProductBody>
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    ColorScheme colorTheme = Theme.of(context).colorScheme;
     return BlocBuilder<ProductBloc, ProductState>(
       builder: ((context, state) {
         Product? product = state.productdetails?.product;
@@ -48,15 +49,8 @@ class _ProductBodyState extends State<ProductBody>
               automaticallyImplyLeading: false,
               pinned: true,
               primary: false,
-              title: TabBar(
-                controller: tabController,
-                labelPadding: const EdgeInsets.symmetric(horizontal: 5),
-                labelColor: colorTheme.primary,
-                unselectedLabelColor: colorTheme.secondary,
-                dividerColor: Colors.transparent,
-                indicator: UnderlineTabIndicator(
-                    borderSide:
-                        BorderSide(color: colorTheme.primary, width: 1)),
+              title: CustomTabBar(
+                tabController: tabController,
                 tabs: const [
                   Tab(text: "Overview"),
                   Tab(text: "Purchases"),

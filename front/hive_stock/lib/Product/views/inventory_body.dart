@@ -6,8 +6,8 @@ import 'package:hive_stock/utils/widgets/item_card.dart';
 import 'package:hive_stock/utils/widgets/search_bar.dart';
 import 'package:hive_stock/utils/constants/padding.dart';
 
-import 'bottom_loader.dart';
-import 'card_stat.dart';
+import '../../utils/widgets/bottom_loader.dart';
+import '../../utils/widgets/card_stat.dart';
 
 class InventoryBody extends StatefulWidget {
   const InventoryBody({super.key});

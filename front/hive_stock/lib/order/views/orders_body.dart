@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_stock/order/bloc/orders_bloc.dart';
+import 'package:hive_stock/order/views/order_page.dart';
+import 'package:hive_stock/utils/constants/padding.dart';
+import 'package:hive_stock/utils/widgets/bottom_loader.dart';
+import 'package:hive_stock/utils/widgets/card_stat.dart';
+import 'package:hive_stock/utils/widgets/custom_tab_bar.dart';
 import 'package:hive_stock/utils/widgets/search_bar.dart';
+
+import 'order_card.dart';
 
 class OrdersBody extends StatefulWidget {
   const OrdersBody({
@@ -11,17 +20,20 @@ class OrdersBody extends StatefulWidget {
   State<OrdersBody> createState() => _OrdersBodyState();
 }
 
-class _OrdersBodyState extends State<OrdersBody> {
+class _OrdersBodyState extends State<OrdersBody> with TickerProviderStateMixin {
   final _scrollController = ScrollController();
+  late TabController tabController;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    tabController = TabController(length: 3, vsync: this);
   }
 
   @override
   void dispose() {
+    tabController.dispose();
     _scrollController
       ..removeListener(_onScroll)
       ..dispose();
@@ -29,7 +41,7 @@ class _OrdersBodyState extends State<OrdersBody> {
   }
 
   void _onScroll() {
-    if (_isBottom) context.read<InventoryBloc>().add(InventoryFetched());
+    if (_isBottom) context.read<OrdersBloc>().add(OrdersFetched());
   }
 
   bool get _isBottom {
@@ -53,43 +65,57 @@ class _OrdersBodyState extends State<OrdersBody> {
                 myLabelText: "Search product, supplier, order",
                 myOnChanged: null,
               ),
-              _OverallInventoryWidget(isVisible: searchQuery.isEmpty),
-              const _ProductTitleWFilter(),
+              _OverallStatsWidget(
+                isVisible: true,
+              ),
             ],
           ),
         ),
-        BlocBuilder<InventoryBloc, InventoryState>(
+        SliverAppBar(
+          automaticallyImplyLeading: false,
+          pinned: true,
+          primary: false,
+          title: CustomTabBar(
+            tabController: tabController,
+            onTap: (index) =>
+                context.read<OrdersBloc>().add(OrdersTypeChange(type: index)),
+            tabs: const [
+              Tab(text: "All"),
+              Tab(text: "Entry"),
+              Tab(text: "Exit"),
+            ],
+          ),
+        ),
+        BlocBuilder<OrdersBloc, OrdersState>(
           builder: (context, state) {
             switch (state.status) {
-              case InventoryStatus.failure:
-                return const Center(child: Text('failed to fetch products'));
-              case InventoryStatus.success:
-                if (state.products.isEmpty) {
-                  return const SliverToBoxAdapter(
-                    child: Center(
-                      child: Text(
-                          'No products, go maybe in the orders tab to gets some product!'),
+              case OrdersStatus.failure:
+                return const Center(child: Text('failed to fetch orders'));
+              case OrdersStatus.success:
+                if (state.orders.isEmpty) {
+                  return SliverToBoxAdapter(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      alignment: Alignment.center,
+                      child: const Text('No orders, add some!'),
                     ),
                   );
                 }
                 return SliverList.builder(
                   itemBuilder: (BuildContext context, int index) {
-                    return index >= state.products.length
+                    return index >= state.orders.length
                         ? const BottomLoader()
-                        : ProductCard(
-                            productInventory: state.products[index],
+                        : OrderCard(
+                            order: state.orders[index],
                             onTap: () => Navigator.of(context).push(
-                                ProductPage.route(
-                                    produitId: state
-                                        .products[index].product.productId!)),
+                                OrderPage.route(id: state.orders[index].id!)),
                           );
                   },
                   itemCount: state.hasReachedMax
-                      ? state.products.length
-                      : state.products.length +
-                          1, // +1 to add the bottom loader
+                      ? state.orders.length
+                      : state.orders.length + 1, // +1 to add the bottom loader
                 );
-              case InventoryStatus.initial:
+              case OrdersStatus.initial:
                 return const SliverToBoxAdapter(
                     child: Center(child: CircularProgressIndicator()));
             }
@@ -99,6 +125,71 @@ class _OrdersBodyState extends State<OrdersBody> {
           child: SizedBox(height: 100),
         )
       ],
+    );
+  }
+}
+
+class _OverallStatsWidget extends StatelessWidget {
+  final bool isVisible;
+
+  const _OverallStatsWidget({required this.isVisible});
+
+  @override
+  Widget build(BuildContext context) {
+    TextTheme textTheme = Theme.of(context).textTheme;
+    ColorScheme colorTheme = Theme.of(context).colorScheme;
+
+    return Visibility(
+      visible: isVisible,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Overall Orders",
+              style: textTheme.headlineSmall
+                  ?.copyWith(color: colorTheme.onBackground),
+            ),
+            const SizedBox(height: 5),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      CardStat(
+                        title: 'Total Order',
+                        titleColor: Color.fromRGBO(21, 112, 239, 1),
+                        data: "2158", // TODO : fecth data from backend
+                      ),
+                      CardStat(
+                        title: 'Total Received',
+                        titleColor: Color.fromRGBO(225, 145, 51, 1),
+                        data: "30", // TODO : fecth data from backend
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      CardStat(
+                        title: 'Total Returned',
+                        titleColor: Color.fromRGBO(132, 94, 188, 1),
+                        data: 'GodZilla',
+                      ), // TODO : fecth data from backend
+                      CardStat(
+                        title: 'On the way',
+                        titleColor: Color.fromRGBO(243, 105, 96, 1),
+                        data: "5",
+                      ), // TODO : fecth data from backend
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

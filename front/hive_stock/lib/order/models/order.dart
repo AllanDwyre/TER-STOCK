@@ -1,3 +1,3 @@
-class Order{
-  
+class Order {
+  int? id = 0;
 }
