@@ -145,8 +145,9 @@ class _Overview extends StatelessWidget {
       children: [
         informationSection(title: 'Primary Details', context: context),
         CustomTableRow(title: 'Name', value: checkValue(product?.name)),
+        CustomTableRow(title: 'Product Sku', value: checkValue(product?.sku)),
         CustomTableRow(
-            title: 'Product Sku', value: checkValue(product?.barcode)),
+            title: 'Product Barcode', value: checkValue(product?.barcode)),
         CustomTableRow(
             title: 'Product Class', value: checkValue(product?.dimensions)),
         CustomTableRow(
