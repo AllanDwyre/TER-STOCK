@@ -8,8 +8,10 @@ import 'package:hive_stock/utils/widgets/snackbars.dart';
 import '../../utils/widgets/custom_tab_bar.dart';
 
 class ProductBody extends StatefulWidget {
-  const ProductBody({super.key, required this.isFullHeader});
+  const ProductBody(
+      {super.key, required this.isFullHeader, this.scrollController});
   final bool isFullHeader;
+  final ScrollController? scrollController;
 
   @override
   State<ProductBody> createState() => _ProductBodyState();
@@ -37,6 +39,7 @@ class _ProductBodyState extends State<ProductBody>
       builder: ((context, state) {
         Product? product = state.productdetails?.product;
         return CustomScrollView(
+          controller: widget.scrollController,
           slivers: [
             SliverVisibility(
               visible: widget.isFullHeader,
