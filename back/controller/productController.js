@@ -190,28 +190,52 @@ module.exports = {
 
   },
 
+  getStockLocations : async(req,res) => {
+    try {
+      const prodId = req.query.prodId;
+      const product = await models.produit.findOne({
+        attributes:['QUANTITE', 'EMPLACEMENT_ID'],
+        where :{
+          PRODUIT_ID : prodId
+        } 
+      });
+
+      const empl = await models.emplacement.findOne({
+        attributes: ['NOM_EMPLACEMENT', 'DESC_EMPLACEMENT'],
+        where :{
+          EMPLACEMENT_ID : product.EMPLACEMENT_ID 
+        }
+      });
+      const response = {
+        NomEmplacement: empl.NOM_EMPLACEMENT,
+        DescriptionEmplacement: empl.DESC_EMPLACEMENT,
+        QuantiteStock: product.QUANTITE,
+      };
+      res.status(200).json(response);
+
+    } catch (error) {
+      res.status(500).json({
+        message: "Erreur lors de la récupération de l'emplacement: " + error.message,
+      });
+    }
+
+  },
+
   getImage : async (req, res) => {
     try {
-      const produit = await models.produit.findByPk(req.params.id);
+      const produit = await models.produit.findByPk(req.query.id);
   
-      if (!produit || !produit.imageProduit) {
+      if (!produit || !produit.PRODUIT_IMAGE) {
         return res.status(404).json({ error: 'Produit ou image non trouvée' });
       }
   
       res.set('Content-Type', 'image/jpeg'); // Ou le type MIME approprié
-      res.send(produit.imageProduit);
+      res.send(produit.PRODUIT_IMAGE);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
 
-  getProductOverview : async (req,res) => {
-    try{
-
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  },
 
   getQuantityDetails : async (req,res) => {
     try {
@@ -277,7 +301,6 @@ module.exports = {
         }
       });
 
-      // Constructing response object
     const response = {
       Quantity: quantiteProd.QUANTITE,
       atPreparation: atPreparation,
@@ -886,44 +909,6 @@ module.exports = {
     }
   },
 
-  getTopSellingProduct: async (req, res) => {
-    try {
-      console.log(`Top Selling Product =>`);
-      await models.produit
-        .findAll({
-          include: [
-            {
-              model: models.produit_vendu,
-              as: "produit_vendus",
-              attributes: [],
-              required: true,
-            },
-          ],
-          attributes: ['NOM'],
-          order: [[sequelize.col('produit_vendus.QUANTITE'), "DESC"]],
-        })
-        .then((result) => {
-          if (result.length > 0) {
-            const topProduct = result[0].dataValues;
-            console.table([topProduct]); 
-            res.status(200).json(topProduct);
-          } else {
-            res.status(404).json({ message: "No products found" });
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching top selling product:", error);
-          res.status(500).json({
-            message: "Error fetching top selling product: " + error.message,
-          });
-        });
-    } catch (error) {
-      res.status(500).json({
-        message:
-          "Erreur lors de la récupération du top selling product: " + error.message,
-      });
-    }
-  },
 
   // getProductsOverview: async (req,res) => {
   //   try {
