@@ -9,6 +9,9 @@ class AddOrEditProductState extends Equatable {
   final Dimension dimension;
   final Weight weight;
   final Price price;
+  final String? img;
+  final String? pathImg;
+  final String? titleImg;
 
   const AddOrEditProductState(
       {this.status = FormzSubmissionStatus.initial,
@@ -18,7 +21,11 @@ class AddOrEditProductState extends Equatable {
       this.category = const Category.pure(),
       this.dimension = const Dimension.pure(),
       this.weight = const Weight.pure(),
-      this.price = const Price.pure()});
+      this.price = const Price.pure(),
+      this.img,
+      this.pathImg,
+      this.titleImg,
+      });
 
   AddOrEditProductState copyWith(
       {FormzSubmissionStatus? status,
@@ -28,7 +35,11 @@ class AddOrEditProductState extends Equatable {
       Category? category,
       Dimension? dimension,
       Weight? weight,
-      Price? price}) {
+      Price? price,
+      String? img,
+      String? pathImg,
+      String? titleImg,
+      }) {
     return AddOrEditProductState(
       status: status ?? this.status,
       productId: productId ?? this.productId,
@@ -38,10 +49,13 @@ class AddOrEditProductState extends Equatable {
       weight: weight ?? this.weight,
       price: price ?? this.price,
       isValid: isValid ?? this.isValid,
+      img: img?? this.img,
+      pathImg: pathImg?? this.pathImg,
+      titleImg: titleImg?? this.titleImg,
     );
   }
 
   @override
   List<Object?> get props =>
-      [status, isValid, productId, name, category, dimension, weight, price];
+      [status, isValid, productId, name, category, dimension, weight, price, img, pathImg, titleImg];
 }

@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:hive_stock/product/models/product.dart';
-import 'package:hive_stock/product/models/product_form.dart';
+import 'package:hive_stock/product/models/product_form_validation.dart';
 import 'package:hive_stock/product/repository/product_repository.dart';
 import 'package:hive_stock/utils/methods/logger.dart';
 
@@ -16,10 +16,22 @@ class AddOrEditProductBloc
       : _productRepository = productRepository,
         super(const AddOrEditProductState()) {
     on<OnSumbitProduct>(_onSumbitProduct);
+    on<OnAddImg>(_onAddImg);
     // on<OnEditProductFetch>(_onEditProductFecth);
     on<OnInformationChangeProduct>(_onInformationChangeProduct);
   }
   final ProductRepository _productRepository;
+
+  FutureOr<void> _onAddImg(
+    OnAddImg event, Emitter emit) {
+    emit(
+      state.copyWith(
+        img: event.img,
+        pathImg: event.pathImg,
+        titleImg: event.titleImg,
+      ),
+    );
+  }
 
   FutureOr<void> _onInformationChangeProduct(
       OnInformationChangeProduct event, Emitter emit) {
@@ -41,7 +53,7 @@ class AddOrEditProductBloc
             state.category,
             state.dimension,
             state.weight,
-            state.price
+            state.price,
           ],
         ),
       ),
@@ -54,6 +66,7 @@ class AddOrEditProductBloc
       unitPrice: state.name.value,
       weight: state.weight.value,
       dimensions: state.dimension.value,
+      img: state.img
     );
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     int result = await _tryAddProduct(product);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class FormTextField extends StatelessWidget {
   final String hintText;
-  final String labelText;
+  final String? labelText;
   final String? errorText;
   final Function(String)? onChanged;
   final bool? obscureText;
@@ -10,7 +10,7 @@ class FormTextField extends StatelessWidget {
   const FormTextField({
     super.key,
     required this.hintText,
-    required this.labelText,
+    this.labelText,
     this.errorText,
     this.onChanged,
     this.obscureText,

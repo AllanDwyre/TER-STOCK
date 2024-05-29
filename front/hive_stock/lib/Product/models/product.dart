@@ -10,6 +10,7 @@ class Product {
   int? categoryId;
   int? locationId;
   int? supplierId;
+  String? img;
 
   Product({
     this.productId,
@@ -23,6 +24,7 @@ class Product {
     this.categoryId,
     this.locationId,
     this.supplierId,
+    this.img,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -38,6 +40,7 @@ class Product {
       categoryId: json['CATEGORIE_ID'],
       locationId: json['EMPLACEMENT_ID'],
       supplierId: json['FOURNISSEUR_ID'],
+      img: json['PRODUIT_IMAGE'],
     );
   }
   Map<String, dynamic> toJson() {
@@ -53,6 +56,7 @@ class Product {
       'CATEGORIE_ID': categoryId,
       'EMPLACEMENT_ID': locationId,
       'FOURNISSEUR_ID': supplierId,
+      'PRODUIT_IMAGE': img,
     };
   }
 
@@ -68,5 +72,6 @@ class Product {
     categoryId: -1,
     locationId: -1,
     supplierId: -1,
+    img: "",
   );
 }
