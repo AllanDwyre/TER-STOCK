@@ -65,17 +65,13 @@ class SecondaryButton extends StatefulWidget {
 class _SecondaryButtonState extends State<SecondaryButton> {
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
+    ColorScheme colorTheme = Theme.of(context).colorScheme;
+    return OutlinedButton(
         key: widget.key,
-        style: ButtonStyle(
-            // TODO: empty background
-            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-              side: BorderSide(
-                  color: Theme.of(context).colorScheme.primary,
-                  width: 1,
-                  style: BorderStyle.solid
-                ),
-              borderRadius: BorderRadius.circular(5.0)))),
+        style: OutlinedButton.styleFrom(
+          backgroundColor: colorTheme.surface,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        ),
         onPressed: widget.onPressed,
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -85,7 +81,7 @@ class _SecondaryButtonState extends State<SecondaryButton> {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
+                  .copyWith(color: Theme.of(context).colorScheme.secondary),
             ),
             if (widget.icon != null) const SizedBox(width: 5),
             if (widget.icon != null) Icon(widget.icon)
@@ -98,3 +94,15 @@ class _SecondaryButtonState extends State<SecondaryButton> {
 // -------------------------------------------------------------------------------
 // -------------------------------- TerniaryButton -------------------------------
 // -------------------------------------------------------------------------------
+
+// ButtonStyle(
+//           shape: MaterialStatePropertyAll(
+//             RoundedRectangleBorder(
+//               side: BorderSide(
+//                   color: Theme.of(context).colorScheme.primary,
+//                   width: 1,
+//                   style: BorderStyle.solid),
+//               borderRadius: BorderRadius.circular(5.0),
+//             ),
+//           ),
+//         ),
