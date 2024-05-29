@@ -6,3 +6,5 @@ final class ProductFetched extends ProductEvent {
   ProductFetched({required this.id});
   final int id;
 }
+
+final class ProductFetchedMovement extends ProductEvent {}

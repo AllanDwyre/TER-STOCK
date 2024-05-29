@@ -7,6 +7,7 @@ import 'package:hive_stock/utils/widgets/snackbars.dart';
 
 import '../../utils/widgets/custom_tab_bar.dart';
 import '../../utils/widgets/table_row.dart';
+import 'product_movement.dart';
 
 class ProductBody extends StatefulWidget {
   const ProductBody(
@@ -55,10 +56,11 @@ class _ProductBodyState extends State<ProductBody>
               primary: false,
               title: CustomTabBar(
                 tabController: tabController,
+                onTap: (index) => onTabTap(context, index),
                 tabs: const [
                   Tab(text: "Overview"),
-                  Tab(text: "Purchases"),
-                  Tab(text: "Adjustement"),
+                  Tab(text: "Movement"),
+                  Tab(text: "Finance"),
                   Tab(text: "History"),
                 ],
               ),
@@ -72,7 +74,7 @@ class _ProductBodyState extends State<ProductBody>
                   controller: tabController,
                   children: [
                     _Overview(product: product),
-                    const _Purchases(),
+                    Movement(state: state),
                     const _Adjustement(),
                     const _History(),
                   ],
@@ -83,6 +85,15 @@ class _ProductBodyState extends State<ProductBody>
         );
       }),
     );
+  }
+
+  onTabTap(BuildContext context, int index) {
+    switch (index) {
+      case 1:
+        context.read<ProductBloc>().add(ProductFetchedMovement());
+        break;
+      default:
+    }
   }
 }
 
@@ -99,17 +110,6 @@ class _History extends StatelessWidget {
 
 class _Adjustement extends StatelessWidget {
   const _Adjustement({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Text('data');
-  }
-}
-
-class _Purchases extends StatelessWidget {
-  const _Purchases({
     super.key,
   });
 
