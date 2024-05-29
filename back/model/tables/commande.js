@@ -24,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     PRIX_TOTAL: {
-      type: DataTypes.DECIMAL(6,2),
+      type: DataTypes.DECIMAL(10,2),
       allowNull: true
     },
     LOCATION_TYPE: {
