@@ -69,7 +69,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     PRODUIT_IMAGE: {
-      type: DataTypes.BLOB, //on met blobl pour stocker des données binaires , sinon STRING
+      type: DataTypes.STRING(255), //on met blobl pour stocker des données binaires , sinon STRING
       allowNull: true
     },
     SKU: {

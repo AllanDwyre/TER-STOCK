@@ -43,7 +43,7 @@ router.get("/homePage/topSellingStock", auth, controllers.HomePageController.get
 
 //PRODUIT
 router.get("/Products", auth, controllers.productController.getProductById);
-router.post("/Product/add", auth,/*upload.single('image'),*/ controllers.addProductController.addProduit);
+router.post("/Product/add", auth,upload.single('image'), controllers.addProductController.addProduit);
 
 router.get("/Product/Overview/imageProduit", auth, controllers.productController.getImage);
 router.get("/Product/Overview", auth, controllers.productController.overviewProduct);
