@@ -284,7 +284,10 @@ module.exports={
                     TYPE_COMMANDE:'commande'
                 }
             });
+
+           
             const commandeIds = commandeclient.map(order =>order.COMM_CLIENT_ID);
+            
 
             // Récupérer toutes les lignes de commande avec le type de commande 'commande'
             const orderLines = await models.ligne_commande.findAll({
@@ -298,6 +301,8 @@ module.exports={
                     },
                 }]
             });
+
+            
     
             // Initialiser un objet pour stocker la somme des quantités commandées pour chaque produit
             const quantitiesByProduct = {};
@@ -308,15 +313,26 @@ module.exports={
                 const quantity = orderLine.QUANTITE;
                 quantitiesByProduct[productId] = (quantitiesByProduct[productId] || 0) + quantity;
             });
+
+            const productIds = Object.keys(quantitiesByProduct);
     
             // Récupérer les informations sur les produits depuis la table produit
-            const products = await models.produit.findAll();
+            const products = await models.produit.findAll({
+                attributes: ['PRODUIT_ID','NOM', 'QUANTITE'], // Ne pas oublier d'ajouter PRODUIT_IMAGE
+                where: {
+                    PRODUIT_ID : {
+                        [Sequelize.Op.in] : productIds
+                    }
+                }
+            });
+
+            console.log(products);
     
             // Vérifier les produits en stock alert
             const stockAlertProducts = [];
             products.forEach(product => {
                 const productId = product.PRODUIT_ID;
-                const availableQuantity = product.QUANTITE_STOCK || 0;
+                const availableQuantity = product.QUANTITE || 0;
                 const orderedQuantity = quantitiesByProduct[productId] || 0;
     
                 if (orderedQuantity >= availableQuantity) {
@@ -357,6 +373,57 @@ module.exports={
             res.status(500).json({ success: false, message: "Erreur lors de la récupération des produits en faible stock: " + error.message });
         }
     },
+    
+    getTopStockPagination: async (req,res) => {
+        try {
+        const start = parseInt(req.query.start);
+        const limit = parseInt(req.query.limit);
+
+        if (isNaN(start) || isNaN(limit)) {
+            throw new Error("start and limit must be enter as a positive number !");
+        }
+        console.log(`Top Selling Stock Pagination => start : ${start}, limit : ${limit}`);
+        models.produit.findAll({
+            include: [
+            {
+                model: models.produit_vendu,
+                as: "produit_vendus",
+                attributes: ['QUANTITE'],
+                required: true,
+            },
+            {
+                model: models.inventaire_produit,
+                as: "inventaire_produits",
+                attributes:['QUANTITE_OBSERVEE'],
+                requuired:true
+            }
+            ],
+            attributes:['NOM','PRIX_UNIT'],
+            order: [[sequelize.col('produit_vendus.QUANTITE'), "DESC"]],
+            // offset: start
+            // limit: limit
+        }).then((result) => {
+            const formattedResult = result.map((produit) => {
+            return produit.dataValues;
+            });
+            console.table(formattedResult);
+            console.table(
+            formattedResult.map((produit) => {
+                return produit.inventaire_produits[0].dataValues;
+            })
+            );
+            res.status(200).json(result);
+        })
+        .catch((error) => {
+            console.error("Error fetching top selling stock:", error);
+        });
+    } catch (error) {
+        res.status(500).json({
+        message:
+            "Erreur lors de la récupération des produits: " + error.message,
+        });
+    }
+    }
     
     
 }
