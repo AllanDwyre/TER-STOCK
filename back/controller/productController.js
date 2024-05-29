@@ -229,7 +229,7 @@ module.exports = {
         return res.status(404).json({ error: 'Produit ou image non trouvée' });
       }
   
-      res.set('Content-Type', 'image/jpeg'); // Ou le type MIME approprié
+      //res.set('Content-Type', 'image/jpeg'); // Ou le type MIME approprié
       res.send(produit.PRODUIT_IMAGE);
     } catch (error) {
       res.status(500).json({ error: error.message });
