@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive_stock/product/views/product_page.dart';
 import 'package:hive_stock/scanner/models/scan_response.dart';
-import 'package:hive_stock/scanner/views/incoming_page.dart';
+import 'package:hive_stock/scanner/views/order_result_page.dart';
 import 'package:hive_stock/utils/constants/constants.dart';
 
 enum ResponseStatus { success, warning, error }
@@ -16,11 +16,9 @@ class ScanResultFactory {
             message:
                 "The current barcode doesnt have any related information, or it's corrupted.");
       case 0:
-        return ProductSearch(response: response);
+        return ProductScanResult(response: response);
       case 1:
-        return Incoming(response: response);
-      case 2:
-        return Outgoing(response: response);
+        return OrderScanResult(response: response);
       default:
     }
     return Success(message: "Good product");
@@ -45,10 +43,8 @@ class ScanResultFactory {
     }
     if (response.type == "product") {
       return 0;
-    } else if (response.type == "incoming") {
-      return 1;
     }
-    return 2;
+    return 1;
   }
 }
 
@@ -56,9 +52,9 @@ abstract class ScanResult {
   Widget showDetails(BuildContext context, ScrollController scrollController);
 }
 
-class ProductSearch implements ScanResult {
+class ProductScanResult implements ScanResult {
   final ScanResponse response;
-  ProductSearch({required this.response});
+  ProductScanResult({required this.response});
 
   @override
   Widget showDetails(BuildContext context, ScrollController scrollController) {
@@ -70,23 +66,14 @@ class ProductSearch implements ScanResult {
   }
 }
 
-class Incoming implements ScanResult {
+class OrderScanResult implements ScanResult {
   final ScanResponse response;
-  Incoming({required this.response});
+  OrderScanResult({required this.response});
 
   @override
   Widget showDetails(BuildContext context, ScrollController scrollController) {
-    return IncommingPage(scrollController: scrollController,  scanResponse : response);
-  }
-}
-
-class Outgoing implements ScanResult {
-  final ScanResponse response;
-  Outgoing({required this.response});
-
-  @override
-  Widget showDetails(BuildContext context, ScrollController scrollController) {
-    return const Placeholder();
+    return IncommingPage(
+        scrollController: scrollController, scanResponse: response);
   }
 }
 

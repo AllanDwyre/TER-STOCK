@@ -34,7 +34,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       return await _orderRepository.getOrder(id);
     } catch (e) {
       logger.e('$e', error: 'Order Fetching Stack');
-      //TODO :
       throw Exception('error fetching order: $e');
     }
   }

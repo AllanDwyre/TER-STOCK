@@ -32,7 +32,7 @@ class _AddProductBodyState extends State<AddProductBody> {
         listener: onListen,
         builder: (context, state) {
           return Container(
-            height: size.height - 100, //TODO better scrollable form
+            height: size.height - 100,
             padding: defaultPagePadding,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
