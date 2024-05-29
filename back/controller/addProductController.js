@@ -13,7 +13,7 @@ module.exports = {
         const productDimensions = req.body.productDimensions;
         const productWeight = req.body.productPoids;
         const productPrix = req.body.productPrix; 
-        const imageProduit = req.file.buffer;
+        const imageProduit = req.body.img;
 
         let categorie = await Categorie.findOne({
           where: {
