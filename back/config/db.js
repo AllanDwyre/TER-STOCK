@@ -121,4 +121,4 @@ cron.schedule('0 0 1 * *', () => {
 });
 
 
-module.exports = sequelizeLocal;
+module.exports = sequelizeCloud;
