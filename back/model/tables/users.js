@@ -38,7 +38,7 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: true,
       },
       USER_PHOTO: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.TEXT,
         allowNull: true
       }
     },
