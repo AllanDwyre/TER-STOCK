@@ -50,6 +50,27 @@ module.exports = {
                 case "all":
                     models.commande
                     .findAll({
+                        include: [
+                        {
+                            model:models.produit,
+                            as:"PRODUIT_ID_produits",
+                            required:true,
+                            attributes:['NOM']
+                        },
+                        {
+                            model: models.commande_client,
+                            as:"commande_client",
+                            attributes:['CLIENT_ID'],
+                            required:false
+                        },
+                        {
+                            model: models.commande_fournisseur,
+                            as:"commande_fournisseur",
+                            attributes:['FOURNISSEUR_ID'],
+                            required:false
+                        }
+                    ]
+                        ,
                         order: [["COMMANDE_ID", "ASC"]],
                         offset: start,
                         limit: limit,
@@ -72,51 +93,80 @@ module.exports = {
                     break;
     
                 case "entry":
-                    models.commande_fournisseur
+                    models.commande
                     .findAll({
-                        order: [["COMM_FOURN_ID", "ASC"]],
+                        include: [
+                            {
+                                model:models.produit,
+                                as:"PRODUIT_ID_produits",
+                                required:true,
+                                attributes:['NOM']
+                            },
+                        
+                            {
+                                model: models.commande_fournisseur,
+                                as:"commande_fournisseur",
+                                required:true
+                            }
+                        ],
+                        order: [["COMMANDE_ID", "ASC"]],
                         offset: start,
                         limit: limit,
                     })
                     .then((result) => {
-                        const formattedResult = result.map((commande_fournisseur) => {
-                        return commande_fournisseur.dataValues;
+                        const formattedResult = result.map((commande) => {
+                        return commande.dataValues;
                         });
                         console.table(formattedResult);
                         console.table(
-                        formattedResult.map((commande_fournisseur) => {
-                            return commande_fournisseur.dataValues;
+                        formattedResult.map((commande) => {
+                            return commande.dataValues;
                         })
                         );
                         res.status(200).json(result);
                     })
                     .catch((error) => {
-                        console.error("Error fetching entry orders:", error);
+                        console.error("Error fetching orders:", error);
                     });
                     break;
     
                 case "exit":
-                    models.commande_client
+                    models.commande
                     .findAll({
-                    order: [["COMM_CLIENT_ID", "ASC"]],
-                    offset: start,
-                    limit: limit,
+                        include: [
+                            {
+                                model:models.produit,
+                                as:"PRODUIT_ID_produits",
+                                required:true,
+                                attributes:['NOM']
+                            },
+                        
+                            {
+                                model: models.commande_client,
+                                as:"commande_client",
+                                required:true
+                            }
+                        ],
+                        order: [["COMMANDE_ID", "ASC"]],
+                        offset: start,
+                        limit: limit,
                     })
                     .then((result) => {
-                    const formattedResult = result.map((commande_client) => {
-                        return commande_client.dataValues;
-                    });
-                    console.table(formattedResult);
-                    console.table(
-                        formattedResult.map((commande_client) => {
-                        return commande_client.dataValues;
+                        const formattedResult = result.map((commande) => {
+                        return commande.dataValues;
+                        });
+                        console.table(formattedResult);
+                        console.table(
+                        formattedResult.map((commande) => {
+                            return commande.dataValues;
                         })
-                    );
-                    res.status(200).json(result);
+                        );
+                        res.status(200).json(result);
                     })
                     .catch((error) => {
-                    console.error("Error fetching exit orders:", error);
+                        console.error("Error fetching orders:", error);
                     });
+                    break;
             }
         } 
         catch (error) {

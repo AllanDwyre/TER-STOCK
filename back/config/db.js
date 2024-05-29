@@ -113,6 +113,7 @@ async function synchronizeTablesInverse() {
     console.error("Erreur lors de la synchronisation des données :", error);
   }
 }
+synchronizeTablesInverse();
 
 
 cron.schedule('0 0 1 * *', () => { 
