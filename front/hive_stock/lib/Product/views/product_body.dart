@@ -6,10 +6,13 @@ import 'package:hive_stock/utils/constants/constants.dart';
 import 'package:hive_stock/utils/widgets/snackbars.dart';
 
 import '../../utils/widgets/custom_tab_bar.dart';
+import '../../utils/widgets/table_row.dart';
 
 class ProductBody extends StatefulWidget {
-  const ProductBody({super.key, required this.isFullHeader});
+  const ProductBody(
+      {super.key, required this.isFullHeader, this.scrollController});
   final bool isFullHeader;
+  final ScrollController? scrollController;
 
   @override
   State<ProductBody> createState() => _ProductBodyState();
@@ -37,6 +40,7 @@ class _ProductBodyState extends State<ProductBody>
       builder: ((context, state) {
         Product? product = state.productdetails?.product;
         return CustomScrollView(
+          controller: widget.scrollController,
           slivers: [
             SliverVisibility(
               visible: widget.isFullHeader,
@@ -140,25 +144,25 @@ class _Overview extends StatelessWidget {
       //TODO : sync informations
       children: [
         InformationSection(title: 'Primary Details', context: context),
-        _TableRowProduct(title: 'Name', value: checkValue(product?.name)),
-        _TableRowProduct(
+        CustomTableRow(title: 'Name', value: checkValue(product?.name)),
+        CustomTableRow(
             title: 'Product Sku', value: checkValue(product?.barcode)),
-        _TableRowProduct(
+        CustomTableRow(
             title: 'Product Class', value: checkValue(product?.dimensions)),
-        _TableRowProduct(
+        CustomTableRow(
             title: 'Product Price',
             value: checkValue(product?.unitPrice.toString())),
-        const _TableRowProduct(title: 'Product category', value: 'Pharmacy'),
-        const _TableRowProduct(title: 'Storage date', value: '15/02/2023'),
+        const CustomTableRow(title: 'Product category', value: 'Pharmacy'),
+        const CustomTableRow(title: 'Storage date', value: '15/02/2023'),
         InformationSection(title: 'Quantity Details', context: context),
-        const _TableRowProduct(title: 'Quantity', value: '20'),
-        const _TableRowProduct(title: 'At preparation', value: '50'),
-        const _TableRowProduct(title: 'On the way', value: '150'),
-        const _TableRowProduct(title: 'Arrival Date', value: '15/06/2023'),
-        const _TableRowProduct(title: 'Threshold Value', value: 'auto'),
+        const CustomTableRow(title: 'Quantity', value: '20'),
+        const CustomTableRow(title: 'At preparation', value: '50'),
+        const CustomTableRow(title: 'On the way', value: '150'),
+        const CustomTableRow(title: 'Arrival Date', value: '15/06/2023'),
+        const CustomTableRow(title: 'Threshold Value', value: 'auto'),
         InformationSection(title: 'Supplier Details', context: context),
-        const _TableRowProduct(title: 'Supplier Name', value: 'Phara LDC'),
-        const _TableRowProduct(
+        const CustomTableRow(title: 'Supplier Name', value: 'Phara LDC'),
+        const CustomTableRow(
             title: 'Supplier Contact', value: '07 67 02 73 76'),
       ],
     );
@@ -308,39 +312,5 @@ class _ProductAppBar extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ));
-  }
-}
-
-class _TableRowProduct extends StatelessWidget {
-  const _TableRowProduct({
-    required this.title,
-    required this.value,
-  });
-  final String title;
-  final String value;
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    TextTheme textTheme = Theme.of(context).textTheme;
-    ColorScheme colorTheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-      width: size.width,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            title,
-            maxLines: 1,
-            softWrap: false,
-            style: textTheme.titleSmall?.copyWith(color: colorTheme.secondary),
-          ),
-          Text(
-            value,
-            style: textTheme.titleSmall?.copyWith(color: colorTheme.secondary),
-          ),
-        ],
-      ),
-    );
   }
 }

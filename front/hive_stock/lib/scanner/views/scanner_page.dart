@@ -11,6 +11,7 @@ class ScannerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.onPrimary,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         forceMaterialTransparency: true,

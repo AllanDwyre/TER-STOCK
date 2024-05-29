@@ -64,7 +64,7 @@ class InventoryBloc extends Bloc<InventoryEvent, InventoryState> {
 
       return products;
     } catch (e) {
-      logger.e("error fetching posts: $e", error: 'Product Bloc');
+      logger.w("error fetching posts: $e", error: 'Product Bloc');
       throw Exception('error fetching posts: $e');
     }
   }

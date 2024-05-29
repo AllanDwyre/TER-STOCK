@@ -10,8 +10,8 @@ class OrderCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.all(5),
-        padding: EdgeInsets.all(15),
+        margin: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(15),
         width: double.infinity,
         decoration: BoxDecoration(
           color: const Color.fromARGB(255, 234, 239, 241),
@@ -23,30 +23,17 @@ class OrderCard extends StatelessWidget {
             Row(
               children: [
                 Text("Order id : ${order.id ?? '-'}"),
-                _Status(order: order),
-                Spacer(),
+                const SizedBox(width: 5),
+                Text("${order.commande?.statusString}"),
+                const Spacer(),
                 Text("${order.commande?.prixTotal ?? '-'}€"),
               ],
             ),
-            Text("${order.details?.first.nameProduct ?? '-'}"),
-            SizedBox(height: 15),
+            Text("${order.details?.first.nameProduct}"),
+            const SizedBox(height: 15),
           ],
         ),
       ),
     );
-  }
-}
-
-class _Status extends StatelessWidget {
-  const _Status({
-    super.key,
-    required this.order,
-  });
-
-  final Order order;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text("${order.commande?.status ?? '-'}");
   }
 }

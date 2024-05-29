@@ -16,6 +16,7 @@ class CustomTabBar extends StatelessWidget {
     ColorScheme colorTheme = Theme.of(context).colorScheme;
     return TabBar(
       controller: tabController,
+      
       labelPadding: const EdgeInsets.symmetric(horizontal: 5),
       labelColor: colorTheme.primary,
       unselectedLabelColor: colorTheme.secondary,

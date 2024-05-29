@@ -1,5 +1,18 @@
 import 'package:formz/formz.dart';
 
+enum ProductIdValidationError { empty }
+
+class ProductId extends FormzInput<String, ProductIdValidationError> {
+  const ProductId.pure() : super.pure('');
+  const ProductId.dirty([super.value = '']) : super.dirty();
+
+  @override
+  ProductIdValidationError? validator(String value) {
+    if (value.isEmpty) return ProductIdValidationError.empty;
+    return null;
+  }
+}
+
 enum NameValidationError { empty }
 
 class Name extends FormzInput<String, NameValidationError> {
@@ -13,28 +26,28 @@ class Name extends FormzInput<String, NameValidationError> {
   }
 }
 
-enum CategoryValidationError { empty }
+enum DescriptionValidationError { empty }
 
-class Category extends FormzInput<String, CategoryValidationError> {
-  const Category.pure() : super.pure('');
-  const Category.dirty([super.value = '']) : super.dirty();
+class Description extends FormzInput<String, DescriptionValidationError> {
+  const Description.pure() : super.pure('');
+  const Description.dirty([super.value = '']) : super.dirty();
 
   @override
-  CategoryValidationError? validator(String value) {
-    if (value.isEmpty) return CategoryValidationError.empty;
+  DescriptionValidationError? validator(String value) {
+    if (value.isEmpty) return DescriptionValidationError.empty;
     return null;
   }
 }
 
-enum DimensionValidationError { empty }
+enum UnitPriceValidationError { empty }
 
-class Dimension extends FormzInput<String, DimensionValidationError> {
-  const Dimension.pure() : super.pure('');
-  const Dimension.dirty([super.value = '']) : super.dirty();
+class UnitPrice extends FormzInput<String, UnitPriceValidationError> {
+  const UnitPrice.pure() : super.pure('');
+  const UnitPrice.dirty([super.value = '']) : super.dirty();
 
   @override
-  DimensionValidationError? validator(String value) {
-    if (value.isEmpty) return DimensionValidationError.empty;
+  UnitPriceValidationError? validator(String value) {
+    if (value.isEmpty) return UnitPriceValidationError.empty;
     return null;
   }
 }
@@ -52,15 +65,93 @@ class Weight extends FormzInput<String, WeightValidationError> {
   }
 }
 
-enum PriceValidationError { empty }
+enum DimensionValidationError { empty }
 
-class Price extends FormzInput<String, PriceValidationError> {
-  const Price.pure() : super.pure('');
-  const Price.dirty([super.value = '']) : super.dirty();
+class Dimension extends FormzInput<String, DimensionValidationError> {
+  const Dimension.pure() : super.pure('');
+  const Dimension.dirty([super.value = '']) : super.dirty();
 
   @override
-  PriceValidationError? validator(String value) {
-    if (value.isEmpty) return PriceValidationError.empty;
+  DimensionValidationError? validator(String value) {
+    if (value.isEmpty) return DimensionValidationError.empty;
+    return null;
+  }
+}
+
+enum WarehouseValidationError { empty }
+
+class Warehouse extends FormzInput<String, WarehouseValidationError> {
+  const Warehouse.pure() : super.pure('');
+  const Warehouse.dirty([super.value = '']) : super.dirty();
+
+  @override
+  WarehouseValidationError? validator(String value) {
+    if (value.isEmpty) return WarehouseValidationError.empty;
+    return null;
+  }
+}
+
+enum BarcodeValidationError { empty }
+
+class Barcode extends FormzInput<String, BarcodeValidationError> {
+  const Barcode.pure() : super.pure('');
+  const Barcode.dirty([super.value = '']) : super.dirty();
+
+  @override
+  BarcodeValidationError? validator(String value) {
+    if (value.isEmpty) return BarcodeValidationError.empty;
+    return null;
+  }
+}
+
+enum CategoryIdValidationError { empty }
+
+class CategoryId extends FormzInput<String, CategoryIdValidationError> {
+  const CategoryId.pure() : super.pure('');
+  const CategoryId.dirty([super.value = '']) : super.dirty();
+
+  @override
+  CategoryIdValidationError? validator(String value) {
+    if (value.isEmpty) return CategoryIdValidationError.empty;
+    return null;
+  }
+}
+
+enum LocationIdValidationError { empty }
+
+class LocationId extends FormzInput<String, LocationIdValidationError> {
+  const LocationId.pure() : super.pure('');
+  const LocationId.dirty([super.value = '']) : super.dirty();
+
+  @override
+  LocationIdValidationError? validator(String value) {
+    if (value.isEmpty) return LocationIdValidationError.empty;
+    return null;
+  }
+}
+
+enum SupplierIdValidationError { empty }
+
+class SupplierId extends FormzInput<String, SupplierIdValidationError> {
+  const SupplierId.pure() : super.pure('');
+  const SupplierId.dirty([super.value = '']) : super.dirty();
+
+  @override
+  SupplierIdValidationError? validator(String value) {
+    if (value.isEmpty) return SupplierIdValidationError.empty;
+    return null;
+  }
+}
+
+enum ImgValidationError { empty }
+
+class Img extends FormzInput<String, ImgValidationError> {
+  const Img.pure() : super.pure('');
+  const Img.dirty([super.value = '']) : super.dirty();
+
+  @override
+  ImgValidationError? validator(String value) {
+    if (value.isEmpty) return ImgValidationError.empty;
     return null;
   }
 }
