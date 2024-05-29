@@ -77,7 +77,8 @@ class OrderBody extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.symmetric(vertical: 5),
                   child: DetailsCard(
-                    onTap: () => _onProductTap(context, order.id!),
+                    onTap: () => _onProductTap(
+                        context, order.details![index].productId!),
                     details: order!.details![index],
                   ),
                 ),

@@ -19,7 +19,7 @@ class IncommingPage extends StatelessWidget {
       child: BlocProvider(
         create: (context) => ScannerBloc(
             orderRepository: RepositoryProvider.of<OrderRepository>(context))
-          ..add(ScannerFectchIncommingEvent(id: scanResponse.id)),
+          ..add(ScannerFectchIncommingEvent(id: scanResponse.id!)),
         child: IncomingBody(scrollController: scrollController),
       ),
     );
@@ -40,7 +40,7 @@ class IncomingBody extends StatelessWidget {
       builder: (context, state) {
         if (state.status == FetchOrderStatus.success) {
           return OrderPage(
-            orderId: state.response!.id,
+            orderId: state.response!.id!,
             isFromScan: true,
           );
         }

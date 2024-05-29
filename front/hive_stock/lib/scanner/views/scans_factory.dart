@@ -59,7 +59,7 @@ class ProductScanResult implements ScanResult {
   @override
   Widget showDetails(BuildContext context, ScrollController scrollController) {
     return ProductPage(
-      produitId: response.id,
+      produitId: response.id!,
       isFullHeader: false,
       scrollController: scrollController,
     );
