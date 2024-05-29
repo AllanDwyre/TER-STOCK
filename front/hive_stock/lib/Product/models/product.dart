@@ -11,6 +11,10 @@ class Product {
   int? locationId;
   int? supplierId;
   String? img;
+  int? seuil;
+  int? quantite;
+  String? sku;
+  String? classe;
 
   Product({
     this.productId,
@@ -25,6 +29,10 @@ class Product {
     this.locationId,
     this.supplierId,
     this.img,
+    this.seuil,
+    this.quantite,
+    this.sku,
+    this.classe,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -41,15 +49,20 @@ class Product {
       locationId: json['EMPLACEMENT_ID'],
       supplierId: json['FOURNISSEUR_ID'],
       img: json['PRODUIT_IMAGE'],
+      seuil: json['SEUIL'],
+      quantite: json['QUANTITE'],
+      sku: json['SKU'],
+      classe: json['CLASSE'],
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'PRODUIT_ID': productId,
       'NOM': name,
       'DESCR': description,
-      'PRIX_UNIT': unitPrice.toString(),
-      'POIDS': weight.toString(),
+      'PRIX_UNIT': unitPrice,
+      'POIDS': weight,
       'DIMENSIONS': dimensions,
       'MAGASIN_ENTREPOT': warehouse,
       'CODE_BARRE_PRODUIT': barcode,
@@ -57,6 +70,10 @@ class Product {
       'EMPLACEMENT_ID': locationId,
       'FOURNISSEUR_ID': supplierId,
       'PRODUIT_IMAGE': img,
+      'SEUIL': seuil,
+      'QUANTITE': quantite,
+      'SKU': sku,
+      'CLASSE': classe,
     };
   }
 
@@ -73,5 +90,9 @@ class Product {
     locationId: -1,
     supplierId: -1,
     img: "",
+    seuil: -1,
+    quantite: -1,
+    sku: '-',
+    classe: '-',
   );
 }

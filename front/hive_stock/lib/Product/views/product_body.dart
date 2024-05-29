@@ -124,7 +124,7 @@ class _Overview extends StatelessWidget {
 
   final Product? product;
 
-  Text InformationSection(
+  Text informationSection(
       {required String title, required BuildContext context}) {
     return Text(
       title,
@@ -143,7 +143,7 @@ class _Overview extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       //TODO : sync informations
       children: [
-        InformationSection(title: 'Primary Details', context: context),
+        informationSection(title: 'Primary Details', context: context),
         CustomTableRow(title: 'Name', value: checkValue(product?.name)),
         CustomTableRow(
             title: 'Product Sku', value: checkValue(product?.barcode)),
@@ -154,13 +154,13 @@ class _Overview extends StatelessWidget {
             value: checkValue(product?.unitPrice.toString())),
         const CustomTableRow(title: 'Product category', value: 'Pharmacy'),
         const CustomTableRow(title: 'Storage date', value: '15/02/2023'),
-        InformationSection(title: 'Quantity Details', context: context),
-        const CustomTableRow(title: 'Quantity', value: '20'),
+        informationSection(title: 'Quantity Details', context: context),
+        CustomTableRow(title: 'Quantity', value: "${product?.quantite}"),
         const CustomTableRow(title: 'At preparation', value: '50'),
         const CustomTableRow(title: 'On the way', value: '150'),
         const CustomTableRow(title: 'Arrival Date', value: '15/06/2023'),
-        const CustomTableRow(title: 'Threshold Value', value: 'auto'),
-        InformationSection(title: 'Supplier Details', context: context),
+        CustomTableRow(title: 'Threshold Value', value: "${product?.seuil}"),
+        informationSection(title: 'Supplier Details', context: context),
         const CustomTableRow(title: 'Supplier Name', value: 'Phara LDC'),
         const CustomTableRow(
             title: 'Supplier Contact', value: '07 67 02 73 76'),
@@ -192,8 +192,7 @@ class _ProductHeader extends StatelessWidget {
                 product: product, isFullHeader: isFullHeader),
             const SizedBox(height: 10),
             Visibility(
-              visible:
-                  (product?.productId ?? 1) % 2 == 0, //TODO : change that lol
+              visible: (product?.productId ?? 1) % 2 == 0,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -203,7 +202,6 @@ class _ProductHeader extends StatelessWidget {
                         ?.copyWith(color: colorTheme.onBackground),
                   ),
                   const SizedBox(height: 10),
-                  // ? : Sliver List ?
                   CustomSnackbar(
                     type: SnackbarType.warning,
                     title: 'Temperature',
@@ -245,8 +243,7 @@ class _ProductBasicInformation extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              // "Class ${widget.product.class_ ?? "null"} | Sku : ${widget.product.sku}", // TODO : get the class and sku from backend modification
-              "Class A | Sku : ABC-12345-S-BL",
+              "Class ${product?.classe ?? "-"} | Sku : ${product?.sku ?? "-"}",
               style: textTheme.titleSmall
                   ?.copyWith(color: colorTheme.onBackground),
             ),
@@ -278,8 +275,7 @@ class _ProductBasicInformation extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           Text(
-            // "Class ${widget.product.class_ ?? "null"} | Sku : ${widget.product.sku}", // TODO : get the class and sku from backend modification
-            "Class A | Sku : ABC-12345-S-BL",
+            "Class ${product?.classe ?? "-"} | Sku : ${product?.sku ?? "-"}",
             style:
                 textTheme.titleSmall?.copyWith(color: colorTheme.onBackground),
           ),
@@ -301,16 +297,17 @@ class _ProductAppBar extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return SliverAppBar(
-        pinned: true,
-        floating: true,
-        expandedHeight: size.height * 0.25,
-        flexibleSpace: FlexibleSpaceBar(
-          centerTitle: false,
-          titlePadding: const EdgeInsetsDirectional.all(15),
-          background: Image.asset(
-            CustomIcons.productImageTest,
-            fit: BoxFit.cover,
-          ),
-        ));
+      pinned: true,
+      floating: true,
+      expandedHeight: size.height * 0.25,
+      flexibleSpace: FlexibleSpaceBar(
+        centerTitle: false,
+        titlePadding: const EdgeInsetsDirectional.all(15),
+        background: Image.asset(
+          CustomIcons.productImageTest,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
   }
 }
