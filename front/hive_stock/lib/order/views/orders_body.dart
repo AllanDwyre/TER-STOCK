@@ -93,7 +93,8 @@ class _OrdersBodyState extends State<OrdersBody> with TickerProviderStateMixin {
                 if (state.orders.isEmpty) {
                   return SliverToBoxAdapter(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 20),
                       alignment: Alignment.center,
                       child: const Text('No orders, add some!'),
                     ),

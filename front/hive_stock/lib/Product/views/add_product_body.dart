@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -79,9 +77,9 @@ class _AddProductBodyState extends State<AddProductBody> {
                   hintText: 'Enter product buying price',
                   errorText: null,
                   onChanged: (price) {
-                      context
-                      .read<AddOrEditProductBloc>()
-                      .add(OnInformationChangeProduct(price: price));
+                    context
+                        .read<AddOrEditProductBloc>()
+                        .add(OnInformationChangeProduct(price: price));
                   },
                 ),
                 SizedBox(height: size.height * 0.05),
@@ -181,14 +179,15 @@ class _ImagePicker extends StatelessWidget {
                         border: Border.all(color: Colors.black12),
                         borderRadius: BorderRadius.circular(10),
                         image: DecorationImage(
-                          image: MemoryImage(base64Decode(state.img!)),//AssetImage(state.pathImg!),
+                          image: MemoryImage(base64Decode(
+                              state.img!)), //AssetImage(state.pathImg!),
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
               const SizedBox(width: 10),
               Text(
-                state.titleImg?? "Browse image",
+                state.titleImg ?? "Browse image",
                 style: textTheme.bodyMedium?.copyWith(
                   color: colorTheme.onBackground,
                   decoration: TextDecoration.underline,
@@ -202,15 +201,15 @@ class _ImagePicker extends StatelessWidget {
   }
 
   void onBrowseImagePressed(BuildContext context) async {
-    var picked = await FilePicker.platform.pickFiles(type: FileType.any, withData: true);
+    var picked =
+        await FilePicker.platform.pickFiles(type: FileType.any, withData: true);
     if (picked != null) {
       PlatformFile file = picked.files.first;
       logger.t(file.name);
       String base64img = base64Encode(file.bytes!); // Uint8List
-      if(context.mounted){
-        context
-        .read<AddOrEditProductBloc>()
-        .add(OnAddImg(img: base64img, pathImg: file.path, titleImg: file.name));
+      if (context.mounted) {
+        context.read<AddOrEditProductBloc>().add(
+            OnAddImg(img: base64img, pathImg: file.path, titleImg: file.name));
       }
     }
   }

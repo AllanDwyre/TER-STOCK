@@ -74,9 +74,12 @@ class OrderBody extends StatelessWidget {
               itemCount: order?.details?.length ?? 0,
               itemBuilder: (context, index) => Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: DetailsCard(
-                  onTap: () => _onProductTap(context, order.id!),
-                  details: order!.details![index],
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 5),
+                  child: DetailsCard(
+                    onTap: () => _onProductTap(context, order.id!),
+                    details: order!.details![index],
+                  ),
                 ),
               ),
             )
