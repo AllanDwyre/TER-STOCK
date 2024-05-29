@@ -190,6 +190,37 @@ module.exports = {
 
   },
 
+  getStockLocations : async(req,res) => {
+    try {
+      const prodId = req.query.prodId;
+      const product = await models.produit.findOne({
+        attributes:['QUANTITE', 'EMPLACEMENT_ID'],
+        where :{
+          PRODUIT_ID : prodId
+        } 
+      });
+
+      const empl = await models.emplacement.findOne({
+        attributes: ['NOM_EMPLACEMENT', 'DESC_EMPLACEMENT'],
+        where :{
+          EMPLACEMENT_ID : product.EMPLACEMENT_ID 
+        }
+      });
+      const response = {
+        NomEmplacement: empl.NOM_EMPLACEMENT,
+        DescriptionEmplacement: empl.DESC_EMPLACEMENT,
+        QuantiteStock: product.QUANTITE,
+      };
+      res.status(200).json(response);
+
+    } catch (error) {
+      res.status(500).json({
+        message: "Erreur lors de la récupération de l'emplacement: " + error.message,
+      });
+    }
+
+  },
+
   getImage : async (req, res) => {
     try {
       const produit = await models.produit.findByPk(req.params.id);
@@ -270,7 +301,6 @@ module.exports = {
         }
       });
 
-      // Constructing response object
     const response = {
       Quantity: quantiteProd.QUANTITE,
       atPreparation: atPreparation,
