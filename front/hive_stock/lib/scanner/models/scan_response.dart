@@ -3,6 +3,9 @@ class ScanResponse {
   final int? id;
   final String? expectedLocation;
   final List<ScanResponseDetails>? details;
+  bool get isIncoming => type == "incoming";
+  bool get isOutgoing => type == "outgoing";
+  bool get isProduct => type == "product";
 
   ScanResponse(
       {required this.type,

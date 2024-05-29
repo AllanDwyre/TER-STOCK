@@ -1,6 +1,6 @@
 part of 'scanner_bloc.dart';
 
-enum FetchOrderStatus { initial, success, done, inProgress, orderError }
+enum FetchOrderStatus { initial, success, done, inProgress, orderError, orderWarning }
 
 class ScannerState extends Equatable {
   final FetchOrderStatus status;

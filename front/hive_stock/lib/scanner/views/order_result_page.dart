@@ -19,7 +19,7 @@ class IncommingPage extends StatelessWidget {
       child: BlocProvider(
         create: (context) => ScannerBloc(
             orderRepository: RepositoryProvider.of<OrderRepository>(context))
-          ..add(ScannerFectchIncommingEvent(id: scanResponse.id!)),
+          ..add(ScannerFectchEvent(response: scanResponse)),
         child: IncomingBody(scrollController: scrollController),
       ),
     );
@@ -53,6 +53,7 @@ class IncomingBody extends StatelessWidget {
         Map<FetchOrderStatus, ResponseStatus> map = {
           FetchOrderStatus.done: ResponseStatus.success,
           FetchOrderStatus.inProgress: ResponseStatus.warning,
+          FetchOrderStatus.orderWarning: ResponseStatus.warning,
           FetchOrderStatus.orderError: ResponseStatus.error,
         };
         return factory
