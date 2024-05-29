@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_stock/order/bloc/orders_bloc.dart';
 import 'package:hive_stock/order/views/order_page.dart';
-import 'package:hive_stock/utils/constants/padding.dart';
 import 'package:hive_stock/utils/widgets/bottom_loader.dart';
 import 'package:hive_stock/utils/widgets/card_stat.dart';
 import 'package:hive_stock/utils/widgets/custom_tab_bar.dart';
@@ -57,11 +55,11 @@ class _OrdersBodyState extends State<OrdersBody> with TickerProviderStateMixin {
       controller: _scrollController,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       slivers: [
-        SliverToBoxAdapter(
+        const SliverToBoxAdapter(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const CustomSearchBar(
+              CustomSearchBar(
                 myLabelText: "Search product, supplier, order",
                 myOnChanged: null,
               ),
