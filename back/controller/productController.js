@@ -113,19 +113,35 @@ module.exports = {
     }
   },
 
+  ///// requetes de overview details
+
   overviewProduct : async(req,res) => {
     try{
-      const prodNom = req.query.nom;
+      const prodId = req.query.id;
 
       const productInformation = await models.produit.findOne({
+        attributes: ['NOM', 'SKU', 'CLASSE', 'PRIX_UNIT'],
+        include: [{
+          model: models.categorie,
+          attributes: ['NOM_CATEGORIE'],
+          as: 'CATEGORIE'
+        }],
         where: {
-          NOM : prodNom
+          PRODUIT_ID : prodId
         } 
       });
 
       console.table(productInformation.dataValues);
 
-      return res.json(productInformation);
+      const resultat = {
+        NOM: productInformation.NOM,
+        SKU: productInformation.SKU,
+        CLASSE: productInformation.CLASSE,
+        PRIX_UNIT:productInformation.PRIX_UNIT,
+        CATEGORIE: productInformation.CATEGORIE ? productInformation.CATEGORIE.NOM_CATEGORIE : null,
+      }
+
+      return res.json(resultat);
 
     }catch (error) {
       res.status(500).json({
@@ -133,18 +149,167 @@ module.exports = {
       });
     }
   },
+  //// requetes des supplier details
+
+  getSupplierDetails : async (req, res) => {
+    try{
+      const prodId = req.query.id;
+
+      const supplierInformation = await models.produit.findOne({
+        where: {
+          PRODUIT_ID: prodId
+        }
+      });
+
+      const fournis = await models.fournisseur.findOne({
+        attributes: ['NOM_FOURNISSEUR', 'TELEPHONE'],
+        where: {
+          FOURNISSEUR_ID : supplierInformation.FOURNISSEUR_ID
+        }
+      })
+      /*if (!supplierInformation || !supplierInformation.FOURNISSEUR) {
+        return res.status(404).json({
+          message: "Fournisseur non trouvé pour ce produit"
+        });
+      }*/
+  
+      console.table(fournis.dataValues);
+  
+      const resultat = {
+        NOM_FOURNISSEUR: fournis.NOM_FOURNISSEUR,
+        NUM_TELEPHONE: fournis.TELEPHONE
+      };
+  
+      return res.json(resultat);
+  
+    } catch (error) {
+      res.status(500).json({
+        message: "Erreur lors de la récupération du fournisseur: " + error.message,
+      });
+    }
+
+  },
+
+  getStockLocations : async(req,res) => {
+    try {
+      const prodId = req.query.prodId;
+      const product = await models.produit.findOne({
+        attributes:['QUANTITE', 'EMPLACEMENT_ID'],
+        where :{
+          PRODUIT_ID : prodId
+        } 
+      });
+
+      const empl = await models.emplacement.findOne({
+        attributes: ['NOM_EMPLACEMENT', 'DESC_EMPLACEMENT'],
+        where :{
+          EMPLACEMENT_ID : product.EMPLACEMENT_ID 
+        }
+      });
+      const response = {
+        NomEmplacement: empl.NOM_EMPLACEMENT,
+        DescriptionEmplacement: empl.DESC_EMPLACEMENT,
+        QuantiteStock: product.QUANTITE,
+      };
+      res.status(200).json(response);
+
+    } catch (error) {
+      res.status(500).json({
+        message: "Erreur lors de la récupération de l'emplacement: " + error.message,
+      });
+    }
+
+  },
 
   getImage : async (req, res) => {
     try {
-      const produit = await models.produit.findByPk(req.params.id);
+      const produit = await models.produit.findByPk(req.query.id);
   
-      if (!produit || !produit.imageProduit) {
+      if (!produit || !produit.PRODUIT_IMAGE) {
         return res.status(404).json({ error: 'Produit ou image non trouvée' });
       }
   
       res.set('Content-Type', 'image/jpeg'); // Ou le type MIME approprié
-      res.send(produit.imageProduit);
+      res.send(produit.PRODUIT_IMAGE);
     } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+
+  getQuantityDetails : async (req,res) => {
+    try {
+      const prodId = req.query.productId;
+      const quantiteProd = await models.produit.findOne({
+        attributes : [
+          'QUANTITE', 'SEUIL'
+        ],
+        where: {
+          PRODUIT_ID: prodId
+        }
+      });
+
+      const commandeClient = await models.commande_client.findAll({
+        attributes: ['COMM_CLIENT_ID'],
+        where : {
+          TYPE_COMMANDE : 'commande'
+        }
+      });
+
+      const commandeIds = commandeClient.map(order => order.COMM_CLIENT_ID);
+      
+      const atPreparation = await models.ligne_commande.count({
+        include: [
+          {
+              model: models.commande,
+              as: "COMMANDE",
+              attributes: [],
+              where: {
+                  DATE_DEPART : null,
+                  COMMANDE_ID : {
+                    [Op.in] : commandeIds
+                  }
+              }
+          }
+        ],
+
+        where: {
+          PRODUIT_ID : prodId,
+        }
+      });
+
+      const onTheWay = await models.ligne_commande.count({
+        include: [
+          {
+              model: models.commande,
+              as: "COMMANDE",
+              attributes: [],
+              where: {
+                DATE_DEPART : {
+                  [Op.not] : null
+                },
+                COMMANDE_ID : {
+                  [Op.in] : commandeIds
+                }
+                 
+              }
+          }
+        ],
+
+        where: {
+          PRODUIT_ID : prodId,
+        }
+      });
+
+    const response = {
+      Quantity: quantiteProd.QUANTITE,
+      atPreparation: atPreparation,
+      onTheWay: onTheWay,
+      TressHoldValue: quantiteProd.SEUIL
+    };
+
+    res.status(200).json(response);
+    }catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
@@ -334,6 +499,7 @@ module.exports = {
       });
   }
   },
+
 
   // Requete graphe pour recup le total de revenus que ce produit a généré par mois/semaine/jour
   productFinance : async (req,res) => {
@@ -743,44 +909,6 @@ module.exports = {
     }
   },
 
-  getTopSellingProduct: async (req, res) => {
-    try {
-      console.log(`Top Selling Product =>`);
-      await models.produit
-        .findAll({
-          include: [
-            {
-              model: models.produit_vendu,
-              as: "produit_vendus",
-              attributes: [],
-              required: true,
-            },
-          ],
-          attributes: ['NOM'],
-          order: [[sequelize.col('produit_vendus.QUANTITE'), "DESC"]],
-        })
-        .then((result) => {
-          if (result.length > 0) {
-            const topProduct = result[0].dataValues;
-            console.table([topProduct]); 
-            res.status(200).json(topProduct);
-          } else {
-            res.status(404).json({ message: "No products found" });
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching top selling product:", error);
-          res.status(500).json({
-            message: "Error fetching top selling product: " + error.message,
-          });
-        });
-    } catch (error) {
-      res.status(500).json({
-        message:
-          "Erreur lors de la récupération du top selling product: " + error.message,
-      });
-    }
-  },
 
   // getProductsOverview: async (req,res) => {
   //   try {
