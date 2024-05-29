@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
+import 'package:hive_stock/product/models/inventory_stats.dart';
 import 'package:hive_stock/product/models/product.dart';
 import 'package:hive_stock/product/repository/product_repository.dart';
 import 'package:hive_stock/utils/methods/logger.dart';
@@ -28,10 +29,12 @@ class InventoryBloc extends Bloc<InventoryEvent, InventoryState> {
       : _productRepository = productRepository,
         super(const InventoryState()) {
     on<InventoryFetched>(_onProductFetched);
+    on<InventoryStatsFetched>(_onProductStatsFetched);
   }
 
   Future<void> _onProductFetched(
       InventoryFetched event, Emitter<InventoryState> emit) async {
+
     if (state.hasReachedMax) return;
     try {
       if (state.status == InventoryStatus.initial) {
@@ -67,5 +70,20 @@ class InventoryBloc extends Bloc<InventoryEvent, InventoryState> {
       logger.w("error fetching posts: $e", error: 'Product Bloc');
       throw Exception('error fetching posts: $e');
     }
+  }
+
+  Future<InventoryStats> _getStats() async {
+    try {
+      return await _productRepository.getStatsInventory();
+    } catch (e) {
+      logger.w("error fetching posts: $e", error: 'Product Bloc');
+      throw Exception('error fetching posts: $e');
+    }
+  }
+
+  FutureOr<void> _onProductStatsFetched(InventoryStatsFetched event, Emitter<InventoryState> emit) async {
+    var stat = await _getStats();
+
+    return emit(state.copyWith(stats : stat));
   }
 }

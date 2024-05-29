@@ -98,24 +98,20 @@ class _ProductBodyState extends State<ProductBody>
 }
 
 class _History extends StatelessWidget {
-  const _History({
-    super.key,
-  });
+  const _History();
 
   @override
   Widget build(BuildContext context) {
-    return Text('data');
+    return const Text('data');
   }
 }
 
 class _Adjustement extends StatelessWidget {
-  const _Adjustement({
-    super.key,
-  });
+  const _Adjustement();
 
   @override
   Widget build(BuildContext context) {
-    return Text('data');
+    return const Text('data');
   }
 }
 

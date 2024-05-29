@@ -48,7 +48,8 @@ class _InventoryPageState extends State<InventoryPage> {
         create: (context) => InventoryBloc(
             productRepository:
                 RepositoryProvider.of<ProductRepository>(context))
-          ..add(InventoryFetched()), // we do the initial fetch
+          ..add(InventoryFetched())
+          ..add(InventoryStatsFetched()), // we do the initial fetch
         child: const InventoryBody(),
       ),
     );

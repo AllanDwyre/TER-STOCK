@@ -7,21 +7,25 @@ final class InventoryState extends Equatable {
     this.status = InventoryStatus.initial,
     this.products = const <Product>[],
     this.hasReachedMax = false,
+    this.stats,
   });
 
   final InventoryStatus status;
   final List<Product> products;
   final bool hasReachedMax;
+  final InventoryStats? stats;
 
   InventoryState copyWith({
     InventoryStatus? status,
     List<Product>? products,
     bool? hasReachedMax,
+    InventoryStats? stats,
   }) {
     return InventoryState(
       status: status ?? this.status,
       products: products ?? this.products,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      stats: stats ?? this.stats,
     );
   }
 

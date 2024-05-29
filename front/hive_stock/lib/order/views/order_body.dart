@@ -98,11 +98,7 @@ class OrderBody extends StatelessWidget {
   }
 
   void _onProductTap(BuildContext context, int productId) {
-    if (isFromScan) {
-      // TODO : redirect to a scan product widget (to display the emplacement of the product and click finish)
-    } else {
-      Navigator.of(context).push(ProductPage.route(produitId: productId));
-    }
+    Navigator.of(context).push(ProductPage.route(produitId: productId));
   }
 
   Text informationSection(

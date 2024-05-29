@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
+import 'package:hive_stock/product/models/inventory_stats.dart';
 import 'package:hive_stock/product/models/movement_chart.dart';
 import 'package:hive_stock/product/models/product.dart';
 import 'package:hive_stock/utils/app/bridge_repository.dart';
@@ -73,5 +74,53 @@ class ProductRepository {
       final map = json as Map<String, dynamic>;
       return MovementChart.fromJson(map);
     }).toList();
+  }
+
+  Future<InventoryStats> getStatsInventory() async {
+    final totalResponse =
+        await BridgeController.request.get("/Inventory/TotalProductsCount");
+
+    if (totalResponse.statusCode != 200) {
+      throw Exception(totalResponse);
+    }
+
+    final categories =
+        await BridgeController.request.get("/Inventory/TotalCategories");
+
+    if (categories.statusCode != 200) {
+      throw Exception(categories);
+    }
+
+    final selling = await BridgeController.request.get("/Inventory/topSelling");
+
+    if (selling.statusCode != 200) {
+      throw Exception(selling);
+    }
+
+    final lowstock =
+        await BridgeController.request.get("/Inventory/LowStockProductsCount");
+
+    if (lowstock.statusCode != 200) {
+      throw Exception(selling);
+    }
+
+    Map<String, dynamic> data = totalResponse.data as Map<String, dynamic>;
+    int? totalProduct = int.tryParse(data["totalProductsCount"].toString());
+
+    data = categories.data as Map<String, dynamic>;
+    int? totalCategory = int.tryParse(data["TotalCategoriesCount"].toString());
+
+    data = selling.data as Map<String, dynamic>;
+    String? topSelling = data["NOM"] as String;
+
+    data = lowstock.data as Map<String, dynamic>;
+    int? lowstockCount = int.tryParse(data["result"].toString());
+
+    return InventoryStats(
+      lowStocks: lowstockCount,
+      topSelling: topSelling,
+      totalCategories: totalCategory,
+      totalProducts: totalProduct,
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_stock/product/bloc/inventory_bloc.dart';
+import 'package:hive_stock/product/models/inventory_stats.dart';
 import 'package:hive_stock/product/views/product_page.dart';
 import 'package:hive_stock/utils/widgets/item_card.dart';
 import 'package:hive_stock/utils/widgets/search_bar.dart';
@@ -167,57 +168,62 @@ class _OverallInventoryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorTheme = Theme.of(context).colorScheme;
-    return Visibility(
-      visible: isVisible,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Overall Inventory",
-              style: textTheme.headlineSmall
-                  ?.copyWith(color: colorTheme.onBackground),
-            ),
-            const SizedBox(height: 5),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                children: [
-                  Row(
+    return BlocBuilder<InventoryBloc, InventoryState>(
+      builder: (context, state) {
+      InventoryStats? stats = state.stats;
+        return Visibility(
+          visible: isVisible,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Overall Inventory",
+                  style: textTheme.headlineSmall
+                      ?.copyWith(color: colorTheme.onBackground),
+                ),
+                const SizedBox(height: 5),
+                 Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(
                     children: [
-                      CardStat(
-                        title: 'Total Products',
-                        titleColor: Color.fromRGBO(225, 145, 51, 1),
-                        data: "2158", // TODO : fecth data from backend
+                      Row(
+                        children: [
+                          CardStat(
+                            title: 'Total Products',
+                            titleColor: const Color.fromRGBO(225, 145, 51, 1),
+                            data: "${stats?.totalProducts}", 
+                          ),
+                          CardStat(
+                            title: 'Categories',
+                            titleColor: const Color.fromRGBO(21, 112, 239, 1),
+                            data: "${stats?.totalCategories}", 
+                          ),
+                        ],
                       ),
-                      CardStat(
-                        title: 'Categories',
-                        titleColor: Color.fromRGBO(21, 112, 239, 1),
-                        data: "30", // TODO : fecth data from backend
+                      Row(
+                        children: [
+                          CardStat(
+                            title: 'Top Selling',
+                            titleColor: const Color.fromRGBO(132, 94, 188, 1),
+                            data: "${stats?.topSelling}",
+                          ), 
+                          CardStat(
+                            title: 'Low Stocks',
+                            titleColor: const Color.fromRGBO(243, 105, 96, 1),
+                            data: "${stats?.lowStocks}",
+                          ), 
+                        ],
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      CardStat(
-                        title: 'Top Selling',
-                        titleColor: Color.fromRGBO(132, 94, 188, 1),
-                        data: 'GodZilla',
-                      ), // TODO : fecth data from backend
-                      CardStat(
-                        title: 'Low Stocks',
-                        titleColor: Color.fromRGBO(243, 105, 96, 1),
-                        data: "5",
-                      ), // TODO : fecth data from backend
-                    ],
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
