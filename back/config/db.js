@@ -79,10 +79,6 @@ const initModels = require("../model/tables/init-models").initModels;
 const modelsLocale = initModels(sequelizeLocal, DataTypes);
 const modelsCloud = initModels(sequelizeCloud, DataTypes);
 
-/*for(const model in modelsCloud ){
-  console.log(model);
-}*/
-
 // Fonction de synchronisation des données pour chaque modèle
 async function synchronizeTables() {
   try {
@@ -123,36 +119,5 @@ cron.schedule("0 0 1 * *", () => {
   synchronizeTables();
 });
 
-/*
-const currentDate = new Date();
-const year = currentDate.getFullYear(); // Année
-const month = currentDate.getMonth() + 1; // Mois (janvier est 0, donc on ajoute 1)
-const day = currentDate.getDate(); // Jour du mois
-const formattedDate = `${year}-${month < 10 ? "0" : ""}${month}-${
-  day < 10 ? "0" : ""
-}${day}`;
-console.log(formattedDate);*/
 
-/*const User = require('../model/tables/users.js')(sequelize, DataTypes);
-
-
-User.findAll().then( res => {
-  console.log(res);
-})*/
-/* Insérer une nouvelle ligne dans la table users
-User.create({
-  USER_ID: 1,
-  USERNAME: 'utilisateur1',
-  NAME_USER: 'NomUtilisateur1',
-  FIRST_NAME: 'PrénomUtilisateur1',
-  USER_MAIL: 'utilisateur1@example.com',
-  USER_TEL: 1234567890,
-  USER_DATE_NAISS: '1990-01-01' // ou null si non spécifié
-}).then(user => {
-  console.log("Utilisateur créé avec succès :", user);
-}).catch(err => {
-  console.error("Erreur lors de la création de l'utilisateur :", err);
-});*/
-
-// Exporter l'objet Sequelize configuré
 module.exports = sequelizeCloud;

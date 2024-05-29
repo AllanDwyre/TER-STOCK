@@ -12,6 +12,8 @@ app.use(session({
   saveUninitialized: true
 }));
 
+app.use(express.json({ limit: '10mb' })); // Pour recevoir des données JSON volumineuses
+
 // Ajout des middlewares
 app.use(express.urlencoded({ extended: true }));
 
