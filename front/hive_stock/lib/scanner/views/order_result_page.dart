@@ -42,6 +42,7 @@ class IncomingBody extends StatelessWidget {
           return OrderPage(
             orderId: state.response!.id!,
             isFromScan: true,
+            scrollController : scrollController,
           );
         }
         if (state.status == FetchOrderStatus.initial) {

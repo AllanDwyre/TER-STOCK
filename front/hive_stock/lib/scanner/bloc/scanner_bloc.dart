@@ -63,7 +63,7 @@ class ScannerBloc extends Bloc<ScannerEvent, ScannerState> {
       );
       return;
     }
-    if (data.expectedLocation == validData.commande!.locationType) {
+    if (data.expectedLocation != validData.commande!.locationType) {
       emit(
         state.copyWith(
             status: FetchOrderStatus.orderError,
@@ -106,7 +106,7 @@ class ScannerBloc extends Bloc<ScannerEvent, ScannerState> {
       );
       return;
     }
-    if (data.expectedLocation == validData.commande!.locationType) {
+    if (data.expectedLocation != validData.commande!.locationType) {
       emit(
         state.copyWith(
             status: FetchOrderStatus.orderWarning,

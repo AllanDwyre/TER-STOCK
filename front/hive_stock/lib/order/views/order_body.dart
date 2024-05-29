@@ -9,10 +9,14 @@ import 'details_card.dart';
 
 class OrderBody extends StatelessWidget {
   final bool isFromScan;
+  final ScrollController? scrollController;
+
   const OrderBody({
     super.key,
     required this.isFromScan,
+    this.scrollController,
   });
+
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
@@ -22,10 +26,12 @@ class OrderBody extends StatelessWidget {
       builder: (context, state) {
         Order? order = state.orderData;
         return CustomScrollView(
+          controller: scrollController,
           slivers: [
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20)
+                    .copyWith(top: 40),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -77,6 +83,7 @@ class OrderBody extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.symmetric(vertical: 5),
                   child: DetailsCard(
+                    isFromScan: isFromScan,
                     onTap: () => _onProductTap(
                         context, order.details![index].productId!),
                     details: order!.details![index],

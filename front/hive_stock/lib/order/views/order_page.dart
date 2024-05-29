@@ -6,9 +6,16 @@ import 'package:hive_stock/order/repository/order_repository.dart';
 import 'order_body.dart';
 
 class OrderPage extends StatelessWidget {
-  const OrderPage({super.key, required this.orderId, this.isFromScan = false});
   final int orderId;
   final bool isFromScan;
+  final ScrollController? scrollController;
+
+  const OrderPage({
+    super.key,
+    required this.orderId,
+    this.isFromScan = false,
+    this.scrollController,
+  });
 
   static Route route({required int id}) => MaterialPageRoute(
       builder: (context) => OrderPage(
@@ -36,6 +43,7 @@ class OrderPage extends StatelessWidget {
             orderRepository: RepositoryProvider.of<OrderRepository>(context))
           ..add(OrderFetched(id: orderId)),
         child: OrderBody(
+          scrollController : scrollController,
           isFromScan: isFromScan,
         ),
       ),
