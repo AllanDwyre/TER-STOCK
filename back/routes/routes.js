@@ -38,6 +38,8 @@ router.get("/homePage/lowStocksProducts", auth, controllers.HomePageController.g
 
 router.get("/homePage/salesAndPurchasesPeriod", auth, controllers.HomePageController.getSalesAndPurchasesByPeriod);
 
+router.get("/homePage/topSellingStock", auth, controllers.HomePageController.getTopStockPagination);
+
 
 //PRODUIT
 router.get("/Products", auth, controllers.productController.getProductById);
