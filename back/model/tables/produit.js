@@ -62,14 +62,14 @@ module.exports = function(sequelize, DataTypes) {
     SEUIL: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      defaultValue: 7
+      defaultValue: 5
     },
     QUANTITE: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
     PRODUIT_IMAGE: {
-      type: DataTypes.STRING(255), //on met blobl pour stocker des données binaires , sinon STRING
+      type: DataTypes.BLOB, //on met blobl pour stocker des données binaires , sinon STRING
       allowNull: true
     },
     SKU: {

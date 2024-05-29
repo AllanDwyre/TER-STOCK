@@ -106,7 +106,6 @@ function initModels(sequelize) {
     foreignKey: "VENTE_ID",
     otherKey: "PRODUIT_ID",
   });
-  produit.belongsTo(fournisseur, {as: "FOURNISSEUR_PROD", foreignKey: "FOURNISSEUR_ID"});
   client.belongsTo(adresse, { as: "ADRESSE", foreignKey: "ADRESSE_ID" });
   adresse.hasMany(client, { as: "clients", foreignKey: "ADRESSE_ID" });
   employe.belongsTo(adresse, { as: "ADRESSE", foreignKey: "ADRESSE_ID" });

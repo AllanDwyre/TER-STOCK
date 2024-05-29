@@ -42,10 +42,7 @@ class _ScannerBodyState extends State<ScannerBody> {
             borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
         context: context,
         builder: (context) => response.type == "product"
-            ? ProductPage(
-                produitId: response.id,
-                isFullHeader: false,
-              )
+            ? ProductPage(produitId: response.id)
             : ProductPage(produitId: response.id) // TODO : change to orderPage
         );
     await Future.delayed(Durations.long2);

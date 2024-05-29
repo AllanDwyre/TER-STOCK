@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_stock/product/bloc/inventory_bloc.dart';
+import 'package:hive_stock/product/models/product_inventory.dart';
 import 'package:hive_stock/product/views/product_page.dart';
 import 'package:hive_stock/utils/widgets/item_card.dart';
 import 'package:hive_stock/utils/widgets/search_bar.dart';
 import 'package:hive_stock/utils/constants/padding.dart';
 
-import '../../utils/widgets/bottom_loader.dart';
-import '../../utils/widgets/card_stat.dart';
+import 'bottom_loader.dart';
+import 'card_stat.dart';
 
 class InventoryBody extends StatefulWidget {
-  const InventoryBody({super.key});
+  const InventoryBody({super.key, this.productList});
+
+  final List<ProductInventory>? productList;
 
   @override
   State<InventoryBody> createState() => _InventoryBodyState();

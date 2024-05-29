@@ -5,11 +5,8 @@ import 'package:hive_stock/product/models/product.dart';
 import 'package:hive_stock/utils/constants/constants.dart';
 import 'package:hive_stock/utils/widgets/snackbars.dart';
 
-import '../../utils/widgets/custom_tab_bar.dart';
-
 class ProductBody extends StatefulWidget {
-  const ProductBody({super.key, required this.isFullHeader});
-  final bool isFullHeader;
+  const ProductBody({super.key});
 
   @override
   State<ProductBody> createState() => _ProductBodyState();
@@ -33,24 +30,29 @@ class _ProductBodyState extends State<ProductBody>
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    ColorScheme colorTheme = Theme.of(context).colorScheme;
     return BlocBuilder<ProductBloc, ProductState>(
       builder: ((context, state) {
         Product? product = state.productdetails?.product;
         return CustomScrollView(
           slivers: [
-            SliverVisibility(
-              visible: widget.isFullHeader,
-              sliver: _ProductAppBar(
-                productName: state.productdetails?.product.name,
-              ),
+            _ProductAppBar(
+              productName: state.productdetails?.product.name,
             ),
-            _ProductHeader(product: product, isFullHeader: widget.isFullHeader),
+            _ProductHeader(product: product),
             SliverAppBar(
               automaticallyImplyLeading: false,
               pinned: true,
               primary: false,
-              title: CustomTabBar(
-                tabController: tabController,
+              title: TabBar(
+                controller: tabController,
+                labelPadding: const EdgeInsets.symmetric(horizontal: 5),
+                labelColor: colorTheme.primary,
+                unselectedLabelColor: colorTheme.secondary,
+                dividerColor: Colors.transparent,
+                indicator: UnderlineTabIndicator(
+                    borderSide:
+                        BorderSide(color: colorTheme.primary, width: 1)),
                 tabs: const [
                   Tab(text: "Overview"),
                   Tab(text: "Purchases"),
@@ -168,11 +170,9 @@ class _Overview extends StatelessWidget {
 class _ProductHeader extends StatelessWidget {
   const _ProductHeader({
     required this.product,
-    required this.isFullHeader,
   });
 
   final Product? product;
-  final bool isFullHeader;
 
   @override
   Widget build(BuildContext context) {
@@ -184,8 +184,17 @@ class _ProductHeader extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _ProductBasicInformation(
-                product: product, isFullHeader: isFullHeader),
+            Text(
+              product?.name ?? '-',
+              style: textTheme.headlineLarge,
+            ),
+            const SizedBox(height: 5),
+            Text(
+              // "Class ${widget.product.class_ ?? "null"} | Sku : ${widget.product.sku}", // TODO : get the class and sku from backend modification
+              "Class A | Sku : ABC-12345-S-BL",
+              style: textTheme.titleSmall
+                  ?.copyWith(color: colorTheme.onBackground),
+            ),
             const SizedBox(height: 10),
             Visibility(
               visible:
@@ -214,74 +223,6 @@ class _ProductHeader extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class _ProductBasicInformation extends StatelessWidget {
-  const _ProductBasicInformation({
-    required this.product,
-    required this.isFullHeader,
-  });
-
-  final Product? product;
-  final bool isFullHeader;
-
-  @override
-  Widget build(BuildContext context) {
-    TextTheme textTheme = Theme.of(context).textTheme;
-    ColorScheme colorTheme = Theme.of(context).colorScheme;
-    return Builder(builder: (context) {
-      if (isFullHeader) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              product?.name ?? '-',
-              style: textTheme.headlineLarge,
-            ),
-            const SizedBox(height: 5),
-            Text(
-              // "Class ${widget.product.class_ ?? "null"} | Sku : ${widget.product.sku}", // TODO : get the class and sku from backend modification
-              "Class A | Sku : ABC-12345-S-BL",
-              style: textTheme.titleSmall
-                  ?.copyWith(color: colorTheme.onBackground),
-            ),
-          ],
-        );
-      }
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                height: 40,
-                width: 40,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(3)),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage(CustomIcons.productImageTest),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 5),
-              Text(
-                product?.name ?? '-',
-                style: textTheme.headlineLarge,
-              ),
-            ],
-          ),
-          const SizedBox(height: 5),
-          Text(
-            // "Class ${widget.product.class_ ?? "null"} | Sku : ${widget.product.sku}", // TODO : get the class and sku from backend modification
-            "Class A | Sku : ABC-12345-S-BL",
-            style:
-                textTheme.titleSmall?.copyWith(color: colorTheme.onBackground),
-          ),
-        ],
-      );
-    });
   }
 }
 

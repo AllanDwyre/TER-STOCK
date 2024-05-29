@@ -24,16 +24,12 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     PRIX_TOTAL: {
-      type: DataTypes.DECIMAL(10,2),
+      type: DataTypes.DECIMAL(6,2),
       allowNull: true
     },
     LOCATION_TYPE: {
       type : DataTypes.ENUM('entrepot','magasin'),
       allowNull: true
-    },
-    DATE_DEPART: {
-      type : DataTypes.DATE,
-      allowNull : true
     }
   }, {
     sequelize,
