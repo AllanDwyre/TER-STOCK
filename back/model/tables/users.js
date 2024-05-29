@@ -38,7 +38,7 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: true,
       },
       USER_PHOTO: {
-        type: DataTypes.BLOB,
+        type: DataTypes.TEXT,
         allowNull: true
       }
     },

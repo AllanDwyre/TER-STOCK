@@ -2,10 +2,10 @@ import 'package:hive_stock/product/models/product.dart';
 
 class ProductInventory {
   final Product product;
-  final int inventaireId;
-  final int staffId;
-  final int quantity;
-  final DateTime inventoryDate;
+  final int? inventaireId;
+  final int? staffId;
+  final int? quantity;
+  final DateTime? inventoryDate;
 
   ProductInventory({
     required this.product,

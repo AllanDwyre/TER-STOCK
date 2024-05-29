@@ -8,9 +8,13 @@ import 'product_body.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage(
-      {super.key, required this.produitId, this.isFullHeader = true});
+      {super.key,
+      required this.produitId,
+      this.isFullHeader = true,
+      this.scrollController});
   final int produitId;
   final bool isFullHeader;
+  final ScrollController? scrollController;
 
   static Route<void> route({required int produitId}) {
     return MaterialPageRoute<void>(
@@ -36,29 +40,31 @@ class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     logger.t('Access to produc n°${widget.produitId}');
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      //resizeToAvoidBottomInset: false,
-      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+    return Builder(builder: (context) {
+      if (widget.isFullHeader) {
+        return Scaffold(
+          extendBodyBehindAppBar: true,
+          //resizeToAvoidBottomInset: false,
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
 
-      body: BlocProvider(
+          body: BlocProvider(
+            create: (context) =>
+                ProductBloc(productRepository: _productRepository)
+                  ..add(ProductFetched(id: widget.produitId)),
+            child: ProductBody(
+              isFullHeader: widget.isFullHeader,
+            ),
+          ),
+        );
+      }
+      return BlocProvider(
         create: (context) => ProductBloc(productRepository: _productRepository)
           ..add(ProductFetched(id: widget.produitId)),
         child: ProductBody(
           isFullHeader: widget.isFullHeader,
+          scrollController: widget.scrollController,
         ),
-      ),
-    );
+      );
+    });
   }
 }
-
-
-      // appBar: AppBar(
-      //   leading: IconButton(
-      //     icon: const Icon(Icons.arrow_back_ios_new,
-      //         color: Colors.white, size: 30.0),
-      //     onPressed: () => Navigator.of(context).pop(),
-      //   ),
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      // ),

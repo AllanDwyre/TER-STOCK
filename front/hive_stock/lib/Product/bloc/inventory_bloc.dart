@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
-import 'package:hive_stock/product/models/product_inventory.dart';
+import 'package:hive_stock/product/models/product.dart';
 import 'package:hive_stock/product/repository/product_repository.dart';
 import 'package:hive_stock/utils/methods/logger.dart';
 import 'package:stream_transform/stream_transform.dart';
@@ -52,19 +52,19 @@ class InventoryBloc extends Bloc<InventoryEvent, InventoryState> {
             ));
     } on Exception catch (e) {
       emit(state.copyWith(status: InventoryStatus.failure));
-      logger.e('Erreur de récupération de list produits\n=> $e',
+      logger.w('Erreur de récupération de list produits\n=> $e',
           error: 'Product Bloc');
     }
   }
 
-  Future<List<ProductInventory>> _fetchProducts([int startIndex = 0]) async {
+  Future<List<Product>> _fetchProducts([int startIndex = 0]) async {
     try {
-      final List<ProductInventory> products = await _productRepository
-          .fetchProducts(start: startIndex, limit: _productLimit);
+      final List<Product> products = await _productRepository.fetchProducts(
+          start: startIndex, limit: _productLimit);
 
       return products;
     } catch (e) {
-      logger.e("error fetching posts: $e", error: 'Product Bloc');
+      logger.w("error fetching posts: $e", error: 'Product Bloc');
       throw Exception('error fetching posts: $e');
     }
   }

@@ -1,16 +1,16 @@
 part of 'product_bloc.dart';
 
 final class ProductState extends Equatable {
-  const ProductState({this.productdetails});
+  const ProductState({this.product});
 
-  final ProductInventory? productdetails;
+  final Product? product;
 
-  ProductState copyWith({ProductInventory? productdetails}) {
+  ProductState copyWith({Product? product}) {
     return ProductState(
-      productdetails: productdetails ?? this.productdetails,
+      product: product ?? this.product,
     );
   }
 
   @override
-  List<Object?> get props => [productdetails];
+  List<Object?> get props => [product];
 }

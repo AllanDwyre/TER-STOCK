@@ -69,7 +69,7 @@ const ColorScheme darkColorScheme = ColorScheme(
 );
 
 const CustomColors lightCustomColors = CustomColors(
-  sourceWarning: Color(0xFFFFBB33),
+  sourceWarning: Color.fromARGB(255, 255, 176, 19),
   warning: Color(0xFF7D5700),
   onWarning: Color(0xFFFFFFFF),
   warningContainer: Color(0xFFFFDEAA),
@@ -93,8 +93,6 @@ const CustomColors darkCustomColors = CustomColors(
   successContainer: Color(0xFF00522C),
   onSuccessContainer: Color(0xFF70FDA7),
 );
-
-
 
 /// Defines a set of custom colors, each comprised of 4 complementary tones.
 ///
@@ -163,12 +161,14 @@ class CustomColors extends ThemeExtension<CustomColors> {
       warning: Color.lerp(warning, other.warning, t),
       onWarning: Color.lerp(onWarning, other.onWarning, t),
       warningContainer: Color.lerp(warningContainer, other.warningContainer, t),
-      onWarningContainer: Color.lerp(onWarningContainer, other.onWarningContainer, t),
+      onWarningContainer:
+          Color.lerp(onWarningContainer, other.onWarningContainer, t),
       sourceSuccess: Color.lerp(sourceSuccess, other.sourceSuccess, t),
       success: Color.lerp(success, other.success, t),
       onSuccess: Color.lerp(onSuccess, other.onSuccess, t),
       successContainer: Color.lerp(successContainer, other.successContainer, t),
-      onSuccessContainer: Color.lerp(onSuccessContainer, other.onSuccessContainer, t),
+      onSuccessContainer:
+          Color.lerp(onSuccessContainer, other.onSuccessContainer, t),
     );
   }
 
@@ -178,7 +178,6 @@ class CustomColors extends ThemeExtension<CustomColors> {
   /// See also:
   ///   * <https://m3.material.io/styles/color/the-color-system/custom-colors#harmonization>
   CustomColors harmonized(ColorScheme dynamic) {
-    return copyWith(
-    );
+    return copyWith();
   }
 }

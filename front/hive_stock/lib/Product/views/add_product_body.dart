@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,19 +31,19 @@ class _AddProductBodyState extends State<AddProductBody> {
         listenWhen: (previous, current) => previous.status != current.status,
         listener: onListen,
         builder: (context, state) {
-          logger.t(state.isValid, error: 'e');
           return Container(
-            height: size.height - 100, //TODO better scrollable form
+            height: size.height - 100,
             padding: defaultPagePadding,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
               children: [
                 _ImagePicker(),
+                const SizedBox(height: 20),
                 FormTextField(
                   labelText: 'Product Name',
                   hintText: 'Enter product name',
-                  errorText: "",
+                  errorText: null,
                   onChanged: (name) => context
                       .read<AddOrEditProductBloc>()
                       .add(OnInformationChangeProduct(name: name)),
@@ -49,7 +51,7 @@ class _AddProductBodyState extends State<AddProductBody> {
                 FormTextField(
                   labelText: 'Category',
                   hintText: 'Enter product category',
-                  errorText: "",
+                  errorText: null,
                   onChanged: (category) => context
                       .read<AddOrEditProductBloc>()
                       .add(OnInformationChangeProduct(category: category)),
@@ -57,7 +59,7 @@ class _AddProductBodyState extends State<AddProductBody> {
                 FormTextField(
                   labelText: 'Dimension',
                   hintText: 'Enter product dimension',
-                  errorText: "",
+                  errorText: null,
                   onChanged: (dimension) => context
                       .read<AddOrEditProductBloc>()
                       .add(OnInformationChangeProduct(dimension: dimension)),
@@ -65,7 +67,7 @@ class _AddProductBodyState extends State<AddProductBody> {
                 FormTextField(
                   labelText: 'Weight',
                   hintText: 'Enter product weight',
-                  errorText: "",
+                  errorText: null,
                   onChanged: (weight) => context
                       .read<AddOrEditProductBloc>()
                       .add(OnInformationChangeProduct(weight: weight)),
@@ -73,18 +75,20 @@ class _AddProductBodyState extends State<AddProductBody> {
                 FormTextField(
                   labelText: 'Buying Price',
                   hintText: 'Enter product buying price',
-                  errorText: "",
-                  onChanged: (price) => context
-                      .read<AddOrEditProductBloc>()
-                      .add(OnInformationChangeProduct(price: price)),
+                  errorText: null,
+                  onChanged: (price) {
+                    context
+                        .read<AddOrEditProductBloc>()
+                        .add(OnInformationChangeProduct(price: price));
+                  },
                 ),
-                SizedBox(height: size.height * 0.1),
+                SizedBox(height: size.height * 0.05),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Visibility(
                       visible: !state.status.isInProgress,
-                      child: PrimaryButton(
+                      child: SecondaryButton(
                         text: 'Discard',
                         onPressed: () => Navigator.of(context).pop(),
                       ),
@@ -150,34 +154,63 @@ class _ImagePicker extends StatelessWidget {
     ColorScheme colorTheme = Theme.of(context).colorScheme;
     Size size = MediaQuery.of(context).size;
 
-    return GestureDetector(
-      onTap: onBrowseImagePressed,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: size.height * .1,
-            height: size.height * .1,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black12),
-              borderRadius: BorderRadius.circular(10),
-            ),
+    return BlocBuilder<AddOrEditProductBloc, AddOrEditProductState>(
+      builder: (context, state) {
+        logger.d(state.img);
+        logger.d(state.pathImg);
+        return GestureDetector(
+          onTap: () => onBrowseImagePressed(context),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              state.pathImg == null
+                  ? Container(
+                      width: size.height * .1,
+                      height: size.height * .1,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black12),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    )
+                  : Container(
+                      width: size.height * .1,
+                      height: size.height * .1,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black12),
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          image: MemoryImage(base64Decode(
+                              state.img!)), //AssetImage(state.pathImg!),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+              const SizedBox(width: 10),
+              Text(
+                state.titleImg ?? "Browse image",
+                style: textTheme.bodyMedium?.copyWith(
+                  color: colorTheme.onBackground,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 10),
-          Text(
-            "Browse image",
-            style: textTheme.bodyMedium?.copyWith(
-              color: colorTheme.onBackground,
-              decoration: TextDecoration.underline,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  void onBrowseImagePressed() async {
-    var picked = await FilePicker.platform.pickFiles();
-    //TODO : file picker
+  void onBrowseImagePressed(BuildContext context) async {
+    var picked =
+        await FilePicker.platform.pickFiles(type: FileType.any, withData: true);
+    if (picked != null) {
+      PlatformFile file = picked.files.first;
+      logger.t(file.name);
+      String base64img = base64Encode(file.bytes!); // Uint8List
+      if (context.mounted) {
+        context.read<AddOrEditProductBloc>().add(
+            OnAddImg(img: base64img, pathImg: file.path, titleImg: file.name));
+      }
+    }
   }
 }

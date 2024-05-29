@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hive_stock/home/views/home_body.dart';
 import 'package:hive_stock/home/views/navigation_menu.dart';
+import 'package:hive_stock/scanner/views/scanner_page.dart';
 import 'package:hive_stock/user/views/profile.dart';
-import 'package:hive_stock/utils/constants/padding.dart';
+import 'package:hive_stock/utils/constants/constants.dart';
 
 class HomePage extends StatelessWidget implements Menu {
   const HomePage({super.key});
@@ -11,8 +13,8 @@ class HomePage extends StatelessWidget implements Menu {
   List<Widget> appBarActions(BuildContext context) {
     return <Widget>[
       IconButton(
-        icon: const Icon(Icons.notifications_none),
-        onPressed: () => {},
+        icon: SvgPicture.asset(CustomIcons.scan),
+        onPressed: () => Navigator.push(context, ScannerScreen.route()),
       ),
       IconButton(
         icon: ClipRRect(

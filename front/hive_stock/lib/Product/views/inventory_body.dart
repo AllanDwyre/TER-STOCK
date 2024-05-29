@@ -94,11 +94,11 @@ class _InventoryBodyState extends State<InventoryBody> {
                     return index >= state.products.length
                         ? const BottomLoader()
                         : ProductCard(
-                            productInventory: state.products[index],
+                            product: state.products[index],
                             onTap: () => Navigator.of(context).push(
                                 ProductPage.route(
-                                    produitId: state
-                                        .products[index].product.productId!)),
+                                    produitId:
+                                        state.products[index].productId!)),
                           );
                   },
                   itemCount: state.hasReachedMax

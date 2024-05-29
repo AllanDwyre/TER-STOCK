@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:hive_stock/product/models/product_inventory.dart';
+import 'package:hive_stock/product/models/product.dart';
 import 'package:hive_stock/product/repository/product_repository.dart';
 import 'package:hive_stock/utils/methods/logger.dart';
 
@@ -23,11 +23,11 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     final product = await _tryGetProduct(event.id);
 
     emit(
-      state.copyWith(productdetails: product),
+      state.copyWith(product: product),
     );
   }
 
-  Future<ProductInventory> _tryGetProduct(int id) async {
+  Future<Product> _tryGetProduct(int id) async {
     try {
       logger.t('Product Fetching ...');
 

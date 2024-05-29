@@ -1,5 +1,5 @@
 const express = require("express");
-const multer = require('multer');
+const multer = require("multer");
 const router = express.Router();
 const controllers = require("../controller/Controllers");
 const auth = require("../utils/middleware").auth;
@@ -66,7 +66,8 @@ router.get("/Inventory/LowStockProductsCount",auth,controllers.InventoryControll
 router.get("/Inventory/fetchPagination",auth,controllers.productController.getProductPagination);
 
 //ORDERS
-router.get("/Order", auth, controllers.ordersController.showOrders);
+// router.get("/Order", auth, controllers.ordersController.showOrders);
+router.get("/Order", auth, controllers.ordersController.getOrderById);
 router.post("/Order/newOrder",auth,controllers.addOrderController.addOrder);
 
 router.get("/Order/TotalOrdersCount",auth,controllers.ordersController.getTotalOrdersCount);
@@ -80,6 +81,9 @@ router.get("/Order/orderPagination",auth,controllers.ordersController.getOrderPa
 router.get("/Order/OrderByDate", auth, controllers.ordersController.getOrderByDate);
 router.get("/Order/OrderByPrice", auth, controllers.ordersController.getOrdersWithTotalPriceLessThan);
 router.get("/Order/OrderInDelevery", auth, controllers.ordersController.getOrdersInDelivery);
+
+
+router.get("/Track", controllers.productController.addOrSustractProduit);
 
 
 /*=============================CRUD===================================

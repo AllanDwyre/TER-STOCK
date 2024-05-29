@@ -17,6 +17,9 @@ class Commande {
     return 2;
   }
 
+  String get statusString => ["In Process", "On the way", "Arrived"][status];
+  bool get isArrived => status == 2;
+
   Commande({
     required this.id,
     required this.dateCommande,

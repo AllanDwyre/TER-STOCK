@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:hive_stock/product/models/product.dart';
-import 'package:hive_stock/product/models/product_inventory.dart';
 import 'package:hive_stock/utils/app/bridge_repository.dart';
 
 class ProductRepository {
@@ -11,8 +10,8 @@ class ProductRepository {
     // TODO ADD FORMDATA
     final params = FormData();
 
-    final response = await BridgeController.request
-        .post("/Products", data: params);
+    final response =
+        await BridgeController.request.post("/Products", data: params);
 
     if (response.statusCode != 200) {
       throw Exception(response);
@@ -21,21 +20,21 @@ class ProductRepository {
     return int.parse(response.data);
   }
 
-  Future<ProductInventory> getProduct(int productId) async {
+  Future<Product> getProduct(int productId) async {
     final params = {"id": productId};
 
-    final response =
-        await BridgeController.request.get("/Products", queryParameters: params);
+    final response = await BridgeController.request
+        .get("/Products", queryParameters: params);
 
     if (response.statusCode != 200) {
       throw Exception(response);
     }
 
     final body = response.data as Map<String, dynamic>;
-    return ProductInventory.fromJson(body);
+    return Product.fromJson(body);
   }
 
-  Future<List<ProductInventory>> fetchProducts(
+  Future<List<Product>> fetchProducts(
       {int start = 0, required int limit}) async {
     final params = {"start": start, "limit": limit};
 
@@ -50,7 +49,7 @@ class ProductRepository {
 
     return body.map((dynamic json) {
       final map = json as Map<String, dynamic>;
-      return ProductInventory.fromJson(map);
+      return Product.fromJson(map);
     }).toList();
   }
 }

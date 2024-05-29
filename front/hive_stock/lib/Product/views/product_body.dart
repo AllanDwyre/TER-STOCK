@@ -6,10 +6,13 @@ import 'package:hive_stock/utils/constants/constants.dart';
 import 'package:hive_stock/utils/widgets/snackbars.dart';
 
 import '../../utils/widgets/custom_tab_bar.dart';
+import '../../utils/widgets/table_row.dart';
 
 class ProductBody extends StatefulWidget {
-  const ProductBody({super.key, required this.isFullHeader});
+  const ProductBody(
+      {super.key, required this.isFullHeader, this.scrollController});
   final bool isFullHeader;
+  final ScrollController? scrollController;
 
   @override
   State<ProductBody> createState() => _ProductBodyState();
@@ -35,13 +38,14 @@ class _ProductBodyState extends State<ProductBody>
     Size size = MediaQuery.of(context).size;
     return BlocBuilder<ProductBloc, ProductState>(
       builder: ((context, state) {
-        Product? product = state.productdetails?.product;
+        Product? product = state.product;
         return CustomScrollView(
+          controller: widget.scrollController,
           slivers: [
             SliverVisibility(
               visible: widget.isFullHeader,
               sliver: _ProductAppBar(
-                productName: state.productdetails?.product.name,
+                productName: product?.name,
               ),
             ),
             _ProductHeader(product: product, isFullHeader: widget.isFullHeader),
@@ -120,7 +124,7 @@ class _Overview extends StatelessWidget {
 
   final Product? product;
 
-  Text InformationSection(
+  Text informationSection(
       {required String title, required BuildContext context}) {
     return Text(
       title,
@@ -139,26 +143,27 @@ class _Overview extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       //TODO : sync informations
       children: [
-        InformationSection(title: 'Primary Details', context: context),
-        _TableRowProduct(title: 'Name', value: checkValue(product?.name)),
-        _TableRowProduct(
-            title: 'Product Sku', value: checkValue(product?.barcode)),
-        _TableRowProduct(
+        informationSection(title: 'Primary Details', context: context),
+        CustomTableRow(title: 'Name', value: checkValue(product?.name)),
+        CustomTableRow(title: 'Product Sku', value: checkValue(product?.sku)),
+        CustomTableRow(
+            title: 'Product Barcode', value: checkValue(product?.barcode)),
+        CustomTableRow(
             title: 'Product Class', value: checkValue(product?.dimensions)),
-        _TableRowProduct(
+        CustomTableRow(
             title: 'Product Price',
             value: checkValue(product?.unitPrice.toString())),
-        const _TableRowProduct(title: 'Product category', value: 'Pharmacy'),
-        const _TableRowProduct(title: 'Storage date', value: '15/02/2023'),
-        InformationSection(title: 'Quantity Details', context: context),
-        const _TableRowProduct(title: 'Quantity', value: '20'),
-        const _TableRowProduct(title: 'At preparation', value: '50'),
-        const _TableRowProduct(title: 'On the way', value: '150'),
-        const _TableRowProduct(title: 'Arrival Date', value: '15/06/2023'),
-        const _TableRowProduct(title: 'Threshold Value', value: 'auto'),
-        InformationSection(title: 'Supplier Details', context: context),
-        const _TableRowProduct(title: 'Supplier Name', value: 'Phara LDC'),
-        const _TableRowProduct(
+        const CustomTableRow(title: 'Product category', value: 'Pharmacy'),
+        const CustomTableRow(title: 'Storage date', value: '15/02/2023'),
+        informationSection(title: 'Quantity Details', context: context),
+        CustomTableRow(title: 'Quantity', value: "${product?.quantity}"),
+        const CustomTableRow(title: 'At preparation', value: '50'),
+        const CustomTableRow(title: 'On the way', value: '150'),
+        const CustomTableRow(title: 'Arrival Date', value: '15/06/2023'),
+        CustomTableRow(title: 'Threshold Value', value: "${product?.seuil}"),
+        informationSection(title: 'Supplier Details', context: context),
+        const CustomTableRow(title: 'Supplier Name', value: 'Phara LDC'),
+        const CustomTableRow(
             title: 'Supplier Contact', value: '07 67 02 73 76'),
       ],
     );
@@ -188,8 +193,7 @@ class _ProductHeader extends StatelessWidget {
                 product: product, isFullHeader: isFullHeader),
             const SizedBox(height: 10),
             Visibility(
-              visible:
-                  (product?.productId ?? 1) % 2 == 0, //TODO : change that lol
+              visible: (product?.productId ?? 1) % 2 == 0,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -199,7 +203,6 @@ class _ProductHeader extends StatelessWidget {
                         ?.copyWith(color: colorTheme.onBackground),
                   ),
                   const SizedBox(height: 10),
-                  // ? : Sliver List ?
                   CustomSnackbar(
                     type: SnackbarType.warning,
                     title: 'Temperature',
@@ -241,8 +244,7 @@ class _ProductBasicInformation extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              // "Class ${widget.product.class_ ?? "null"} | Sku : ${widget.product.sku}", // TODO : get the class and sku from backend modification
-              "Class A | Sku : ABC-12345-S-BL",
+              "Class ${product?.classe ?? "-"} | Sku : ${product?.sku ?? "-"}",
               style: textTheme.titleSmall
                   ?.copyWith(color: colorTheme.onBackground),
             ),
@@ -274,8 +276,7 @@ class _ProductBasicInformation extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           Text(
-            // "Class ${widget.product.class_ ?? "null"} | Sku : ${widget.product.sku}", // TODO : get the class and sku from backend modification
-            "Class A | Sku : ABC-12345-S-BL",
+            "Class ${product?.classe ?? "-"} | Sku : ${product?.sku ?? "-"}",
             style:
                 textTheme.titleSmall?.copyWith(color: colorTheme.onBackground),
           ),
@@ -297,49 +298,16 @@ class _ProductAppBar extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return SliverAppBar(
-        pinned: true,
-        floating: true,
-        expandedHeight: size.height * 0.25,
-        flexibleSpace: FlexibleSpaceBar(
-          centerTitle: false,
-          titlePadding: const EdgeInsetsDirectional.all(15),
-          background: Image.asset(
-            CustomIcons.productImageTest,
-            fit: BoxFit.cover,
-          ),
-        ));
-  }
-}
-
-class _TableRowProduct extends StatelessWidget {
-  const _TableRowProduct({
-    required this.title,
-    required this.value,
-  });
-  final String title;
-  final String value;
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    TextTheme textTheme = Theme.of(context).textTheme;
-    ColorScheme colorTheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-      width: size.width,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            title,
-            maxLines: 1,
-            softWrap: false,
-            style: textTheme.titleSmall?.copyWith(color: colorTheme.secondary),
-          ),
-          Text(
-            value,
-            style: textTheme.titleSmall?.copyWith(color: colorTheme.secondary),
-          ),
-        ],
+      pinned: true,
+      floating: true,
+      expandedHeight: size.height * 0.25,
+      flexibleSpace: FlexibleSpaceBar(
+        centerTitle: false,
+        titlePadding: const EdgeInsetsDirectional.all(15),
+        background: Image.asset(
+          CustomIcons.productImageTest,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
