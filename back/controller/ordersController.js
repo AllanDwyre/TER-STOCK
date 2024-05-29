@@ -1,4 +1,5 @@
 const { Sequelize } = require("sequelize");
+const { Op, literal, where } = require("sequelize");
 const sequelize = require("../config/db");
 const initModels = require("../model/tables/init-models").initModels;
 const models = initModels(sequelize);
@@ -230,8 +231,20 @@ module.exports = {
     try {
       const ordersInTransitFournisseur =
         await models.commande_fournisseur.findAll({
+          include: [
+            {
+                model: models.commande,
+                as: "COMM_FOURN",
+                attributes: [],
+                where: {
+                    DATE_REEL_RECU: null,
+                    DATE_DEPART : {
+                      [Op.not] : null
+                    }
+                }
+            }
+        ], 
           where: {
-            DATE_REEL_RECU: null,
             TYPE_COMMANDE: "commande",
           },
         });
@@ -248,8 +261,20 @@ module.exports = {
   getOrdersInTransitClient: async (req, res) => {
     try {
       const ordersInTransitClient = await models.commande_client.findAll({
+        include: [
+          {
+              model: models.commande,
+              as: "COMM_CLIENT",
+              attributes: [],
+              where: {
+                  DATE_REEL_RECU: null,
+                  DATE_DEPART : {
+                    [Op.not] : null
+                  }
+              }
+          }
+      ], 
         where: {
-          DATE_REEL_RECU: null,
           TYPE_COMMANDE: "commande",
         },
       });

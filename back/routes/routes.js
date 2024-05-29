@@ -73,8 +73,8 @@ router.post("/Order/newOrder",auth,controllers.addOrderController.addOrder);
 router.get("/Order/TotalOrdersCount",auth,controllers.ordersController.getTotalOrdersCount);
 router.get("/Order/TotalOrdersreceived",auth,controllers.ordersController.getTotalOrdersReceived);
 router.get("/Order/TotalOrdersreturned",auth,controllers.ordersController.getReturnOrdersCount);
-router.get("/Order/TotalOrdersInTransitClient",auth,controllers.ordersController.getOrdersInTransitClient);
-router.get("/Order/TotalOrdersInTransitFournisseur",auth,controllers.ordersController.getOrdersInTransitFournisseur);
+router.get("/Order/TotalOrdersInTransitClient",controllers.ordersController.getOrdersInTransitClient);
+router.get("/Order/TotalOrdersInTransitFournisseur",controllers.ordersController.getOrdersInTransitFournisseur);
 
 router.get("/Order/orderPagination",auth,controllers.ordersController.getOrderPagination);
 
