@@ -1,4 +1,4 @@
-const { Op, literal } = require("sequelize");
+const { Op, literal, where } = require("sequelize");
 const { Sequelize } = require("sequelize");
 const sequelize = require("../config/db");
 const initModels = require("../model/tables/init-models").initModels;
@@ -229,7 +229,7 @@ module.exports = {
         return res.status(404).json({ error: 'Produit ou image non trouvée' });
       }
   
-      res.set('Content-Type', 'image/jpeg'); // Ou le type MIME approprié
+      //res.set('Content-Type', 'image/jpeg'); // Ou le type MIME approprié
       res.send(produit.PRODUIT_IMAGE);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -851,6 +851,49 @@ module.exports = {
             message: 'Erreur lors de la récupération des quantités et des revenus par période.'
         });
     }
+  },
+
+  addOrSustractProduit : async (req,res) => {
+    //const addSustract = req.query.modif;
+    const quantity = req.query.quantity;
+    const prodId = req.query.idProd;
+
+    const pad = (number) => number.toString().padStart(2, '0');
+
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = pad(now.getMonth() + 1); // Les mois sont de 0 à 11
+    const day = pad(now.getDate());
+    const hours = pad(now.getHours());
+    const minutes = pad(now.getMinutes());
+    const seconds = pad(now.getSeconds());
+
+    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+    console.log(formattedDate);
+    try{
+      const product = await models.produit.findOne({
+        where: {
+          PRODUIT_ID : prodId
+        }
+      });
+
+        const incrementResult = await product.increment('QUANTITE', { by: quantity });
+        const updateStock = await models.stock.create({
+          QUANTITE_STOCK : incrementResult.QUANTITE,
+          PRODUIT_ID : product.PRODUIT_ID,
+          DATE_STOCK : formattedDate
+        });
+        res.status(200).json(updateStock);
+ 
+  
+    }catch (error) {
+      console.error('Erreur lors de l incrémentation ou décrementation de la quantité :', error);
+      res.status(500).json({
+          message: 'Erreur lors de l incrémentation ou décrementation de la quantité'
+      });
+  }
+
   },
 
 

@@ -83,6 +83,9 @@ router.get("/Order/OrderByPrice", auth, controllers.ordersController.getOrdersWi
 router.get("/Order/OrderInDelevery", auth, controllers.ordersController.getOrdersInDelivery);
 
 
+router.get("/Track", controllers.productController.addOrSustractProduit);
+
+
 /*=============================CRUD===================================
 
 // CRUD utilisateur:
