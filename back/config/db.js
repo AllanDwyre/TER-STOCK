@@ -118,9 +118,8 @@ async function synchronizeTablesInverse() {
   }
 }
 
-
-cron.schedule('0 0 1 * *', () => { 
-  console.log('Début de la synchronisation mensuelle.');
+cron.schedule("0 0 1 * *", () => {
+  console.log("Début de la synchronisation mensuelle.");
   synchronizeTables();
 });
 
@@ -156,4 +155,4 @@ User.create({
 });*/
 
 // Exporter l'objet Sequelize configuré
-module.exports = sequelizeLocal;
+module.exports = sequelizeCloud;

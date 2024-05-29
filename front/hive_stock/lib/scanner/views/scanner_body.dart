@@ -38,7 +38,7 @@ class _ScannerBodyState extends State<ScannerBody> {
     logger.t("new scan made : ${response.type} n°${response.id}");
 
     await _buildBottomSheet(scanFactory);
-    await Future.delayed(Durations.long2);
+    await Future.delayed(Durations.extralong1);
     await _scannerController.stop();
     unawaited(_scannerController.start());
   }
@@ -51,13 +51,12 @@ class _ScannerBodyState extends State<ScannerBody> {
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
       context: context,
-      // builder: (context) => DraggableScrollableSheet(
-      //       expand: false,
-      //       shouldCloseOnMinExtent: false,
-      //       builder: (context, scrollController) =>
-      //           scanFactory.showDetails(context, scrollController),
-      //     ));
-      builder: (context) => scanFactory.showDetails(context, null),
+      builder: (context) => DraggableScrollableSheet(
+        expand: false,
+        minChildSize: 0.1,
+        builder: (context, scrollController) =>
+            scanFactory.showDetails(context, scrollController),
+      ),
     );
   }
 
@@ -73,6 +72,7 @@ class _ScannerBodyState extends State<ScannerBody> {
   Center _onScanErrorMethod(
       BuildContext context, MobileScannerException exeption, Widget? widget) {
     logger.e(exeption.errorDetails?.message ?? "Error occured");
+    _scannerController.stop();
     return Center(
       child: widget ?? Text(exeption.errorDetails?.message ?? "Error occured"),
     );

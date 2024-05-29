@@ -2,26 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive_stock/product/views/product_page.dart';
 import 'package:hive_stock/scanner/models/scan_response.dart';
+import 'package:hive_stock/scanner/views/incoming_page.dart';
 import 'package:hive_stock/utils/constants/constants.dart';
+
+enum ResponseStatus { success, warning, error }
 
 class ScanResultFactory {
   ScanResult createResult(ScanResponse response) {
-    // if (type == 'Smartphone') {
-    return ProductSearch(response: response);
-    // return Success(
-    //     message:
-    //         "The product need to be returned, It arrives in the wrong destination");
-    // // } else if (type == 'Laptop') {
-    //   return Incoming();
-    // } else if (type == 'Headphone') {
-    //   return Outgoing();
-    // }
-    // return null;
+    final status = _handleJson(response);
+    switch (status) {
+      case -1:
+        return Error(
+            message:
+                "The current barcode doesnt have any related information, or it's corrupted.");
+      case 0:
+        return ProductSearch(response: response);
+      case 1:
+        return Incoming(response: response);
+      case 2:
+        return Outgoing(response: response);
+      default:
+    }
+    return Success(message: "Good product");
+  }
+
+  ScanResult createResponce(ResponseStatus status, String? message) {
+    switch (status) {
+      case ResponseStatus.success:
+        return Success(message: message ?? "Unknown Reasons");
+      case ResponseStatus.warning:
+        return Warning(message: message ?? "Unknown Reasons");
+      case ResponseStatus.error:
+        return Error(message: message ?? "Unknown Reasons");
+      default:
+        return Error(message: message ?? "Unknown Reasons");
+    }
+  }
+
+  int _handleJson(ScanResponse response) {
+    if (!["incoming", "outgoing", "product"].contains(response.type)) {
+      return -1;
+    }
+    if (response.type == "product") {
+      return 0;
+    } else if (response.type == "incoming") {
+      return 1;
+    }
+    return 2;
   }
 }
 
 abstract class ScanResult {
-  Widget showDetails(BuildContext context, ScrollController? scrollController);
+  Widget showDetails(BuildContext context, ScrollController scrollController);
 }
 
 class ProductSearch implements ScanResult {
@@ -29,7 +61,7 @@ class ProductSearch implements ScanResult {
   ProductSearch({required this.response});
 
   @override
-  Widget showDetails(BuildContext context, ScrollController? scrollController) {
+  Widget showDetails(BuildContext context, ScrollController scrollController) {
     return ProductPage(
       produitId: response.id,
       isFullHeader: false,
@@ -43,8 +75,8 @@ class Incoming implements ScanResult {
   Incoming({required this.response});
 
   @override
-  Widget showDetails(BuildContext context, ScrollController? scrollController) {
-    return const Placeholder();
+  Widget showDetails(BuildContext context, ScrollController scrollController) {
+    return IncommingPage(scrollController: scrollController,  scanResponse : response);
   }
 }
 
@@ -53,7 +85,7 @@ class Outgoing implements ScanResult {
   Outgoing({required this.response});
 
   @override
-  Widget showDetails(BuildContext context, ScrollController? scrollController) {
+  Widget showDetails(BuildContext context, ScrollController scrollController) {
     return const Placeholder();
   }
 }
@@ -63,28 +95,31 @@ class Success implements ScanResult {
   Success({required this.message});
 
   @override
-  Widget showDetails(BuildContext context, ScrollController? _) {
+  Widget showDetails(BuildContext context, ScrollController _) {
     TextTheme textTheme = Theme.of(context).textTheme;
     // ColorScheme colorTheme = Theme.of(context).colorScheme;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SvgPicture.asset(
-          CustomIcons.success,
-          colorFilter: ColorFilter.mode(
-              lightCustomColors.sourceSuccess!, BlendMode.srcIn),
-          width: 100,
-          height: 100,
-        ),
-        const SizedBox(height: 20),
-        Text(
-          message,
-          textAlign: TextAlign.center,
-          style: textTheme.bodyLarge
-              ?.copyWith(color: lightCustomColors.sourceSuccess),
-        ),
-      ],
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            CustomIcons.success,
+            colorFilter: ColorFilter.mode(
+                lightCustomColors.sourceSuccess!, BlendMode.srcIn),
+            width: 100,
+            height: 100,
+          ),
+          const SizedBox(height: 20),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: textTheme.bodyLarge
+                ?.copyWith(color: lightCustomColors.sourceSuccess),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -94,26 +129,29 @@ class Warning implements ScanResult {
   Warning({required this.message});
 
   @override
-  Widget showDetails(BuildContext context, ScrollController? _) {
+  Widget showDetails(BuildContext context, ScrollController _) {
     TextTheme textTheme = Theme.of(context).textTheme;
     // ColorScheme colorTheme = Theme.of(context).colorScheme;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.warning_amber_rounded,
-          color: lightCustomColors.sourceWarning,
-          size: 100,
-        ),
-        const SizedBox(height: 20),
-        Text(
-          message,
-          textAlign: TextAlign.center,
-          style: textTheme.bodyLarge
-              ?.copyWith(color: lightCustomColors.sourceWarning),
-        ),
-      ],
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.warning_amber_rounded,
+            color: lightCustomColors.sourceWarning,
+            size: 100,
+          ),
+          const SizedBox(height: 20),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: textTheme.bodyLarge
+                ?.copyWith(color: lightCustomColors.sourceWarning),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -123,25 +161,28 @@ class Error implements ScanResult {
   Error({required this.message});
 
   @override
-  Widget showDetails(BuildContext context, ScrollController? _) {
+  Widget showDetails(BuildContext context, ScrollController _) {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorTheme = Theme.of(context).colorScheme;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.report_gmailerrorred,
-          color: colorTheme.error,
-          size: 100,
-        ),
-        const SizedBox(height: 20),
-        Text(
-          message,
-          textAlign: TextAlign.center,
-          style: textTheme.bodyLarge?.copyWith(color: colorTheme.error),
-        ),
-      ],
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.report_gmailerrorred,
+            color: colorTheme.error,
+            size: 100,
+          ),
+          const SizedBox(height: 20),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: textTheme.bodyLarge?.copyWith(color: colorTheme.error),
+          ),
+        ],
+      ),
     );
   }
 }

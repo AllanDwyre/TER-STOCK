@@ -33,6 +33,22 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
 
   Future<void> _onOrdersFetched(
       OrdersFetched event, Emitter<OrdersState> emit) async {
+    await _fecthOrderLogic(emit);
+  }
+
+  FutureOr<void> _onTypeChanged(
+      OrdersTypeChange event, Emitter<OrdersState> emit) async {
+    emit(
+      state.copyWith(
+        type: event.type,
+        hasReachedMax: false,
+        orders: List.empty(),
+      ),
+    );
+    await _fecthOrderLogic(emit);
+  }
+
+  Future<void> _fecthOrderLogic(Emitter<OrdersState> emit) async {
     if (state.hasReachedMax) return;
     try {
       if (state.status == OrdersStatus.initial) {
@@ -56,19 +72,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       logger.e('Erreur de récupération de list orders\n=> $e',
           error: 'Order Bloc');
     }
-  }
-
-  FutureOr<void> _onTypeChanged(
-      OrdersTypeChange event, Emitter<OrdersState> emit) {
-    // TODO : filter the current orders and maybe ask to fetch more (find a way to differentiate differente type)
-    emit(
-      state.copyWith(
-        type: event.type,
-        hasReachedMax: false,
-        orders: List.empty(),
-        // orders: state.orders.
-      ),
-    );
   }
 
   Future<List<Order>> _fetchOrders([int startIndex = 0]) async {

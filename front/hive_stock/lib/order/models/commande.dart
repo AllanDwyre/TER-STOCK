@@ -17,6 +17,8 @@ class Commande {
     return 2;
   }
 
+  String get statusString => ["In Process", "On the way", "Arrived"][status];
+
   Commande({
     required this.id,
     required this.dateCommande,

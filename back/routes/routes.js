@@ -1,5 +1,5 @@
 const express = require("express");
-const multer = require('multer');
+const multer = require("multer");
 const router = express.Router();
 const controllers = require("../controller/Controllers");
 const auth = require("../utils/middleware").auth;
@@ -28,57 +28,174 @@ router.get("/Search", auth, controllers.SearchBarController.findAlikeObject);
 //=========================PAGE====================================
 //produit
 router.get("/Products", auth, controllers.productController.getProductById);
-router.post("/Product/add", /*upload.single('image'),*/ controllers.addProductController.addProduit);
+router.post(
+  "/Product/add",
+  /*upload.single('image'),*/ controllers.addProductController.addProduit
+);
 
-router.get("/Product/Overview", auth, controllers.productController.overviewProduct);
+router.get(
+  "/Product/Overview",
+  auth,
+  controllers.productController.overviewProduct
+);
 
-router.get("/Product/supplierdetails", auth, controllers.productController.getSupplierDetails);
+router.get(
+  "/Product/supplierdetails",
+  auth,
+  controllers.productController.getSupplierDetails
+);
 
-router.get("/Product/Overview/imageProduit", auth, controllers.productController.getImage);
-router.get("/Product/Overview/getQuantityDetails",  controllers.productController.getQuantityDetails);
+router.get(
+  "/Product/Overview/imageProduit",
+  auth,
+  controllers.productController.getImage
+);
+router.get(
+  "/Product/Overview/getQuantityDetails",
+  controllers.productController.getQuantityDetails
+);
 
 router.get("/Product/Movement", controllers.productController.productMovement);
-router.get("/Product/Finance",  auth, controllers.productController.productFinance);
-router.get("/Product/QuantityHistory", auth, controllers.productController.productQuantityHistory);
-
+router.get(
+  "/Product/Finance",
+  auth,
+  controllers.productController.productFinance
+);
+router.get(
+  "/Product/QuantityHistory",
+  auth,
+  controllers.productController.productQuantityHistory
+);
 
 //inventory
-router.get("/Inventory/fetchPagination",auth,controllers.productController.getProductPagination);
-router.get("/Inventory/TotalProductsCount",auth,controllers.InventoryController.getTotalProductsCount);
-router.get("/inventory/TotalCategories",auth,controllers.InventoryController.getTotalCategories);
-router.get("/inventory/TopSellingProduct",auth,controllers.InventoryController.getTopSellingProduct);
-router.get("/inventory/LowStockProductsCount",auth,controllers.InventoryController.getLowStockProductsCount);
+router.get(
+  "/Inventory/fetchPagination",
+  auth,
+  controllers.productController.getProductPagination
+);
+router.get(
+  "/Inventory/TotalProductsCount",
+  auth,
+  controllers.InventoryController.getTotalProductsCount
+);
+router.get(
+  "/inventory/TotalCategories",
+  auth,
+  controllers.InventoryController.getTotalCategories
+);
+router.get(
+  "/inventory/TopSellingProduct",
+  auth,
+  controllers.InventoryController.getTopSellingProduct
+);
+router.get(
+  "/inventory/LowStockProductsCount",
+  auth,
+  controllers.InventoryController.getLowStockProductsCount
+);
 //order
-router.get("/Order", auth, controllers.ordersController.showOrders);
+// router.get("/Order", auth, controllers.ordersController.showOrders);
+router.get("/Order", auth, controllers.ordersController.getOrderById);
 //router.get("/Order/newOrder", auth, controllers.addOrderController.newOrder);
-router.get("/Order/orderPagination",auth,controllers.ordersController.getOrderPagination);
-router.get(  "/Product/topSelling",   auth,    controllers.productController.getTopSellingProduct  );
+router.get(
+  "/Order/orderPagination",
+  auth,
+  controllers.ordersController.getOrderPagination
+);
+router.get(
+  "/Product/topSelling",
+  auth,
+  controllers.productController.getTopSellingProduct
+);
 //router.get("/Product/overview",  auth,   controllers.productController.getProductsOverview);
 
 //router.get("Order/newOrder", auth, controllers.addOrderController.newOrder);
-router.get("/Order/TotalOrdersCount",auth,controllers.ordersController.getTotalOrdersCount);
-router.get("/Order/TotalOrdersreceived",auth,controllers.ordersController.getTotalOrdersReceived);
-router.get("/Order/TotalOrdersreturned",auth,controllers.ordersController.getReturnOrdersCount);
-router.get("/Order/TotalOrdersInTransitClient",auth,controllers.ordersController.getOrdersInTransitClient);
-router.get("/Order/TotalOrdersInTransitFournisseur",auth,controllers.ordersController.getOrdersInTransitFournisseur);
-router.get("/Order/OrderByDate", auth, controllers.ordersController.getOrderByDate);
-router.get("/Order/OrderByPrice", auth, controllers.ordersController.getOrdersWithTotalPriceLessThan);
-router.get("/Order/OrderInDelevery", auth, controllers.ordersController.getOrdersInDelivery);
+router.get(
+  "/Order/TotalOrdersCount",
+  auth,
+  controllers.ordersController.getTotalOrdersCount
+);
+router.get(
+  "/Order/TotalOrdersreceived",
+  auth,
+  controllers.ordersController.getTotalOrdersReceived
+);
+router.get(
+  "/Order/TotalOrdersreturned",
+  auth,
+  controllers.ordersController.getReturnOrdersCount
+);
+router.get(
+  "/Order/TotalOrdersInTransitClient",
+  auth,
+  controllers.ordersController.getOrdersInTransitClient
+);
+router.get(
+  "/Order/TotalOrdersInTransitFournisseur",
+  auth,
+  controllers.ordersController.getOrdersInTransitFournisseur
+);
+router.get(
+  "/Order/OrderByDate",
+  auth,
+  controllers.ordersController.getOrderByDate
+);
+router.get(
+  "/Order/OrderByPrice",
+  auth,
+  controllers.ordersController.getOrdersWithTotalPriceLessThan
+);
+router.get(
+  "/Order/OrderInDelevery",
+  auth,
+  controllers.ordersController.getOrdersInDelivery
+);
 
-
-//Home Page 
-router.get("/homePage/totalProducts", auth, controllers.HomePageController.getTotalProductsCount);
-router.get("/homePage/totalOrders", auth, controllers.HomePageController.getTotalOrders);
-router.get("/homePage/totalfournisseur", auth, controllers.HomePageController.getNumberSupplier);
-router.get("/homePage/seuilProducts", auth, controllers.HomePageController.getReplenishmentLevel);
-router.get("/homePage/salesAndPurchasesPeriod", auth, controllers.HomePageController.getSalesAndPurchasesByPeriod);
-router.get("/homePage/totalPrice", auth, controllers.HomePageController.getTotalOrdersPrice);
-router.get("/homePage/lowStocksProducts", auth, controllers.HomePageController.getLowStockProducts);
-router.get("/homePage/stockAlert", auth, controllers.HomePageController.calculateStockAlert);
+//Home Page
+router.get(
+  "/homePage/totalProducts",
+  auth,
+  controllers.HomePageController.getTotalProductsCount
+);
+router.get(
+  "/homePage/totalOrders",
+  auth,
+  controllers.HomePageController.getTotalOrders
+);
+router.get(
+  "/homePage/totalfournisseur",
+  auth,
+  controllers.HomePageController.getNumberSupplier
+);
+router.get(
+  "/homePage/seuilProducts",
+  auth,
+  controllers.HomePageController.getReplenishmentLevel
+);
+router.get(
+  "/homePage/salesAndPurchasesPeriod",
+  auth,
+  controllers.HomePageController.getSalesAndPurchasesByPeriod
+);
+router.get(
+  "/homePage/totalPrice",
+  auth,
+  controllers.HomePageController.getTotalOrdersPrice
+);
+router.get(
+  "/homePage/lowStocksProducts",
+  auth,
+  controllers.HomePageController.getLowStockProducts
+);
+router.get(
+  "/homePage/stockAlert",
+  auth,
+  controllers.HomePageController.calculateStockAlert
+);
 
 //addorderpage
 
-router.post("/Order/newOrder",auth,controllers.addOrderController.addOrder);
+router.post("/Order/newOrder", auth, controllers.addOrderController.addOrder);
 /*=============================CRUD===================================
 
 // CRUD utilisateur:

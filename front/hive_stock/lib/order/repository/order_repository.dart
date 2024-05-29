@@ -9,13 +9,20 @@ class OrderRepository {
     throw UnimplementedError();
   }
 
-  Future<int> getOrder(int id) {
-    throw UnimplementedError();
+  Future<Order?> getOrder(int id) async {
+    final params = {"id": id};
+    final response =
+        await BridgeController.request.get("/Order", queryParameters: params);
+
+    if (response.statusCode != 200) {
+      throw Exception(response);
+    }
+    return Order.fromJson(response.data);
   }
 
   Future<List<Order>> fetchOrders(
       {required int start, required int limit, required int type}) async {
-    final typeMap = {0: "all", 1: "exit", 2: "entry"};
+    final typeMap = {0: "all", 1: "entry", 2: "exit"};
     final params = {"start": start, "limit": limit, "type": typeMap[type]};
 
     final response = await BridgeController.request
