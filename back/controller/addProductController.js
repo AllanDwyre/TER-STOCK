@@ -13,7 +13,7 @@ module.exports = {
         const productDimensions = req.body.productDimensions;
         const productWeight = req.body.productPoids;
         const productPrix = req.body.productPrix; 
-        //const imageProduit = req.file.buffer;
+        const imageProduit = req.file.buffer;
 
         let categorie = await Categorie.findOne({
           where: {
@@ -37,7 +37,7 @@ module.exports = {
             POIDS : productWeight,
             DIMENSIONS: productDimensions,
             PRIX_UNIT: productPrix,
-            //PRODUIT_IMAGE : imageProduit
+            PRODUIT_IMAGE : imageProduit
           });
           res.status(201).json({ success: true, produit: nouveauProduit.dataValues });
           
