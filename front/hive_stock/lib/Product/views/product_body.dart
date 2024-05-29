@@ -38,14 +38,14 @@ class _ProductBodyState extends State<ProductBody>
     Size size = MediaQuery.of(context).size;
     return BlocBuilder<ProductBloc, ProductState>(
       builder: ((context, state) {
-        Product? product = state.productdetails?.product;
+        Product? product = state.product;
         return CustomScrollView(
           controller: widget.scrollController,
           slivers: [
             SliverVisibility(
               visible: widget.isFullHeader,
               sliver: _ProductAppBar(
-                productName: state.productdetails?.product.name,
+                productName: product?.name,
               ),
             ),
             _ProductHeader(product: product, isFullHeader: widget.isFullHeader),
@@ -156,7 +156,7 @@ class _Overview extends StatelessWidget {
         const CustomTableRow(title: 'Product category', value: 'Pharmacy'),
         const CustomTableRow(title: 'Storage date', value: '15/02/2023'),
         informationSection(title: 'Quantity Details', context: context),
-        CustomTableRow(title: 'Quantity', value: "${product?.quantite}"),
+        CustomTableRow(title: 'Quantity', value: "${product?.quantity}"),
         const CustomTableRow(title: 'At preparation', value: '50'),
         const CustomTableRow(title: 'On the way', value: '150'),
         const CustomTableRow(title: 'Arrival Date', value: '15/06/2023'),

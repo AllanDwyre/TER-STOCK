@@ -12,7 +12,7 @@ class Product {
   int? supplierId;
   String? img;
   int? seuil;
-  int? quantite;
+  int? quantity;
   String? sku;
   String? classe;
 
@@ -30,7 +30,7 @@ class Product {
     this.supplierId,
     this.img,
     this.seuil,
-    this.quantite,
+    this.quantity,
     this.sku,
     this.classe,
   });
@@ -50,7 +50,7 @@ class Product {
       supplierId: json['FOURNISSEUR_ID'],
       img: json['PRODUIT_IMAGE'],
       seuil: json['SEUIL'],
-      quantite: json['QUANTITE'],
+      quantity: json['QUANTITE'],
       sku: json['SKU'],
       classe: json['CLASSE'],
     );
@@ -71,7 +71,7 @@ class Product {
       'FOURNISSEUR_ID': supplierId,
       'PRODUIT_IMAGE': img,
       'SEUIL': seuil,
-      'QUANTITE': quantite,
+      'QUANTITE': quantity,
       'SKU': sku,
       'CLASSE': classe,
     };
@@ -91,7 +91,7 @@ class Product {
     supplierId: -1,
     img: "",
     seuil: -1,
-    quantite: -1,
+    quantity: -1,
     sku: '-',
     classe: '-',
   );

@@ -104,10 +104,13 @@ class _OrdersBodyState extends State<OrdersBody> with TickerProviderStateMixin {
                   itemBuilder: (BuildContext context, int index) {
                     return index >= state.orders.length
                         ? const BottomLoader()
-                        : OrderCard(
-                            order: state.orders[index],
-                            onTap: () => Navigator.of(context).push(
-                                OrderPage.route(id: state.orders[index].id!)),
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: OrderCard(
+                              order: state.orders[index],
+                              onTap: () => Navigator.of(context).push(
+                                  OrderPage.route(id: state.orders[index].id!)),
+                            ),
                           );
                   },
                   itemCount: state.hasReachedMax

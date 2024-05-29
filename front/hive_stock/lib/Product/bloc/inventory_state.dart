@@ -5,17 +5,17 @@ enum InventoryStatus { initial, success, failure }
 final class InventoryState extends Equatable {
   const InventoryState({
     this.status = InventoryStatus.initial,
-    this.products = const <ProductInventory>[],
+    this.products = const <Product>[],
     this.hasReachedMax = false,
   });
 
   final InventoryStatus status;
-  final List<ProductInventory> products;
+  final List<Product> products;
   final bool hasReachedMax;
 
   InventoryState copyWith({
     InventoryStatus? status,
-    List<ProductInventory>? products,
+    List<Product>? products,
     bool? hasReachedMax,
   }) {
     return InventoryState(
