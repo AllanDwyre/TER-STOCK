@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_stock/order/bloc/orders_bloc.dart';
 import 'package:hive_stock/order/models/orders_stats.dart';
 import 'package:hive_stock/order/views/order_page.dart';
-import 'package:hive_stock/utils/methods/logger.dart';
 import 'package:hive_stock/utils/widgets/bottom_loader.dart';
 import 'package:hive_stock/utils/widgets/card_stat.dart';
 import 'package:hive_stock/utils/widgets/custom_tab_bar.dart';
