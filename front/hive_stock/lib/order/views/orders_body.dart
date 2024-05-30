@@ -89,7 +89,8 @@ class _OrdersBodyState extends State<OrdersBody> with TickerProviderStateMixin {
           builder: (context, state) {
             switch (state.status) {
               case OrdersStatus.failure:
-                return const Center(child: Text('failed to fetch orders'));
+                return const SliverToBoxAdapter(
+                    child: Center(child: Text('failed to fetch orders')));
               case OrdersStatus.success:
                 if (state.orders.isEmpty) {
                   return SliverToBoxAdapter(

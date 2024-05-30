@@ -40,8 +40,7 @@ class OrdersPage extends StatelessWidget implements Menu {
       child: BlocProvider(
         create: (context) => OrdersBloc(
             orderRepository: RepositoryProvider.of<OrderRepository>(context))
-          ..add(OrdersFetched())
-          ..add(OrdersStatsFetched()),
+          ..add(OrdersFetched()),
         child: const OrdersBody(),
       ),
     );

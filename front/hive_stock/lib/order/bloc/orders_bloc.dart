@@ -29,7 +29,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       : _orderRepository = orderRepository,
         super(const OrdersState()) {
     on<OrdersFetched>(_onOrdersFetched);
-    on<OrdersStatsFetched>(_onOrdersStatsFetched);
     on<OrdersTypeChange>(_onTypeChanged);
   }
 
@@ -87,13 +86,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       logger.w("error fetching posts: $e", error: 'Orders Bloc');
       return List<Order>.empty();
     }
-  }
-
-  FutureOr<void> _onOrdersStatsFetched(
-      OrdersStatsFetched event, Emitter<OrdersState> emit) async {
-    var stat = await _getStats();
-
-    return emit(state.copyWith(stats: stat));
   }
 
   Future<OrdersStats> _getStats() async {
