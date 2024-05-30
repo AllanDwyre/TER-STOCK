@@ -42,8 +42,8 @@ class ScanResponseDetails {
 
   factory ScanResponseDetails.fromJson(Map<String, dynamic> json) {
     return ScanResponseDetails(
-      productName: json['product'] as String,
-      quantity: json['quantity'] as int,
+      productName: json['product'].toString(),
+      quantity: int.tryParse(json['quantity'].toString()),
     );
   }
 }
