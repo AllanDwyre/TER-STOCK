@@ -19,8 +19,8 @@ class ApiConfiguration {
 
   static String get baseUrl => isDebugMode ? _debugBaseUrl : _prodBaseUrl;
 
-  //TODO : HERE the url of prod backend !!
-  static const String _prodBaseUrl = '';
+  static const String _prodBaseUrl =
+      'https://terstock-4d2f3762870f.herokuapp.com/';
 
   static String get _debugBaseUrl =>
       Platform.isAndroid ? _debugBaseUrlAndroid : _debugBaseUrlIOS;

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:hive_stock/product/models/product.dart';
+import 'package:hive_stock/product/models/product_form.dart';
 import 'package:hive_stock/product/models/product_form_validation.dart';
 import 'package:hive_stock/product/repository/product_repository.dart';
 import 'package:hive_stock/utils/methods/logger.dart';
@@ -22,8 +22,7 @@ class AddOrEditProductBloc
   }
   final ProductRepository _productRepository;
 
-  FutureOr<void> _onAddImg(
-    OnAddImg event, Emitter emit) {
+  FutureOr<void> _onAddImg(OnAddImg event, Emitter emit) {
     emit(
       state.copyWith(
         img: event.img,
@@ -61,12 +60,13 @@ class AddOrEditProductBloc
   }
 
   FutureOr<void> _onSumbitProduct(OnSumbitProduct event, Emitter emit) async {
-    Product product = Product(
+    ProductAddForm product = ProductAddForm(
       name: state.name.value,
-      unitPrice: state.name.value,
+      price: state.price.value,
       weight: state.weight.value,
-      dimensions: state.dimension.value,
-      img: state.img
+      dimension: state.dimension.value,
+      category: state.category.value,
+      img: state.img,
     );
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     int result = await _tryAddProduct(product);
@@ -81,7 +81,7 @@ class AddOrEditProductBloc
     );
   }
 
-  Future<int> _tryAddProduct(Product product) async {
+  Future<int> _tryAddProduct(ProductAddForm product) async {
     try {
       return await _productRepository.addProduct(product);
     } catch (e) {

@@ -234,10 +234,16 @@ class _ProductBasicInformation extends StatelessWidget {
     ColorScheme colorTheme = Theme.of(context).colorScheme;
 
     ImageProvider<Object>? imageProduct;
-    try{
-      imageProduct = MemoryImage(base64Decode(product!.img!.substring(1, product!.img!.length - 1)));
-    } catch(e) { logger.t(e); }
-    
+    try {
+      if (product?.img != null) {
+        String? substr = product!.img!.substring(1, product!.img!.length - 1);
+        imageProduct = MemoryImage(
+            base64Decode(product!.img![0] == '"' ? substr : product!.img![0]));
+      }
+    } catch (e) {
+      logger.t(e);
+    }
+
     return Builder(builder: (context) {
       if (isFullHeader) {
         return Column(
@@ -268,7 +274,8 @@ class _ProductBasicInformation extends StatelessWidget {
                   borderRadius: const BorderRadius.all(Radius.circular(3)),
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: imageProduct?? const AssetImage(CustomIcons.productImageTest),
+                    image: imageProduct ??
+                        const AssetImage(CustomIcons.productImageTest),
                   ),
                 ),
               ),
@@ -292,10 +299,7 @@ class _ProductBasicInformation extends StatelessWidget {
 }
 
 class _ProductAppBar extends StatelessWidget {
-  const _ProductAppBar({
-    required this.productName,
-    this.productImg
-  });
+  const _ProductAppBar({required this.productName, this.productImg});
 
   final String? productName;
   final String? productImg;
@@ -305,9 +309,15 @@ class _ProductAppBar extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     Image? imageProduct;
-    try{
-      imageProduct = Image.memory(base64Decode(productImg!.substring(1, productImg!.length - 1)), fit:BoxFit.cover);
-    } catch(e) { logger.t(e); }
+    try {
+      if (productImg != null) {
+        imageProduct = Image.memory(
+            base64Decode(productImg!.substring(1, productImg!.length - 1)),
+            fit: BoxFit.cover);
+      }
+    } catch (e) {
+      logger.t(e);
+    }
 
     return SliverAppBar(
       pinned: true,
@@ -316,10 +326,11 @@ class _ProductAppBar extends StatelessWidget {
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: false,
         titlePadding: const EdgeInsetsDirectional.all(15),
-        background: imageProduct?? Image.asset(
-          CustomIcons.productImageTest,
-          fit: BoxFit.cover,
-        ),
+        background: imageProduct ??
+            Image.asset(
+              CustomIcons.productImageTest,
+              fit: BoxFit.cover,
+            ),
       ),
     );
   }

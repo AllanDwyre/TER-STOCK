@@ -15,9 +15,15 @@ class ProductCard extends StatelessWidget {
     ColorScheme colorTheme = Theme.of(context).colorScheme;
 
     Image? imageProduct;
-    try{
-      imageProduct = Image.memory(base64Decode(product.img!.substring(1, product.img!.length - 1)));
-    } catch(e) { logger.t(e); }
+    try {
+      if (product.img != null) {
+        String? substr = product.img!.substring(1, product.img!.length - 1);
+        imageProduct = Image.memory(
+            base64Decode(product.img![0] == '"' ? substr : product.img![0]));
+      }
+    } catch (e) {
+      logger.t(e);
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -31,7 +37,7 @@ class ProductCard extends StatelessWidget {
             constraints: const BoxConstraints(minWidth: 60, maxWidth: 60),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8), // Image border
-              child: imageProduct?? Image.asset(CustomIcons.productImageTest),
+              child: imageProduct ?? Image.asset(CustomIcons.productImageTest),
             ),
           ),
         ),
@@ -42,16 +48,16 @@ class ProductCard extends StatelessWidget {
         subtitle: Row(
           children: [
             Text(
-              product.quantity! > 0 ? 'In-stock' : 'Out of stock',
+              (product.quantity ?? 0) > 0 ? 'In-stock' : 'Out of stock',
               style: textTheme.bodySmall?.copyWith(
-                color: product.quantity! > 0
+                color: (product.quantity ?? 0) > 0
                     ? lightCustomColors.sourceSuccess
                     : colorTheme.secondary,
               ),
             ),
             const SizedBox(width: 10),
             Visibility(
-              visible: product.quantity! > 0,
+              visible: (product.quantity ?? 0) > 0,
               child: Text(
                 '${product.quantity} in stock',
                 style:

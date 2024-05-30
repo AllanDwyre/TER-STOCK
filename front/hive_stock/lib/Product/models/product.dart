@@ -37,22 +37,33 @@ class Product {
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      productId: json['PRODUIT_ID'],
-      name: json['NOM'],
-      description: json['DESCR'],
-      unitPrice: json['PRIX_UNIT'],
-      weight: json['POIDS'],
-      dimensions: json['DIMENSIONS'],
-      warehouse: json['MAGASIN_ENTREPOT'],
-      barcode: json['CODE_BARRE_PRODUIT'],
-      categoryId: json['CATEGORIE_ID'],
-      locationId: json['EMPLACEMENT_ID'],
-      supplierId: json['FOURNISSEUR_ID'],
-      img: json['PRODUIT_IMAGE'],
-      seuil: json['SEUIL'],
-      quantity: json['QUANTITE'],
-      sku: json['SKU'],
-      classe: json['CLASSE'],
+      productId: json['PRODUIT_ID'] != null
+          ? int.tryParse(json['PRODUIT_ID'].toString())
+          : null,
+      name: json['NOM']?.toString(),
+      description: json['DESCR']?.toString(),
+      unitPrice: json['PRIX_UNIT']?.toString(),
+      weight: json['POIDS']?.toString(),
+      dimensions: json['DIMENSIONS']?.toString(),
+      warehouse: json['MAGASIN_ENTREPOT']?.toString(),
+      barcode: json['CODE_BARRE_PRODUIT']?.toString(),
+      categoryId: json['CATEGORIE_ID'] != null
+          ? int.tryParse(json['CATEGORIE_ID'].toString())
+          : null,
+      locationId: json['EMPLACEMENT_ID'] != null
+          ? int.tryParse(json['EMPLACEMENT_ID'].toString())
+          : null,
+      supplierId: json['FOURNISSEUR_ID'] != null
+          ? int.tryParse(json['FOURNISSEUR_ID'].toString())
+          : null,
+      img: json['PRODUIT_IMAGE']?.toString(),
+      seuil:
+          json['SEUIL'] != null ? int.tryParse(json['SEUIL'].toString()) : null,
+      quantity: json['QUANTITE'] != null
+          ? int.tryParse(json['QUANTITE'].toString())
+          : null,
+      sku: json['SKU']?.toString(),
+      classe: json['CLASSE']?.toString(),
     );
   }
 

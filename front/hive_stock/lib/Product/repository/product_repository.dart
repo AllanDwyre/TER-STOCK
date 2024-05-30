@@ -1,18 +1,19 @@
 import 'dart:async';
-import 'package:dio/dio.dart';
 import 'package:hive_stock/product/models/inventory_stats.dart';
 import 'package:hive_stock/product/models/movement_chart.dart';
 import 'package:hive_stock/product/models/product.dart';
+import 'package:hive_stock/product/models/product_form.dart';
 import 'package:hive_stock/utils/app/bridge_repository.dart';
+import 'package:hive_stock/utils/methods/logger.dart';
 
 class ProductRepository {
   ProductRepository();
 
-  Future<int> addProduct(Product product) async {
-    final params = FormData();
+  Future<int> addProduct(ProductAddForm product) async {
+    logger.d(product.toJson());
 
-    final response =
-        await BridgeController.request.post("/Products", data: params);
+    final response = await BridgeController.request
+        .post("/Products", data: product.toJson());
 
     if (response.statusCode != 200) {
       throw Exception(response);
