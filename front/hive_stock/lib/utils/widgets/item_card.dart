@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive_stock/product/models/product.dart';
 import 'package:hive_stock/utils/constants/constants.dart';
+import 'package:hive_stock/utils/methods/logger.dart';
+import 'dart:convert';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({super.key, required this.product, this.onTap});
@@ -11,6 +13,12 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorTheme = Theme.of(context).colorScheme;
+
+    Image? imageProduct;
+    try{
+      imageProduct = Image.memory(base64Decode(product.img!.substring(1, product.img!.length - 1)));
+    } catch(e) { logger.t(e); }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: ListTile(
@@ -19,9 +27,12 @@ class ProductCard extends StatelessWidget {
         tileColor: const Color.fromARGB(255, 234, 239, 241),
         leading: Hero(
           tag: product.name ?? "-",
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8), // Image border
-            child: Image.asset(CustomIcons.productImageTest),
+          child: Container(
+            constraints: const BoxConstraints(minWidth: 60, maxWidth: 60),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8), // Image border
+              child: imageProduct?? Image.asset(CustomIcons.productImageTest),
+            ),
           ),
         ),
         title: Text(
