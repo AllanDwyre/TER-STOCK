@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hive_stock/order/models/order.dart';
+import 'package:hive_stock/order/models/orders_stats.dart';
 import 'package:hive_stock/order/repository/order_repository.dart';
 import 'package:hive_stock/utils/methods/logger.dart';
 import 'package:stream_transform/stream_transform.dart';
@@ -28,6 +29,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       : _orderRepository = orderRepository,
         super(const OrdersState()) {
     on<OrdersFetched>(_onOrdersFetched);
+    on<OrdersStatsFetched>(_onOrdersStatsFetched);
     on<OrdersTypeChange>(_onTypeChanged);
   }
 
@@ -57,6 +59,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
           status: OrdersStatus.success,
           orders: orders,
           hasReachedMax: false,
+          stats: await _getStats(),
         ));
       }
       final orders = await _fetchOrders(state.orders.length);
@@ -66,6 +69,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
               status: OrdersStatus.success,
               orders: List.of(state.orders)..addAll(orders),
               hasReachedMax: false,
+              stats: await _getStats(),
             ));
     } on Exception catch (e) {
       emit(state.copyWith(status: OrdersStatus.failure));
@@ -82,6 +86,26 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     } catch (e) {
       logger.w("error fetching posts: $e", error: 'Orders Bloc');
       return List<Order>.empty();
+    }
+  }
+
+  FutureOr<void> _onOrdersStatsFetched(
+      OrdersStatsFetched event, Emitter<OrdersState> emit) async {
+    var stat = await _getStats();
+
+    return emit(state.copyWith(stats: stat));
+  }
+
+  Future<OrdersStats> _getStats() async {
+    try {
+      logger.t('Get the data from stats');
+      var stats = await _orderRepository.getStatsOrders();
+
+      logger.t('client : ${stats.totalClient}');
+      return stats;
+    } catch (e) {
+      logger.w("error fetching posts: $e", error: 'Product Bloc');
+      throw Exception('error fetching stats: $e');
     }
   }
 }

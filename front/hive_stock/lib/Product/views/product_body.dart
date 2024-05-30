@@ -137,7 +137,6 @@ class _Overview extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      //TODO : sync informations
       children: [
         informationSection(title: 'Primary Details', context: context),
         CustomTableRow(title: 'Name', value: checkValue(product?.name)),

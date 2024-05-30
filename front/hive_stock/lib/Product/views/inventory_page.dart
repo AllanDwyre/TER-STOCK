@@ -49,7 +49,7 @@ class _InventoryPageState extends State<InventoryPage> {
             productRepository:
                 RepositoryProvider.of<ProductRepository>(context))
           ..add(InventoryFetched())
-          ..add(InventoryStatsFetched()), // we do the initial fetch
+          ..add(InventoryStatsFetched()),
         child: const InventoryBody(),
       ),
     );

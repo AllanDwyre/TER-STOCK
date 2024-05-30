@@ -1,4 +1,5 @@
 const { Sequelize } = require("sequelize");
+const { Op, literal, where } = require("sequelize");
 const sequelize = require("../config/db");
 const initModels = require("../model/tables/init-models").initModels;
 const models = initModels(sequelize);
@@ -229,13 +230,25 @@ module.exports = {
   getOrdersInTransitFournisseur: async (req, res) => {
     try {
       const ordersInTransitFournisseur =
-        await models.commande_fournisseur.findAll({
+        await models.commande_fournisseur.count({
+          include: [
+            {
+              model: models.commande,
+              as: "COMM_FOURN",
+              attributes: [],
+              where: {
+                DATE_REEL_RECU: null,
+                DATE_DEPART: {
+                  [Op.not]: null,
+                },
+              },
+            },
+          ],
           where: {
-            DATE_REEL_RECU: null,
             TYPE_COMMANDE: "commande",
           },
         });
-      res.status(200).json({ ordersInTransitFournisseur });
+      res.status(200).json(ordersInTransitFournisseur);
     } catch (error) {
       res.status(500).json({
         message:
@@ -247,13 +260,25 @@ module.exports = {
 
   getOrdersInTransitClient: async (req, res) => {
     try {
-      const ordersInTransitClient = await models.commande_client.findAll({
+      const ordersInTransitClient = await models.commande_client.count({
+        include: [
+          {
+            model: models.commande,
+            as: "COMM_CLIENT",
+            attributes: [],
+            where: {
+              DATE_REEL_RECU: null,
+              DATE_DEPART: {
+                [Op.not]: null,
+              },
+            },
+          },
+        ],
         where: {
-          DATE_REEL_RECU: null,
           TYPE_COMMANDE: "commande",
         },
       });
-      res.status(200).json({ ordersInTransitClient });
+      res.status(200).json(ordersInTransitClient);
     } catch (error) {
       res.status(500).json({
         message:

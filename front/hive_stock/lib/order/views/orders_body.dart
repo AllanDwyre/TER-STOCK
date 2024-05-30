@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_stock/order/bloc/orders_bloc.dart';
+import 'package:hive_stock/order/models/orders_stats.dart';
 import 'package:hive_stock/order/views/order_page.dart';
+import 'package:hive_stock/utils/methods/logger.dart';
 import 'package:hive_stock/utils/widgets/bottom_loader.dart';
 import 'package:hive_stock/utils/widgets/card_stat.dart';
 import 'package:hive_stock/utils/widgets/custom_tab_bar.dart';
@@ -141,57 +143,65 @@ class _OverallStatsWidget extends StatelessWidget {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorTheme = Theme.of(context).colorScheme;
 
-    return Visibility(
-      visible: isVisible,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Overall Orders",
-              style: textTheme.headlineSmall
-                  ?.copyWith(color: colorTheme.onBackground),
-            ),
-            const SizedBox(height: 5),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                children: [
-                  Row(
+    return BlocBuilder<OrdersBloc, OrdersState>(
+      builder: (context, state) {
+        OrdersStats? stats = state.stats;
+        return Visibility(
+          visible: isVisible,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Overall Orders",
+                  style: textTheme.headlineSmall
+                      ?.copyWith(color: colorTheme.onBackground),
+                ),
+                const SizedBox(height: 5),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(
                     children: [
-                      CardStat(
-                        title: 'Total Order',
-                        titleColor: Color.fromRGBO(21, 112, 239, 1),
-                        data: "2158", // TODO : fecth data from backend
+                      Row(
+                        children: [
+                          CardStat(
+                            title: 'Total Order',
+                            titleColor: const Color.fromRGBO(21, 112, 239, 1),
+                            data: "${stats?.totalOrder}",
+                          ),
+                          CardStat(
+                            title: 'Total Received',
+                            titleColor: const Color.fromRGBO(225, 145, 51, 1),
+                            data: "${stats?.totalReceived}",
+                          ),
+                        ],
                       ),
-                      CardStat(
-                        title: 'Total Received',
-                        titleColor: Color.fromRGBO(225, 145, 51, 1),
-                        data: "30", // TODO : fecth data from backend
+                      Row(
+                        children: [
+                          CardStat(
+                            title: 'Total Returned',
+                            titleColor: const Color.fromRGBO(132, 94, 188, 1),
+                            data: "${stats?.totaltReturned}",
+                          ),
+                          CardStatDuo(
+                            title: 'On the way',
+                            titleColor: const Color.fromRGBO(243, 105, 96, 1),
+                            label: 'Client',
+                            label1: 'Fournisseur',
+                            data: "${stats?.totalClient}",
+                            data1: "${stats?.totalFournisseur}",
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      CardStat(
-                        title: 'Total Returned',
-                        titleColor: Color.fromRGBO(132, 94, 188, 1),
-                        data: 'GodZilla',
-                      ), // TODO : fecth data from backend
-                      CardStat(
-                        title: 'On the way',
-                        titleColor: Color.fromRGBO(243, 105, 96, 1),
-                        data: "5",
-                      ), // TODO : fecth data from backend
-                    ],
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
