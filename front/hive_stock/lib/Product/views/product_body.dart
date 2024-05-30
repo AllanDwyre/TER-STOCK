@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_stock/product/bloc/product_bloc.dart';
 import 'package:hive_stock/product/models/product.dart';
 import 'package:hive_stock/utils/constants/constants.dart';
+import 'package:hive_stock/utils/methods/logger.dart';
 import 'package:hive_stock/utils/widgets/snackbars.dart';
 
 import '../../utils/widgets/custom_tab_bar.dart';
@@ -47,6 +50,7 @@ class _ProductBodyState extends State<ProductBody>
               visible: widget.isFullHeader,
               sliver: _ProductAppBar(
                 productName: product?.name,
+                productImg: product?.img,
               ),
             ),
             _ProductHeader(product: product, isFullHeader: widget.isFullHeader),
@@ -229,6 +233,12 @@ class _ProductBasicInformation extends StatelessWidget {
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorTheme = Theme.of(context).colorScheme;
+
+    ImageProvider<Object>? imageProduct;
+    try{
+      imageProduct = MemoryImage(base64Decode(product!.img!.substring(1, product!.img!.length - 1)));
+    } catch(e) { logger.t(e); }
+    
     return Builder(builder: (context) {
       if (isFullHeader) {
         return Column(
@@ -255,11 +265,11 @@ class _ProductBasicInformation extends StatelessWidget {
               Container(
                 height: 40,
                 width: 40,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(3)),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(3)),
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: AssetImage(CustomIcons.productImageTest),
+                    image: imageProduct?? const AssetImage(CustomIcons.productImageTest),
                   ),
                 ),
               ),
@@ -285,13 +295,20 @@ class _ProductBasicInformation extends StatelessWidget {
 class _ProductAppBar extends StatelessWidget {
   const _ProductAppBar({
     required this.productName,
+    this.productImg
   });
 
   final String? productName;
+  final String? productImg;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    Image? imageProduct;
+    try{
+      imageProduct = Image.memory(base64Decode(productImg!.substring(1, productImg!.length - 1)), fit:BoxFit.cover);
+    } catch(e) { logger.t(e); }
 
     return SliverAppBar(
       pinned: true,
@@ -300,7 +317,7 @@ class _ProductAppBar extends StatelessWidget {
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: false,
         titlePadding: const EdgeInsetsDirectional.all(15),
-        background: Image.asset(
+        background: imageProduct?? Image.asset(
           CustomIcons.productImageTest,
           fit: BoxFit.cover,
         ),
