@@ -1,10 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-
-part 'user.g.dart';
-
-@HiveType(typeId: 0)
-class User extends Equatable {
+class User {
   const User(
       {required this.id,
       required this.username,
@@ -14,19 +8,12 @@ class User extends Equatable {
       required this.phoneNumber,
       required this.birthday});
 
-  @HiveField(0)
-  final String id;
-  @HiveField(1)
-  final String username;
-  @HiveField(2)
-  final String firstname;
-  @HiveField(3)
-  final String lastname;
-  @HiveField(4)
-  final String email;
-  @HiveField(5)
-  final String phoneNumber;
-  @HiveField(6)
+  final String? id;
+  final String? username;
+  final String? firstname;
+  final String? lastname;
+  final String? email;
+  final String? phoneNumber;
   final DateTime? birthday;
 
   String get fullname => '$firstname $lastname';
@@ -34,17 +21,14 @@ class User extends Equatable {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['USER_ID'].toString(),
-      username: json['USERNAME'],
-      firstname: json['FIRSTNAME'],
-      lastname: json['LASTNAME'],
-      email: json['USER_MAIL'],
+      username: json['USERNAME'].toString(),
+      firstname: json['FIRSTNAME'].toString(),
+      lastname: json['LASTNAME'].toString(),
+      email: json['USER_MAIL'].toString(),
       phoneNumber: json['USER_TEL'],
-      birthday: DateTime.parse(json['USER_DATE_NAISS']),
+      birthday: DateTime.tryParse(json['USER_DATE_NAISS'].toString()),
     );
   }
-
-  @override
-  List<Object> get props => [id];
 
   static const empty = User(
     id: '-',

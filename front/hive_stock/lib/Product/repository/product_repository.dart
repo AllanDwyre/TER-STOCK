@@ -9,7 +9,6 @@ class ProductRepository {
   ProductRepository();
 
   Future<int> addProduct(Product product) async {
-    // TODO ADD FORMDATA
     final params = FormData();
 
     final response =

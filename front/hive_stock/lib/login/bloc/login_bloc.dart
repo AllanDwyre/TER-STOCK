@@ -170,7 +170,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             // otp: state.otp.value,
           );
         }
-        emit(state.copyWith(status: FormzSubmissionStatus.success));
+        return emit(state.copyWith(status: FormzSubmissionStatus.success));
       } catch (e) {
         emit(state.copyWith(
             status: FormzSubmissionStatus.failure, errorMessage: e.toString()));

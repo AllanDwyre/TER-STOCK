@@ -40,8 +40,23 @@ class _LoginBodyState extends State<LoginBody> {
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                    content:
-                        Text('Authentication Failure ${state.errorMessage}')),
+                    behavior: SnackBarBehavior.floating,
+                    backgroundColor: colorScheme.errorContainer,
+                    margin: const EdgeInsets.all(20),
+                    content: Row(
+                      children: [
+                        Icon(Icons.error_outline_outlined,
+                            color: colorScheme.onErrorContainer),
+                        const SizedBox(width: 10),
+                        Flexible(
+                          child: Text(
+                            'Authentication Failure ${state.errorMessage}',
+                            style: textTheme.bodyMedium
+                                ?.copyWith(color: colorScheme.onErrorContainer),
+                          ),
+                        ),
+                      ],
+                    )),
               );
           }
         },
